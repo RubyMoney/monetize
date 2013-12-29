@@ -1,6 +1,6 @@
 # Monetize
 
-A library for converting strings into `Money` objects.
+A library for converting various objects into `Money` objects.
 
 ## Installation
 
