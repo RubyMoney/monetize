@@ -3,6 +3,7 @@
 [![Gem Version](https://badge.fury.io/rb/monetize.png)](http://badge.fury.io/rb/monetize)
 [![Build Status](https://travis-ci.org/RubyMoney/monetize.png?branch=master)](https://travis-ci.org/RubyMoney/monetize)
 [![Code Climate](https://codeclimate.com/github/RubyMoney/monetize.png)](https://codeclimate.com/github/RubyMoney/monetize)
+[![Coverage Status](https://coveralls.io/repos/RubyMoney/monetize/badge.png)](https://coveralls.io/r/RubyMoney/monetize)
 [![Dependency Status](https://gemnasium.com/RubyMoney/monetize.png)](https://gemnasium.com/RubyMoney/monetize)
 [![License](http://img.shields.io/license/MIT.png?color=green)](http://opensource.org/licenses/MIT)
 
