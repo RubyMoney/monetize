@@ -19,7 +19,11 @@ Or install it yourself as:
 ## Usage
 
 ```ruby
-# Coming Soon
+Money.parse("$100") == Money.new(100_00, "USD")
+Money.parse("€100") == Money.new(100_00, "EUR")
+Money.parse("£100") == Money.new(100_00, "GBP")
+
+"$100".to_money == Money.new(100_00, "USD")
 ```
 
 ## Contributing
