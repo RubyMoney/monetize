@@ -26,9 +26,9 @@ Or install it yourself as:
 ## Usage
 
 ```ruby
-Money.parse("$100") == Money.new(100_00, "USD")
-Money.parse("€100") == Money.new(100_00, "EUR")
-Money.parse("£100") == Money.new(100_00, "GBP")
+Monetize.parse("$100") == Money.new(100_00, "USD")
+Monetize.parse("€100") == Money.new(100_00, "EUR")
+Monetize.parse("£100") == Money.new(100_00, "GBP")
 
 "$100".to_money == Money.new(100_00, "USD")
 ```
