@@ -25,6 +25,10 @@ describe Monetize do
           Monetize.assume_from_symbol = true
         end
 
+        after do
+          Monetize.assume_from_symbol = false
+        end
+
         it "parses formatted inputs with the currency passed as a symbol" do
           original_currency = Money.default_currency
           Money.default_currency = "EUR"
