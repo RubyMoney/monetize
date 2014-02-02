@@ -22,7 +22,7 @@ describe Monetize do
     describe 'currency assumption' do
       context 'opted in' do
         before do
-          Money.assume_from_symbol = true
+          Monetize.assume_from_symbol = true
         end
 
         it "parses formatted inputs with the currency passed as a symbol" do
@@ -40,7 +40,7 @@ describe Monetize do
       end
       context 'opted out' do
         before do
-          Money.assume_from_symbol = false
+          Monetize.assume_from_symbol = false
         end
         it "parses formatted inputs with the currency passed as a symbol but ignores the symbol" do
           expect(Monetize.parse("$5.95")).to eq Money.new(595, 'USD')
@@ -51,7 +51,7 @@ describe Monetize do
         end
       end
       it 'should opt out by default' do
-        expect(Money.assume_from_symbol).to be false
+        expect(Monetize.assume_from_symbol).to be_falsy
       end
     end
 
