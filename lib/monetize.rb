@@ -4,10 +4,27 @@ require "money"
 require "monetize/version"
 
 module Monetize
+  # Determine if the currency can be assumed from a passed symbol.
+  #
+  # @return [Boolean] Defaults to false.
+  def self.assume_from_symbol
+    @assume_from_symbol
+  end
+
+  # Use this to enable the ability to assume the currency from a passed
+  # symbol.
+  #
+  # @param value [Boolean]
+  #
+  # @return nothing.
+  def self.assume_from_symbol= value
+    @assume_from_symbol = value
+  end
+
   def self.parse(input, currency = Money.default_currency)
     input = input.to_s.strip
 
-    computed_currency = if Money.assume_from_symbol && input =~ /^(\$|€|£)/
+    computed_currency = if assume_from_symbol && input =~ /^(\$|€|£)/
                           case input
                           when /^\$/ then "USD"
                           when /^€/ then "EUR"
