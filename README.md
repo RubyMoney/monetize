@@ -30,7 +30,15 @@ Monetize.parse("$100") == Money.new(100_00, "USD")
 Monetize.parse("€100") == Money.new(100_00, "EUR")
 Monetize.parse("£100") == Money.new(100_00, "GBP")
 
-"$100".to_money == Money.new(100_00, "USD")
+"100".to_money == Money.new(100_00, "USD")
+```
+
+Optionally, enable the ability to assume the currency from a passed symbol.
+
+```ruby
+Monetize.assume_from_symbol = true
+
+"100".to_money == Money.new(100_00, "USD")
 ```
 
 ## Contributing
