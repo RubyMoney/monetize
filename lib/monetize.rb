@@ -4,21 +4,12 @@ require "money"
 require "monetize/version"
 
 module Monetize
-  # Determine if the currency can be assumed from a passed symbol.
-  #
-  # @return [Boolean] Defaults to false.
-  def self.assume_from_symbol
-    @assume_from_symbol
-  end
 
-  # Use this to enable the ability to assume the currency from a passed
-  # symbol.
-  #
-  # @param value [Boolean]
-  #
-  # @return nothing.
-  def self.assume_from_symbol= value
-    @assume_from_symbol = value
+  # Class methods
+  class << self
+    # @attr_accessor [true, false] assume_from_symbol Use this to enable the
+    #   ability to assume the currency from a passed symbol
+    attr_accessor :assume_from_symbol
   end
 
   def self.parse(input, currency = Money.default_currency)
