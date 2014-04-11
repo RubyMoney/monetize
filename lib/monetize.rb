@@ -39,7 +39,7 @@ module Monetize
     if matches.empty?
       input[/[A-Z]{2,3}/]
     else
-      max = 0
+      max = matches[0].length
       best_match = matches[0]
       (1...matches.length).each do |i|
         if matches[i].length > max
