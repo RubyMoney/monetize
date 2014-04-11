@@ -28,18 +28,6 @@ module Monetize
     Money.new(fractional, currency)
   end
 
-  def self.find_best_match(matches) 
-    max = matches[0].length
-    best = matches[0]
-    (1...matches.length).each do |i|
-      if matches[i].length > max
-        best = matches[i]
-        max = best.length
-      end
-    end
-    best
-  end
-
   def self.compute_currency(input)
     known_symbols = {"$" => "USD", "€" => "EUR", "£" => "GBP", "R" => "ZAR", "R\\$" => "BRL"}
     matches = []
@@ -54,6 +42,18 @@ module Monetize
       best_match = find_best_match(matches)
       known_symbols[best_match]
     end
+  end
+
+  def self.find_best_match(matches)
+    max = matches[0].length
+    best = matches[0]
+    (1...matches.length).each do |i|
+      if matches[i].length > max
+        best = matches[i]
+        max = best.length
+      end
+    end
+    best
   end
 
   def self.from_string(value, currency = Money.default_currency)
