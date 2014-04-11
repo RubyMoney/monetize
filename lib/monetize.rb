@@ -13,7 +13,7 @@ module Monetize
     attr_accessor :assume_from_symbol
   end
 
- def self.parse(input, currency = Money.default_currency)
+  def self.parse(input, currency = Money.default_currency)
     input = input.to_s.strip
 
     computed_currency = compute_currency(input)
@@ -28,6 +28,18 @@ module Monetize
     Money.new(fractional, currency)
   end
 
+  def self.find_best_match(matches) 
+    max = matches[0].length
+    best = matches[0]
+    (1...matches.length).each do |i|
+      if matches[i].length > max
+        best = matches[i]
+        max = best.length
+      end
+    end
+    best
+  end
+
   def self.compute_currency(input)
     known_symbols = {"$" => "USD", "€" => "EUR", "£" => "GBP", "R" => "ZAR", "R\\$" => "BRL"}
     matches = []
@@ -39,14 +51,7 @@ module Monetize
     if matches.empty?
       input[/[A-Z]{2,3}/]
     else
-      max = matches[0].length
-      best_match = matches[0]
-      (1...matches.length).each do |i|
-        if matches[i].length > max
-          best_match = matches[i]
-          max = best_match.length
-        end
-      end
+      best_match = find_best_match(matches)
       known_symbols[best_match]
     end
   end
