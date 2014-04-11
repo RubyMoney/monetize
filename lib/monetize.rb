@@ -18,7 +18,7 @@ module Monetize
 
     computed_currency = compute_currency(input)
     if not assume_from_symbol
-      computed_currency = currency
+      computed_currency = input[/[A-Z]{2,3}/] || currency
     end
 
     currency = computed_currency || currency || Money.default_currency
