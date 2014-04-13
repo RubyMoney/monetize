@@ -16,21 +16,44 @@ module Monetize
   def self.parse(input, currency = Money.default_currency)
     input = input.to_s.strip
 
-    computed_currency = if assume_from_symbol && input =~ /^(\$|€|£)/
-                          case input
-                          when /^\$/ then "USD"
-                          when /^€/ then "EUR"
-                          when /^£/ then "GBP"
-                          end
-                        else
-                          input[/[A-Z]{2,3}/]
-                        end
+    computed_currency = compute_currency(input)
+    if not assume_from_symbol
+      computed_currency = input[/[A-Z]{2,3}/] || currency
+    end
 
     currency = computed_currency || currency || Money.default_currency
     currency = Money::Currency.wrap(currency)
 
     fractional = extract_cents(input, currency)
     Money.new(fractional, currency)
+  end
+
+  def self.compute_currency(input)
+    known_symbols = {"$" => "USD", "€" => "EUR", "£" => "GBP", "R" => "ZAR", "R\\$" => "BRL"}
+    matches = []
+    known_symbols.each do |k, v|
+      if input =~ /^#{k}/
+        matches << k
+      end
+    end
+    if matches.empty?
+      input[/[A-Z]{2,3}/]
+    else
+      best_match = find_best_match(matches)
+      known_symbols[best_match]
+    end
+  end
+
+  def self.find_best_match(matches)
+    max = matches[0].length
+    best = matches[0]
+    (1...matches.length).each do |i|
+      if matches[i].length > max
+        best = matches[i]
+        max = best.length
+      end
+    end
+    best
   end
 
   def self.from_string(value, currency = Money.default_currency)

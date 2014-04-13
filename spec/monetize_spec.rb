@@ -36,6 +36,7 @@ describe Monetize do
           expect(Monetize.parse("€5.95")).to eq Money.new(595, 'EUR')
           expect(Monetize.parse(" €5.95 ")).to eq Money.new(595, 'EUR')
           expect(Monetize.parse("£9.99")).to eq Money.new(999, 'GBP')
+          expect(Monetize.parse("R9.99")).to eq Money.new(999, 'ZAR')
         end
 
         it 'should assume default currency if not a recognised symbol' do
@@ -49,6 +50,7 @@ describe Monetize do
         it "parses formatted inputs with the currency passed as a symbol but ignores the symbol" do
           expect(Monetize.parse("$5.95")).to eq Money.new(595, 'USD')
           expect(Monetize.parse("€5.95")).to eq Money.new(595, 'USD')
+          expect(Monetize.parse("R5.95")).to eq Money.new(595, 'USD')
           expect(Monetize.parse(" €5.95 ")).to eq Money.new(595, 'USD')
           expect(Monetize.parse("£9.99")).to eq Money.new(999, 'USD')
 
