@@ -19,23 +19,30 @@ describe Monetize do
       expect(Monetize.parse('EUR 1.111.234.567,89')).to eq Money.new(111123456789, 'EUR')
     end
 
-    describe 'currency assumption' do
+    describe 'currency detection' do
+
       context 'opted in' do
-        before do
+        before :all do
           Monetize.assume_from_symbol = true
         end
 
-        after do
+        after :all do
           Monetize.assume_from_symbol = false
         end
 
-        it "parses formatted inputs with the currency passed as a symbol" do
-          original_currency = Money.default_currency
-          Money.default_currency = "EUR"
-          Money.default_currency = original_currency
+        it "parses formatted inputs with Euros passed as a symbol" do
           expect(Monetize.parse("€5.95")).to eq Money.new(595, 'EUR')
+        end
+
+        it "parses formatted inputs with Euros passed as a symbol with surrounding space" do
           expect(Monetize.parse(" €5.95 ")).to eq Money.new(595, 'EUR')
+        end
+
+        it "parses formatted inputs with British Pounds Sterling passed as a symbol" do
           expect(Monetize.parse("£9.99")).to eq Money.new(999, 'GBP')
+        end
+
+        it "parses formatted inputs with South African Rand passed as a symbol" do
           expect(Monetize.parse("R9.99")).to eq Money.new(999, 'ZAR')
         end
 
@@ -43,19 +50,29 @@ describe Monetize do
           expect(Monetize.parse("L9.99")).to eq Money.new(999, 'USD')
         end
       end
+
       context 'opted out' do
         before do
           Monetize.assume_from_symbol = false
         end
-        it "parses formatted inputs with the currency passed as a symbol but ignores the symbol" do
-          expect(Monetize.parse("$5.95")).to eq Money.new(595, 'USD')
-          expect(Monetize.parse("€5.95")).to eq Money.new(595, 'USD')
-          expect(Monetize.parse("R5.95")).to eq Money.new(595, 'USD')
-          expect(Monetize.parse(" €5.95 ")).to eq Money.new(595, 'USD')
-          expect(Monetize.parse("£9.99")).to eq Money.new(999, 'USD')
 
+        it "ignores the Euro symbol" do
+          expect(Monetize.parse("€5.95")).to eq Money.new(595, 'USD')
+        end
+
+        it "ignores the South African Rand symbol" do
+          expect(Monetize.parse("R5.95")).to eq Money.new(595, 'USD')
+        end
+
+        it "ignores the Euro symbol with surrounding spaces" do
+          expect(Monetize.parse(" €5.95 ")).to eq Money.new(595, 'USD')
+        end
+
+        it "ignores the British Pounds Sterling symbol" do
+          expect(Monetize.parse("£9.99")).to eq Money.new(999, 'USD')
         end
       end
+
       it 'should opt out by default' do
         expect(Monetize.assume_from_symbol).to be_falsy
       end
