@@ -6,6 +6,8 @@ require "monetize/version"
 
 module Monetize
 
+  NEGATIVE_NUMBER_RE = /\A-|-\z/
+
   # Class methods
   class << self
     # @attr_accessor [true, false] assume_from_symbol Use this to enable the
@@ -92,21 +94,15 @@ module Monetize
   end
 
   def self.extract_cents(input, currency = Money.default_currency)
-    num = input.gsub(/[^\d.,'-]/, '')
-
-    negative = num =~ /^-|-$/ ? true : false
+    @original_number = num = input.gsub(/[^\d.,'-]/, '')
 
     decimal_char = currency.decimal_mark
 
-    num = num.sub(/^-|-$/, '') if negative
+    num = strip_negative_symbols(num)
 
-    if num.include?('-')
-      raise ArgumentError, "Invalid currency amount (hyphen)"
-    end
+    num.sub!(/[\.,]\z/, '')
 
-    num.chop! if num.match(/[\.|,]$/)
-
-    used_delimiters = num.scan(/[^\d]/)
+    used_delimiters = num.scan(/[\D]/)
 
     case used_delimiters.uniq.length
     when 0
@@ -164,6 +160,23 @@ module Monetize
 
     cents += minor
 
-    negative ? cents * -1 : cents
+    negative? ? cents * -1 : cents
   end
+
+  def self.negative?
+    NEGATIVE_NUMBER_RE === @original_number
+  end
+
+  def self.contains_hyphen?(num)
+    if num.include?('-')
+      raise ArgumentError, "Invalid currency amount (hyphen)"
+    end
+    num
+  end
+
+  def self.strip_negative_symbols(num)
+    stripped_number = num.sub(NEGATIVE_NUMBER_RE, '')
+    contains_hyphen?(stripped_number)
+  end
+
 end
