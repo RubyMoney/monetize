@@ -7,10 +7,10 @@ require "monetize/version"
 module Monetize
 
   CURRENCY_SYMBOLS = {
-    "$" => "USD",
-    "€" => "EUR",
-    "£" => "GBP",
-    "R" => "ZAR",
+    "$"    => "USD",
+    "€"    => "EUR",
+    "£"    => "GBP",
+    "R"    => "ZAR",
     "R\\$" => "BRL"
   }
 
@@ -38,33 +38,6 @@ module Monetize
 
     fractional = extract_cents(input, currency)
     Money.new(fractional, currency)
-  end
-
-  def self.compute_currency(input)
-    matches = []
-    CURRENCY_SYMBOLS.each do |k, v|
-      if input =~ /^#{k}/
-        matches << k
-      end
-    end
-    if matches.empty?
-      input[/[A-Z]{2,3}/]
-    else
-      best_match = find_best_match(matches)
-      CURRENCY_SYMBOLS[best_match]
-    end
-  end
-
-  def self.find_best_match(matches)
-    max = matches[0].length
-    best = matches[0]
-    (1...matches.length).each do |i|
-      if matches[i].length > max
-        best = matches[i]
-        max = best.length
-      end
-    end
-    best
   end
 
   def self.from_string(value, currency = Money.default_currency)
@@ -176,5 +149,30 @@ module Monetize
     cents += minor
 
     negative ? cents * -1 : cents
+  end
+
+  private
+
+  def self.contains_currency_symbol?(amount)
+    currency_symbol_regex === amount
+  end
+
+  def self.compute_currency(amount)
+    if contains_currency_symbol?(amount)
+      matches = amount.match(currency_symbol_regex)
+      CURRENCY_SYMBOLS[matches[:symbol]]
+    else
+      amount[/[A-Z]{2,3}/]
+    end
+  end
+
+  def self.regex_safe_symbols
+    CURRENCY_SYMBOLS.keys.map { |key|
+      Regexp.escape(key)
+    }.join('|')
+  end
+
+  def self.currency_symbol_regex
+    /\A(?<symbol>#{regex_safe_symbols})/
   end
 end
