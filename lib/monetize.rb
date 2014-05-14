@@ -6,6 +6,14 @@ require "monetize/version"
 
 module Monetize
 
+  CURRENCY_SYMBOLS = {
+    "$" => "USD",
+    "€" => "EUR",
+    "£" => "GBP",
+    "R" => "ZAR",
+    "R\\$" => "BRL"
+  }
+
   class InvalidValue < ArgumentError; end
   class InvalidFormat < ArgumentError; end
   class InvalidAmount < ArgumentError; end
@@ -33,9 +41,8 @@ module Monetize
   end
 
   def self.compute_currency(input)
-    known_symbols = {"$" => "USD", "€" => "EUR", "£" => "GBP", "R" => "ZAR", "R\\$" => "BRL"}
     matches = []
-    known_symbols.each do |k, v|
+    CURRENCY_SYMBOLS.each do |k, v|
       if input =~ /^#{k}/
         matches << k
       end
@@ -44,7 +51,7 @@ module Monetize
       input[/[A-Z]{2,3}/]
     else
       best_match = find_best_match(matches)
-      known_symbols[best_match]
+      CURRENCY_SYMBOLS[best_match]
     end
   end
 
