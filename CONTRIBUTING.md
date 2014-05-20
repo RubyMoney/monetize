@@ -12,6 +12,6 @@
 
 ## Notes
 
-When contributing, please make sure to update the CHANGELOG and AUTHORS files
-when you submit your pull request. Upon merging of your first pull request,
-you will be given commit access to the repository.
+When contributing, please make sure to update the CHANGELOG when you submit
+your pull request. Upon merging of your first pull request, you will be
+given commit access to the repository.
