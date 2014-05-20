@@ -2,7 +2,7 @@
 
 ## Steps
 
-1. Fork [the repo](https://github.com/RubyMoney/money)
+1. Fork [the repo](https://github.com/RubyMoney/monetize)
 2. Grab dependencies: `bundle install`
 3. Make sure everything is working: `bundle exec rake spec`
 4. Make your changes
