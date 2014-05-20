@@ -10,8 +10,8 @@ module Monetize
     "$"    => "USD",
     "€"    => "EUR",
     "£"    => "GBP",
-    "R"    => "ZAR",
-    "R\\$" => "BRL"
+    "R$"   => "BRL",
+    "R"    => "ZAR"
   }
 
   # Class methods

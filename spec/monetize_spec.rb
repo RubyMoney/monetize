@@ -46,6 +46,10 @@ describe Monetize do
           expect(Monetize.parse("R9.99")).to eq Money.new(999, 'ZAR')
         end
 
+        it "parses formatted inputs with Brazilian real passed as a symbol" do
+          expect(Monetize.parse("R$R9.99")).to eq Money.new(999, 'BRL')
+        end
+
         it 'should assume default currency if not a recognised symbol' do
           expect(Monetize.parse("L9.99")).to eq Money.new(999, 'USD')
         end
