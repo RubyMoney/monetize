@@ -4,6 +4,10 @@ require "money"
 require "monetize/core_extensions"
 require "monetize/version"
 
+class InvalidValue < ArgumentError; end
+class InvalidFormat < ArgumentError; end
+class InvalidAmount < ArgumentError; end
+
 module Monetize
 
   CURRENCY_SYMBOLS = {
@@ -67,7 +71,7 @@ module Monetize
       value = BigDecimal.new(value.to_s)
       from_bigdecimal(value, currency)
     else
-      raise ArgumentError, "'value' should be a type of Numeric"
+      raise InvalidValue, "'value' should be a type of Numeric"
     end
   end
 
@@ -81,7 +85,7 @@ module Monetize
     num = num.sub(/^-|-$/, '') if negative
 
     if num.include?('-')
-      raise ArgumentError, "Invalid currency amount (hyphen)"
+      raise InvalidFormat, "Invalid currency amount (hyphen)"
     end
 
     num.chop! if num.match(/[\.|,]$/)
@@ -125,7 +129,7 @@ module Monetize
         end
       end
     else
-      raise ArgumentError, "Invalid currency amount"
+      raise InvalidAmount, "Invalid currency amount"
     end
 
     cents = major.to_i * currency.subunit_to_unit
