@@ -96,9 +96,9 @@ describe Monetize do
     end
 
     it "does not return a price if there is a price range" do
-      expect { Monetize.parse('$5.95-10.95') }.to raise_error ArgumentError
-      expect { Monetize.parse('$5.95 - 10.95') }.to raise_error ArgumentError
-      expect { Monetize.parse('$5.95 - $10.95') }.to raise_error ArgumentError
+      expect { Monetize.parse('$5.95-10.95') }.to raise_error Monetize::InvalidFormat
+      expect { Monetize.parse('$5.95 - 10.95') }.to raise_error Monetize::InvalidFormat
+      expect { Monetize.parse('$5.95 - $10.95') }.to raise_error Monetize::InvalidFormat
     end
 
     it "does not return a price for completely invalid input" do
@@ -116,7 +116,7 @@ describe Monetize do
     end
 
     it "raises ArgumentError when unable to detect polarity" do
-      expect { Monetize.parse('-$5.95-') }.to raise_error ArgumentError
+      expect { Monetize.parse('-$5.95-') }.to raise_error Monetize::InvalidFormat
     end
 
     it "parses correctly strings with exactly 3 decimal digits" do
@@ -300,7 +300,7 @@ describe Monetize do
     end
 
     it "raises ArgumentError with unsupported argument" do
-      expect { Monetize.from_numeric("100") }.to raise_error(ArgumentError)
+      expect { Monetize.from_numeric("100") }.to raise_error(Monetize::InvalidValue)
     end
 
     it "optimizes workload" do
