@@ -4,11 +4,11 @@ require "money"
 require "monetize/core_extensions"
 require "monetize/version"
 
-class InvalidValue < ArgumentError; end
-class InvalidFormat < ArgumentError; end
-class InvalidAmount < ArgumentError; end
-
 module Monetize
+
+  class InvalidValue < ArgumentError; end
+  class InvalidFormat < ArgumentError; end
+  class InvalidAmount < ArgumentError; end
 
   # Class methods
   class << self
