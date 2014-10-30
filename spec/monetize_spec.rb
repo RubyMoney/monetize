@@ -53,6 +53,10 @@ describe Monetize do
         it 'should assume default currency if not a recognised symbol' do
           expect(Monetize.parse("L9.99")).to eq Money.new(999, 'USD')
         end
+
+        it 'parses formatted inputs without currency detection when overridden' do
+          expect(Monetize.parse("£9.99", nil, assume_from_symbol: false)).to eq Money.new(999, 'USD')
+        end
       end
 
       context 'opted out' do
@@ -74,6 +78,10 @@ describe Monetize do
 
         it "ignores the British Pounds Sterling symbol" do
           expect(Monetize.parse("£9.99")).to eq Money.new(999, 'USD')
+        end
+
+        it 'parses formatted inputs with currency detection when overridden' do
+          expect(Monetize.parse("£9.99", nil, assume_from_symbol: true)).to eq Money.new(999, 'GBP')
         end
       end
 
