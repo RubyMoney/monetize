@@ -189,7 +189,7 @@ describe Monetize do
     it "respects :subunit_to_unit currency property" do
       expect(Monetize.from_string("1", "USD")).to eq Money.new(1_00, "USD")
       expect(Monetize.from_string("1", "TND")).to eq Money.new(1_000, "TND")
-      expect(Monetize.from_string("1", "CLP")).to eq Money.new(1, "CLP")
+      expect(Monetize.from_string("1", "JPY")).to eq Money.new(1, "JPY")
     end
 
     it "accepts a currency options" do
@@ -214,7 +214,7 @@ describe Monetize do
     it "should respect :subunit_to_unit currency property" do
       expect(Monetize.from_fixnum(1, "USD")).to eq Money.new(1_00, "USD")
       expect(Monetize.from_fixnum(1, "TND")).to eq Money.new(1_000, "TND")
-      expect(Monetize.from_fixnum(1, "CLP")).to eq Money.new(1, "CLP")
+      expect(Monetize.from_fixnum(1, "JPY")).to eq Money.new(1, "JPY")
     end
 
     it "accepts a currency options" do
@@ -239,7 +239,7 @@ describe Monetize do
     it "respects :subunit_to_unit currency property" do
       expect(Monetize.from_float(1.2, "USD")).to eq Money.new(1_20, "USD")
       expect(Monetize.from_float(1.2, "TND")).to eq Money.new(1_200, "TND")
-      expect(Monetize.from_float(1.2, "CLP")).to eq Money.new(1, "CLP")
+      expect(Monetize.from_float(1.2, "JPY")).to eq Money.new(1, "JPY")
     end
 
     it "accepts a currency options" do
@@ -264,7 +264,7 @@ describe Monetize do
     it "respects :subunit_to_unit currency property" do
       expect(Monetize.from_bigdecimal(BigDecimal.new("1"), "USD")).to eq Money.new(1_00, "USD")
       expect(Monetize.from_bigdecimal(BigDecimal.new("1"), "TND")).to eq Money.new(1_000, "TND")
-      expect(Monetize.from_bigdecimal(BigDecimal.new("1"), "CLP")).to eq Money.new(1, "CLP")
+      expect(Monetize.from_bigdecimal(BigDecimal.new("1"), "JPY")).to eq Money.new(1, "JPY")
     end
 
     it "accepts a currency options" do
@@ -317,7 +317,7 @@ describe Monetize do
     it "respects :subunit_to_unit currency property" do
       expect(Monetize.from_numeric(1, "USD")).to eq Money.new(1_00, "USD")
       expect(Monetize.from_numeric(1, "TND")).to eq Money.new(1_000, "TND")
-      expect(Monetize.from_numeric(1, "CLP")).to eq Money.new(1, "CLP")
+      expect(Monetize.from_numeric(1, "JPY")).to eq Money.new(1, "JPY")
     end
 
     it "accepts a bank option" do

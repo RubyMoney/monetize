@@ -29,7 +29,7 @@ describe Monetize, "core extensions" do
       it "respects :subunit_to_unit currency property" do
         expect(10.to_money('USD')).to eq Money.new(10_00, 'USD')
         expect(10.to_money('TND')).to eq Money.new(10_000, 'TND')
-        expect(10.to_money('CLP')).to eq Money.new(10, 'CLP')
+        expect(10.to_money('JPY')).to eq Money.new(10, 'JPY')
       end
 
       specify "GH-15" do
@@ -124,7 +124,7 @@ describe Monetize, "core extensions" do
       it "respects :subunit_to_unit currency property" do
         expect("1".to_money("USD")).to eq Money.new(1_00,  "USD")
         expect("1".to_money("TND")).to eq Money.new(1_000, "TND")
-        expect("1".to_money("CLP")).to eq Money.new(1,     "CLP")
+        expect("1".to_money("JPY")).to eq Money.new(1,     "JPY")
         expect("1.5".to_money("KWD").cents).to eq 1500
       end
     end
