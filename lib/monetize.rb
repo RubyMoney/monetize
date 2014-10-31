@@ -21,13 +21,14 @@ module Monetize
     attr_accessor :assume_from_symbol
   end
 
-  def self.parse(input, currency = Money.default_currency)
+  def self.parse(input, currency = Money.default_currency, options = {})
     input = input.to_s.strip
 
-    computed_currency = compute_currency(input)
-    if not assume_from_symbol
-      computed_currency = input[/[A-Z]{2,3}/] || currency
-    end
+    computed_currency = if options.fetch(:assume_from_symbol) { assume_from_symbol }
+                          compute_currency(input)
+                        else
+                          input[/[A-Z]{2,3}/]
+                        end
 
     currency = computed_currency || currency || Money.default_currency
     currency = Money::Currency.wrap(currency)
