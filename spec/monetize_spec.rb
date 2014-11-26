@@ -57,6 +57,27 @@ describe Monetize do
         it 'parses formatted inputs without currency detection when overridden' do
           expect(Monetize.parse("£9.99", nil, assume_from_symbol: false)).to eq Money.new(999, 'USD')
         end
+
+        it 'parses formatted inputs with minus sign and currency symbol' do
+          expect(Monetize.parse("-€9.99")).to eq Money.new(-999, 'EUR')
+          expect(Monetize.parse("-£9.99")).to eq Money.new(-999, 'GBP')
+          expect(Monetize.parse("-R$R9.99")).to eq Money.new(-999, 'BRL')
+        end
+
+        it 'parses formatted inputs with plus and GBP passed as symbol' do
+          expect(Monetize.parse("+€9.99")).to eq Money.new(999, 'EUR')
+          expect(Monetize.parse("+£9.99")).to eq Money.new(999, 'GBP')
+          expect(Monetize.parse("+R$R9.99")).to eq Money.new(999, 'BRL')
+        end
+
+        it 'parses formatted inputs with currency symbol and postfix minus sign' do
+          expect(Monetize.parse("€9.99-")).to eq Money.new(-999, 'EUR')
+        end
+
+        it 'parses formatted inputs with currency symbol and postfix plus sign' do
+          expect(Monetize.parse("€9.99+")).to eq Money.new(999, 'EUR')
+        end
+
       end
 
       context 'opted out' do
