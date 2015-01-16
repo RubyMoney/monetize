@@ -3,6 +3,7 @@
 require "money"
 require "monetize/core_extensions"
 require "monetize/version"
+require "collection"
 
 module Monetize
 
@@ -36,6 +37,10 @@ module Monetize
 
     fractional = extract_cents(input, currency)
     Money.new(fractional, currency)
+  end
+
+  def self.parse_collection(input, currency = Money.default_currency, options = {})
+    Collection.parse(input, currency, options)
   end
 
   def self.from_string(value, currency = Money.default_currency)
