@@ -26,19 +26,22 @@ Or install it yourself as:
 ## Usage
 
 ```ruby
-Monetize.parse("$100") == Money.new(100_00, "USD")
-Monetize.parse("€100") == Money.new(100_00, "EUR")
-Monetize.parse("£100") == Money.new(100_00, "GBP")
+Monetize.parse("USD 100") == Money.new(100_00, "USD")
+Monetize.parse("EUR 100") == Money.new(100_00, "EUR")
+Monetize.parse("GBP 100") == Money.new(100_00, "GBP")
 
 "100".to_money == Money.new(100_00, "USD")
 ```
 
-Optionally, enable the ability to assume the currency from a passed symbol.
+Optionally, enable the ability to assume the currency from a passed symbol. Otherwise, currency symbols will be ignored, and USD used as the default currency:
 
 ```ruby
+Monetize.parse("£100") == Money.new(100_00, "USD")
+
 Monetize.assume_from_symbol = true
 
-"$100".to_money == Money.new(100_00, "USD")
+Monetize.parse("£100") == Money.new(100_00, "GBP")
+"€100".to_money == Money.new(100_00, "EUR")
 ```
 
 ## Contributing
