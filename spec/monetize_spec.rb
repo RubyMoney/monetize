@@ -213,6 +213,30 @@ describe Monetize do
     end
   end
 
+  describe ".parse_collection" do
+    it "parses into a Money::Collection" do
+      expect(Monetize.parse_collection("$7")).to be_a Monetize::Collection
+    end
+
+    it "parses comma separated values" do
+      collection = Monetize.parse_collection("$5, $7")
+      expect(collection.first).to eq Monetize.parse("$5")
+      expect(collection.last).to eq Monetize.parse("$7")
+    end
+
+    it "parses slash separated values" do
+      collection = Monetize.parse_collection("£4.50/€6")
+      expect(collection.first).to eq Monetize.parse("£4.50")
+      expect(collection.last).to eq Monetize.parse("€6")
+    end
+
+    it "parses hyphens as ranges" do
+      collection = Monetize.parse_collection("$4 - $10")
+      expect(collection.first).to eq Monetize.parse("$4")
+      expect(collection.last).to eq Monetize.parse("$10")
+    end
+  end
+
   describe ".from_string" do
     it "converts given amount to cents" do
       expect(Monetize.from_string("1")).to eq Money.new(1_00)

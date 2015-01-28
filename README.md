@@ -44,6 +44,16 @@ Monetize.parse("£100") == Money.new(100_00, "GBP")
 "€100".to_money == Money.new(100_00, "EUR")
 ```
 
+Monetize can also parse a list of values, returning an array-like object ([Monetize::Collection](lib/collection.rb)):
+
+```ruby
+Monetize.parse_collection("€80/$100") == [Money.new(80_00, "EUR"), Money.new(100_00, "USD")]
+Monetize.parse_collection("€80, $100") == [Money.new(80_00, "EUR"), Money.new(100_00, "USD")]
+
+# The #range? method detects the presence of a hyphen
+Monetize.parse_collection("€80-$100").range? == true
+```
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
