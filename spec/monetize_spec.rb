@@ -54,6 +54,10 @@ describe Monetize do
           expect(Monetize.parse("¥999")).to eq Money.new(999, 'JPY')
         end
 
+        it "parses formatted inputs with Canadian Dollar passed as a symbol" do
+          expect(Monetize.parse("C$9.99")).to eq Money.new(999, 'CAD')
+        end
+
         it 'should assume default currency if not a recognised symbol' do
           expect(Monetize.parse("L9.99")).to eq Money.new(999, 'USD')
         end
@@ -67,12 +71,16 @@ describe Monetize do
           expect(Monetize.parse("-£9.99")).to eq Money.new(-999, 'GBP')
           expect(Monetize.parse("-R$R9.99")).to eq Money.new(-999, 'BRL')
           expect(Monetize.parse("-¥999")).to eq Money.new(-999, 'JPY')
+          expect(Monetize.parse("-C$9.99")).to eq Money.new(-999, 'CAD')
         end
 
         it 'parses formatted inputs with plus and GBP passed as symbol' do
           expect(Monetize.parse("+€9.99")).to eq Money.new(999, 'EUR')
           expect(Monetize.parse("+£9.99")).to eq Money.new(999, 'GBP')
           expect(Monetize.parse("+R$R9.99")).to eq Money.new(999, 'BRL')
+          expect(Monetize.parse("+¥999")).to eq Money.new(999, 'JPY')
+          expect(Monetize.parse("+C$9.99")).to eq Money.new(999, 'CAD')
+
         end
 
         it 'parses formatted inputs with currency symbol and postfix minus sign' do

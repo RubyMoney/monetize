@@ -13,7 +13,8 @@ module Monetize
     "£"    => "GBP",
     "R$"   => "BRL",
     "R"    => "ZAR",
-    "¥"    => "JPY"
+    "¥"    => "JPY",
+    "C$"   => "CAD"
   }
 
   # Class methods
