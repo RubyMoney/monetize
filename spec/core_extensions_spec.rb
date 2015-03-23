@@ -5,6 +5,21 @@ require "monetize"
 require "monetize/core_extensions"
 
 describe Monetize, "core extensions" do
+  describe NilClass do
+    describe "#to_money" do
+      it "work as documented" do
+        money = nil.to_money
+        expect(money.cents).to eq 0
+        expect(money.currency).to eq Money.default_currency
+      end
+
+      it "accepts optional currency" do
+        expect(nil.to_money('USD')).to eq Money.new(nil, 'USD')
+        expect(nil.to_money('EUR')).to eq Money.new(nil, 'EUR')
+      end
+    end
+  end
+
   describe Numeric do
     describe "#to_money" do
       it "work as documented" do
