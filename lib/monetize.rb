@@ -11,6 +11,7 @@ module Monetize
     "$"    => "USD",
     "€"    => "EUR",
     "£"    => "GBP",
+    "₤"    => "GBP",
     "R$"   => "BRL",
     "R"    => "ZAR",
     "¥"    => "JPY",
