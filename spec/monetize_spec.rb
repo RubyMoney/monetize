@@ -42,6 +42,10 @@ describe Monetize do
           expect(Monetize.parse("£9.99")).to eq Money.new(999, 'GBP')
         end
 
+        it "parses formatted inputs with British Pounds Sterling passed as a lira sign symbol" do
+          expect(Monetize.parse("₤9.99")).to eq Money.new(999, 'GBP')
+        end
+
         it "parses formatted inputs with South African Rand passed as a symbol" do
           expect(Monetize.parse("R9.99")).to eq Money.new(999, 'ZAR')
         end
