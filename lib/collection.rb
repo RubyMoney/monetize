@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 require 'monetize'
+require 'forwardable'
 
 module Monetize
   class Collection
