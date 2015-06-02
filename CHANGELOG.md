@@ -2,6 +2,7 @@
 
 ## Master
 - Required Forwardable on Collection to resolve NameError [\#44](https://github.com/RubyMoney/monetize/issues/44)
+- Add capability to parse currency amounts given with suffixes (K, M, B, and T)
 
 ## 1.3.0
 - Add NilClass extension

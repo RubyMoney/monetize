@@ -95,6 +95,13 @@ describe Monetize do
           expect(Monetize.parse("€9.99+")).to eq Money.new(999, 'EUR')
         end
 
+        it 'parses formatted inputs with amounts given with suffixes' do
+          expect(Monetize.parse('$1.26K')).to eq Money.new(1_260_00, 'USD')
+          expect(Monetize.parse('$126.36M')).to eq Money.new(126_360_000_00, 'USD')
+          expect(Monetize.parse('€.45B')).to eq Money.new(450_000_000_00, 'EUR')
+          expect(Monetize.parse('-$2.45B')).to eq Money.new(-2_450_000_000_00, 'USD')
+          expect(Monetize.parse('€1.65T')).to eq Money.new(1_650_000_000_000_00, 'EUR')
+        end
       end
 
       context 'opted out' do

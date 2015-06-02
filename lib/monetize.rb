@@ -18,6 +18,15 @@ module Monetize
     "C$"   => "CAD"
   }
 
+  MULTIPLIER_SUFFIXES = {
+    "K"    => 3,
+    "M"    => 6,
+    "B"    => 9,
+    "T"    => 12
+  }
+  MULTIPLIER_SUFFIXES.default = 0
+  MULTIPLIER_REGEXP = Regexp.new('\d(%s)\b[^\d]*$' % MULTIPLIER_SUFFIXES.keys.join('|'), 'i')
+
   # Class methods
   class << self
     # @attr_accessor [true, false] assume_from_symbol Use this to enable the
@@ -81,6 +90,9 @@ module Monetize
   end
 
   def self.extract_cents(input, currency = Money.default_currency)
+    multiplier_suffix = (matches = MULTIPLIER_REGEXP.match(input)) ? matches[1].upcase : nil
+    multiplier_exp = MULTIPLIER_SUFFIXES[multiplier_suffix]
+
     num = input.gsub(/[^\d.,'-]/, '')
 
     negative = num =~ /^-|-$/ ? true : false
@@ -138,7 +150,13 @@ module Monetize
     end
 
     cents = major.to_i * currency.subunit_to_unit
-    minor = minor.to_s
+
+    cents *= (10 ** multiplier_exp)
+    minor = minor.to_s + ('0' * multiplier_exp)
+    shift = minor[0 ... multiplier_exp].to_i * 100
+    cents += shift
+    minor = (minor[multiplier_exp .. -1] || '')
+
     minor = if minor.size < currency.decimal_places
               (minor + ("0" * currency.decimal_places))[0,currency.decimal_places].to_i
             elsif minor.size > currency.decimal_places
