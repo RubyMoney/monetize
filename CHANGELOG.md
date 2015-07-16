@@ -9,3 +9,6 @@
 - Added correct parsing of Brazilian Real $R symbol
 - Add testing task for  Brazilian Real parsing 
 - Add Lira Sign (₤) as a symbol for GBP
+
+## 1.3.1
+- Updated Money version dependency to 6.6
