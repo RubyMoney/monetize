@@ -1,9 +1,9 @@
 # encoding: utf-8
-require "coveralls"
+require 'coveralls'
 Coveralls.wear!
 
-require "money"
+require 'money'
 
 RSpec.configure do |config|
-  config.order = "random"
+  config.order = 'random'
 end

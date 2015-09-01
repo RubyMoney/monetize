@@ -1,28 +1,28 @@
 # encoding: utf-8
 
-require "money"
-require "monetize/core_extensions"
-require "monetize/version"
-require "collection"
+require 'money'
+require 'monetize/core_extensions'
+require 'monetize/version'
+require 'collection'
 
 module Monetize
 
   CURRENCY_SYMBOLS = {
-    "$"    => "USD",
-    "€"    => "EUR",
-    "£"    => "GBP",
-    "₤"    => "GBP",
-    "R$"   => "BRL",
-    "R"    => "ZAR",
-    "¥"    => "JPY",
-    "C$"   => "CAD"
+    '$'    => 'USD',
+    '€'    => 'EUR',
+    '£'    => 'GBP',
+    '₤'    => 'GBP',
+    'R$'   => 'BRL',
+    'R'    => 'ZAR',
+    '¥'    => 'JPY',
+    'C$'   => 'CAD'
   }
 
   MULTIPLIER_SUFFIXES = {
-    "K"    => 3,
-    "M"    => 6,
-    "B"    => 9,
-    "T"    => 12
+    'K'    => 3,
+    'M'    => 6,
+    'B'    => 9,
+    'T'    => 12
   }
   MULTIPLIER_SUFFIXES.default = 0
   MULTIPLIER_REGEXP = Regexp.new('\d(%s)\b[^\d]*$' % MULTIPLIER_SUFFIXES.keys.join('|'), 'i')
@@ -102,7 +102,7 @@ module Monetize
     num = num.sub(/^-|-$/, '') if negative
 
     if num.include?('-')
-      raise ArgumentError, "Invalid currency amount (hyphen)"
+      raise ArgumentError, 'Invalid currency amount (hyphen)'
     end
 
     num.chop! if num.match(/[\.|,]$/)
@@ -127,8 +127,8 @@ module Monetize
           major, minor = num.gsub(decimal_mark, ''), 0
         else
           possible_major, possible_minor = num.split(decimal_mark)
-          possible_major ||= "0"
-          possible_minor ||= "00"
+          possible_major ||= '0'
+          possible_minor ||= '00'
 
           if possible_minor.length != 3 # thousands_separator
             major, minor = possible_major, possible_minor
@@ -146,7 +146,7 @@ module Monetize
         end
       end
     else
-      raise ArgumentError, "Invalid currency amount"
+      raise ArgumentError, 'Invalid currency amount'
     end
 
     cents = major.to_i * currency.subunit_to_unit
@@ -159,7 +159,7 @@ module Monetize
     minor = if Money.infinite_precision
               (BigDecimal.new(minor) / (10 ** minor.size)) * currency.subunit_to_unit
             elsif minor.size < currency.decimal_places
-              (minor + ("0" * currency.decimal_places))[0,currency.decimal_places].to_i
+              (minor + ('0' * currency.decimal_places))[0,currency.decimal_places].to_i
             elsif minor.size > currency.decimal_places
               if minor[currency.decimal_places,1].to_i >= 5
                 minor[0,currency.decimal_places].to_i+1
