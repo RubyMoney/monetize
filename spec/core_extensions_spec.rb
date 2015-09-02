@@ -169,7 +169,7 @@ describe Monetize, 'core extensions' do
     describe '#to_money' do
 
       context 'when currency is present in hash' do
-        subject(:hash){ {cents: 5, currency: 'EUR'} }
+        subject(:hash) { {cents: 5, currency: 'EUR'} }
 
         it 'converts Hash to Money using key from hash' do
           expect(hash.to_money).to eq(Money.new(5, 'EUR'))
@@ -177,7 +177,7 @@ describe Monetize, 'core extensions' do
       end
 
       context 'when currency is passed as argument' do
-        subject(:hash){ {cents: 10} }
+        subject(:hash) { {cents: 10} }
 
         it 'converts Hash to Money using passed currency argument' do
           expect(hash.to_money('JPY')).to eq(Money.new(10, 'JPY'))
@@ -185,7 +185,7 @@ describe Monetize, 'core extensions' do
       end
 
       context 'when no currency is passed' do
-        subject(:hash){ {cents: 123} }
+        subject(:hash) { {cents: 123} }
 
         before { allow(Money).to receive(:default_currency).and_return('USD') }
 
