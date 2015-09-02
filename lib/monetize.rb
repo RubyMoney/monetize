@@ -117,7 +117,7 @@ module Monetize
       thousands_separator, decimal_mark = used_delimiters.uniq
 
       major, minor = num.gsub(thousands_separator, '').split(decimal_mark)
-      min = 0 unless min
+      minor = 0 unless minor
     when 1
       decimal_mark = used_delimiters.first
 
