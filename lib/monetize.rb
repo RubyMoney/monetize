@@ -111,7 +111,8 @@ module Monetize
 
     case used_delimiters.uniq.length
     when 0
-      major, minor = num, 0
+      major = num
+      minor = 0
     when 2
       thousands_separator, decimal_mark = used_delimiters.uniq
 
@@ -124,22 +125,27 @@ module Monetize
         major, minor = num.split(decimal_char)
       else
         if num.scan(decimal_mark).length > 1 # multiple matches; treat as decimal_mark
-          major, minor = num.gsub(decimal_mark, ''), 0
+          major = num.gsub(decimal_mark, '')
+          minor = 0
         else
           possible_major, possible_minor = num.split(decimal_mark)
           possible_major ||= '0'
           possible_minor ||= '00'
 
           if possible_minor.length != 3 # thousands_separator
-            major, minor = possible_major, possible_minor
+            major = possible_major
+            minor = possible_minor
           else
             if possible_major.length > 3
-              major, minor = possible_major, possible_minor
+              major = possible_major
+              minor = possible_minor
             else
               if decimal_mark == '.'
-                major, minor = possible_major, possible_minor
+                major = possible_major
+                minor = possible_minor
               else
-                major, minor = "#{possible_major}#{possible_minor}", 0
+                major = "#{possible_major}#{possible_minor}"
+                minor = 0
               end
             end
           end
