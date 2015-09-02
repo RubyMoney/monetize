@@ -6,7 +6,6 @@ require 'monetize/version'
 require 'collection'
 
 module Monetize
-
   CURRENCY_SYMBOLS = {
     '$'    => 'USD',
     '€'    => 'EUR',
