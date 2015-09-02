@@ -100,9 +100,7 @@ module Monetize
 
     num = num.sub(/^-|-$/, '') if negative
 
-    if num.include?('-')
-      fail ArgumentError, 'Invalid currency amount (hyphen)'
-    end
+    fail ArgumentError, 'Invalid currency amount (hyphen)' if num.include?('-')
 
     num.chop! if num.match(/[\.|,]$/)
 
