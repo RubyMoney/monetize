@@ -12,3 +12,6 @@
 
 ## 1.3.1
 - Updated Money version dependency to 6.6
+
+## master
+- Fixed support for <code>Money.infinite_precision = true</code> in .to_money

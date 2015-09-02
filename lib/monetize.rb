@@ -156,8 +156,9 @@ module Monetize
     shift = minor[0 ... multiplier_exp].to_i * 100
     cents += shift
     minor = (minor[multiplier_exp .. -1] || '')
-
-    minor = if minor.size < currency.decimal_places
+    minor = if Money.infinite_precision
+              (BigDecimal.new(minor) / (10 ** minor.size)) * currency.subunit_to_unit
+            elsif minor.size < currency.decimal_places
               (minor + ("0" * currency.decimal_places))[0,currency.decimal_places].to_i
             elsif minor.size > currency.decimal_places
               if minor[currency.decimal_places,1].to_i >= 5
