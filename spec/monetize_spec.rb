@@ -182,13 +182,13 @@ describe Monetize do
 
     context 'custom currencies with 4 decimal places' do
       before :each do
-        Money::Currency.register(JSON.parse(bar, :symbolize_names => true))
-        Money::Currency.register(JSON.parse(eu4, :symbolize_names => true))
+        Money::Currency.register(JSON.parse(bar, symbolize_names: true))
+        Money::Currency.register(JSON.parse(eu4, symbolize_names: true))
       end
 
       after :each do
-        Money::Currency.unregister(JSON.parse(bar, :symbolize_names => true))
-        Money::Currency.unregister(JSON.parse(eu4, :symbolize_names => true))
+        Money::Currency.unregister(JSON.parse(bar, symbolize_names: true))
+        Money::Currency.unregister(JSON.parse(eu4, symbolize_names: true))
       end
 
       # String#to_money(Currency) is equivalent to Monetize.parse(String, Currency)
