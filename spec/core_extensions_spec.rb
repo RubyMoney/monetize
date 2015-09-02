@@ -117,7 +117,7 @@ describe Monetize, 'core extensions' do
         '$-1,955 USD'     => Money.new(-1_955_00, 'USD'),
         '$1,194.5900 USD' => Money.new(1_194_59, 'USD'),
         '$-1,955.000 USD' => Money.new(-1_955_00, 'USD'),
-        '$1.99000 USD'    => Money.new(1_99, 'USD'),
+        '$1.99000 USD'    => Money.new(1_99, 'USD')
       }
 
       it 'works as documented' do
