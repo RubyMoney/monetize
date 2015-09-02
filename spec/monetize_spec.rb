@@ -15,8 +15,8 @@ describe Monetize do
     end
 
     it 'parses european-formatted inputs with multiple thousands-seperators' do
-      expect(Monetize.parse('EUR 1.234.567,89')).to eq Money.new(123456789, 'EUR')
-      expect(Monetize.parse('EUR 1.111.234.567,89')).to eq Money.new(111123456789, 'EUR')
+      expect(Monetize.parse('EUR 1.234.567,89')).to eq Money.new(1_234_567_89, 'EUR')
+      expect(Monetize.parse('EUR 1.111.234.567,89')).to eq Money.new(1_111_234_567_89, 'EUR')
     end
 
     describe 'currency detection' do
@@ -148,8 +148,8 @@ describe Monetize do
     end
 
     it 'parses USD-formatted inputs with multiple thousands-seperators' do
-      expect(Monetize.parse('1,234,567.89')).to eq Money.new(123456789, 'USD')
-      expect(Monetize.parse('1,111,234,567.89')).to eq Money.new(111123456789, 'USD')
+      expect(Monetize.parse('1,234,567.89')).to eq Money.new(1_234_567_89, 'USD')
+      expect(Monetize.parse('1,111,234,567.89')).to eq Money.new(1_111_234_567_89, 'USD')
     end
 
     it 'does not return a price if there is a price range' do
@@ -214,20 +214,23 @@ describe Monetize do
         expect('$0.5324'.to_money('BAR')).to eq Money.new(5324, 'BAR')
         expect('€0,5324'.to_money('EU4')).to eq Money.new(5324, 'EU4')
 
-        expect('$6.5324'.to_money('BAR')).to eq Money.new(65324, 'BAR')
-        expect('€6,5324'.to_money('EU4')).to eq Money.new(65324, 'EU4')
+        # Following currencies consider 4 decimal places
+        # rubocop:disable Style/NumericLiterals
+        expect('$6.5324'.to_money('BAR')).to eq Money.new(6_5324, 'BAR')
+        expect('€6,5324'.to_money('EU4')).to eq Money.new(6_5324, 'EU4')
 
-        expect('$86.5324'.to_money('BAR')).to eq Money.new(865324, 'BAR')
-        expect('€86,5324'.to_money('EU4')).to eq Money.new(865324, 'EU4')
+        expect('$86.5324'.to_money('BAR')).to eq Money.new(86_5324, 'BAR')
+        expect('€86,5324'.to_money('EU4')).to eq Money.new(86_5324, 'EU4')
 
-        expect('$186.5324'.to_money('BAR')).to eq Money.new(1865324, 'BAR')
-        expect('€186,5324'.to_money('EU4')).to eq Money.new(1865324, 'EU4')
+        expect('$186.5324'.to_money('BAR')).to eq Money.new(186_5324, 'BAR')
+        expect('€186,5324'.to_money('EU4')).to eq Money.new(186_5324, 'EU4')
 
-        expect('$3,331.0034'.to_money('BAR')).to eq Money.new(33310034, 'BAR')
-        expect('€3.331,0034'.to_money('EU4')).to eq Money.new(33310034, 'EU4')
+        expect('$3,331.0034'.to_money('BAR')).to eq Money.new(3_331_0034, 'BAR')
+        expect('€3.331,0034'.to_money('EU4')).to eq Money.new(3_331_0034, 'EU4')
 
-        expect('$8,883,331.0034'.to_money('BAR')).to eq Money.new(88833310034, 'BAR')
-        expect('€8.883.331,0034'.to_money('EU4')).to eq Money.new(88833310034, 'EU4')
+        expect('$8,883,331.0034'.to_money('BAR')).to eq Money.new(8_883_331_0034, 'BAR')
+        expect('€8.883.331,0034'.to_money('EU4')).to eq Money.new(8_883_331_0034, 'EU4')
+        # rubocop:enable Style/NumericLiterals
       end
     end
   end

@@ -24,7 +24,7 @@ describe Monetize, 'core extensions' do
     describe '#to_money' do
       it 'work as documented' do
         money = 1234.to_money
-        expect(money.cents).to eq 1234_00
+        expect(money.cents).to eq 1_234_00
         expect(money.currency).to eq Money.default_currency
 
         money = 100.37.to_money
@@ -32,13 +32,13 @@ describe Monetize, 'core extensions' do
         expect(money.currency).to eq Money.default_currency
 
         money = BigDecimal.new('1234').to_money
-        expect(money.cents).to eq 1234_00
+        expect(money.cents).to eq 1_234_00
         expect(money.currency).to eq Money.default_currency
       end
 
       it 'accepts optional currency' do
-        expect(1234.to_money('USD')).to eq Money.new(123400, 'USD')
-        expect(1234.to_money('EUR')).to eq Money.new(123400, 'EUR')
+        expect(1234.to_money('USD')).to eq Money.new(1_234_00, 'USD')
+        expect(1234.to_money('EUR')).to eq Money.new(1_234_00, 'EUR')
       end
 
       it 'respects :subunit_to_unit currency property' do
@@ -49,7 +49,7 @@ describe Monetize, 'core extensions' do
 
       specify 'GH-15' do
         amount = 555.55.to_money
-        expect(amount).to eq Money.new(55555)
+        expect(amount).to eq Money.new(555_55)
       end
     end
   end
@@ -131,24 +131,24 @@ describe Monetize, 'core extensions' do
       end
 
       it 'accepts optional currency' do
-        expect('10.10'.to_money('USD')).to eq Money.new(1010, 'USD')
-        expect('10.10'.to_money('EUR')).to eq Money.new(1010, 'EUR')
-        expect('10.10 USD'.to_money('USD')).to eq Money.new(1010, 'USD')
+        expect('10.10'.to_money('USD')).to eq Money.new(10_10, 'USD')
+        expect('10.10'.to_money('EUR')).to eq Money.new(10_10, 'EUR')
+        expect('10.10 USD'.to_money('USD')).to eq Money.new(10_10, 'USD')
       end
 
       it 'uses parsed currency, even if currency is passed' do
-        expect('10.10 USD'.to_money('EUR')).to eq(Money.new(1010, 'USD'))
+        expect('10.10 USD'.to_money('EUR')).to eq(Money.new(10_10, 'USD'))
       end
 
       it 'ignores unrecognized data' do
-        expect('hello 2000 world'.to_money).to eq Money.new(2000_00)
+        expect('hello 2000 world'.to_money).to eq Money.new(2_000_00)
       end
 
       it 'respects :subunit_to_unit currency property' do
         expect('1'.to_money('USD')).to eq Money.new(1_00,  'USD')
         expect('1'.to_money('TND')).to eq Money.new(1_000, 'TND')
         expect('1'.to_money('JPY')).to eq Money.new(1,     'JPY')
-        expect('1.5'.to_money('KWD').cents).to eq 1500
+        expect('1.5'.to_money('KWD').cents).to eq 1_500
       end
     end
 
