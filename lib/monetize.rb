@@ -153,9 +153,9 @@ module Monetize
 
     cents *= (10 ** multiplier_exp)
     minor = minor.to_s + ('0' * multiplier_exp)
-    shift = minor[0 ... multiplier_exp].to_i * 100
+    shift = minor[0...multiplier_exp].to_i * 100
     cents += shift
-    minor = (minor[multiplier_exp .. -1] || '')
+    minor = (minor[multiplier_exp..-1] || '')
     minor = if Money.infinite_precision
               (BigDecimal.new(minor) / (10 ** minor.size)) * currency.subunit_to_unit
             elsif minor.size < currency.decimal_places
