@@ -47,13 +47,11 @@ module Monetize
     RANGE_SPLIT = /-/
 
     def split_list
-      Array @input.split(LIST_SPLIT)
-        .map(&:strip)
+      @input.split(LIST_SPLIT).map(&:strip)
     end
 
     def split_range
-      Array @input.split(RANGE_SPLIT)
-        .map(&:strip)
+      @input.split(RANGE_SPLIT).map(&:strip)
     end
   end
 end
