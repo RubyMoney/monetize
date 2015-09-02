@@ -24,7 +24,7 @@ module Monetize
     'T'    => 12
   }
   MULTIPLIER_SUFFIXES.default = 0
-  MULTIPLIER_REGEXP = Regexp.new('\d(%s)\b[^\d]*$' % MULTIPLIER_SUFFIXES.keys.join('|'), 'i')
+  MULTIPLIER_REGEXP = Regexp.new(format('\d(%s)\b[^\d]*$', MULTIPLIER_SUFFIXES.keys.join('|')), 'i')
 
   # Class methods
   class << self
