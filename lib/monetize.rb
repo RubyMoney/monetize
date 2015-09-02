@@ -183,7 +183,7 @@ module Monetize
   private
 
   def self.contains_currency_symbol?(amount)
-    currency_symbol_regex === amount
+    amount =~ currency_symbol_regex
   end
 
   def self.compute_currency(amount)
