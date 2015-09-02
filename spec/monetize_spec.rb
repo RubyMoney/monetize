@@ -365,10 +365,17 @@ describe Monetize do
       end
 
       it "keeps precision" do
+        expect(Monetize.from_bigdecimal(BigDecimal.new("1"))).to eq Money.new(100)
         expect(Monetize.from_bigdecimal(BigDecimal.new("1.23456"))).to eq Money.new(123.456)
         expect(Monetize.from_bigdecimal(BigDecimal.new("-1.23456"))).to eq Money.new(-123.456)
         expect(Monetize.from_bigdecimal(BigDecimal.new("1.23456"))).to eq Money.new(123.456, "USD")
         expect(Monetize.from_bigdecimal(BigDecimal.new("1.23456"), "EUR")).to eq Money.new(123.456, "EUR")
+
+        expect("1".to_money).to eq Money.new(100)
+        expect("1.23456".to_money).to eq Money.new(123.456)
+        expect("-1.23456".to_money).to eq Money.new(-123.456)
+        expect("$1.23456".to_money).to eq Money.new(123.456, "USD")
+        expect("1.23456 EUR".to_money).to eq Money.new(123.456, "EUR")
       end
     end
   end
