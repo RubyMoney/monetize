@@ -61,7 +61,7 @@ module Monetize
 
   def self.from_fixnum(value, currency = Money.default_currency)
     currency = Money::Currency.wrap(currency)
-    value = value * currency.subunit_to_unit
+    value *= currency.subunit_to_unit
     Money.new(value, currency)
   end
 
@@ -72,7 +72,7 @@ module Monetize
 
   def self.from_bigdecimal(value, currency = Money.default_currency)
     currency = Money::Currency.wrap(currency)
-    value = value * currency.subunit_to_unit
+    value *= currency.subunit_to_unit
     value = value.round unless Money.infinite_precision
     Money.new(value, currency)
   end
