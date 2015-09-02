@@ -19,7 +19,7 @@ module Monetize
       if input.respond_to? :strip
         @input = input.clone.strip
       else
-        raise ArgumentError 'Input must be a string'
+        fail ArgumentError, 'Input must be a string'
       end
 
       @currency = currency

@@ -84,7 +84,7 @@ module Monetize
       value = BigDecimal.new(value.to_s)
       from_bigdecimal(value, currency)
     else
-      raise ArgumentError, "'value' should be a type of Numeric"
+      fail ArgumentError, "'value' should be a type of Numeric"
     end
   end
 
@@ -101,7 +101,7 @@ module Monetize
     num = num.sub(/^-|-$/, '') if negative
 
     if num.include?('-')
-      raise ArgumentError, 'Invalid currency amount (hyphen)'
+      fail ArgumentError, 'Invalid currency amount (hyphen)'
     end
 
     num.chop! if num.match(/[\.|,]$/)
@@ -151,7 +151,7 @@ module Monetize
         end
       end
     else
-      raise ArgumentError, 'Invalid currency amount'
+      fail ArgumentError, 'Invalid currency amount'
     end
 
     cents = major.to_i * currency.subunit_to_unit
