@@ -56,7 +56,6 @@ describe Monetize, 'core extensions' do
 
   describe String do
     describe '#to_money' do
-
       STRING_TO_MONEY = {
         '20.15'           => Money.new(20_15),
         '100'             => Money.new(100_00),
@@ -167,7 +166,6 @@ describe Monetize, 'core extensions' do
 
   describe Hash do
     describe '#to_money' do
-
       context 'when currency is present in hash' do
         subject(:hash) { {cents: 5, currency: 'EUR'} }
 
@@ -193,7 +191,6 @@ describe Monetize, 'core extensions' do
           expect(hash.to_money('USD')).to eq(Money.new(123, 'USD'))
         end
       end
-
     end
   end
 

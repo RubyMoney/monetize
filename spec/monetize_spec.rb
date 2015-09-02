@@ -4,12 +4,10 @@ require 'spec_helper'
 require 'monetize'
 
 describe Monetize do
-
   bar = '{ "priority": 1, "iso_code": "BAR", "iso_numeric": "840", "name": "Dollar with 4 decimal places", "symbol": "$", "subunit": "Cent", "subunit_to_unit": 10000, "symbol_first": true, "html_entity": "$", "decimal_mark": ".", "thousands_separator": "," }'
   eu4 = '{ "priority": 1, "iso_code": "EU4", "iso_numeric": "841", "name": "Euro with 4 decimal places", "symbol": "€", "subunit": "Cent", "subunit_to_unit": 10000, "symbol_first": true, "html_entity": "€", "decimal_mark": ",", "thousands_separator": "." }'
 
   describe '.parse' do
-
     it 'parses european-formatted inputs under 10EUR' do
       expect(Monetize.parse('EUR 5,95')).to eq Money.new(595, 'EUR')
     end
@@ -20,7 +18,6 @@ describe Monetize do
     end
 
     describe 'currency detection' do
-
       context 'opted in' do
         before :all do
           Monetize.assume_from_symbol = true
@@ -84,7 +81,6 @@ describe Monetize do
           expect(Monetize.parse('+R$R9.99')).to eq Money.new(999, 'BRL')
           expect(Monetize.parse('+¥999')).to eq Money.new(999, 'JPY')
           expect(Monetize.parse('+C$9.99')).to eq Money.new(999, 'CAD')
-
         end
 
         it 'parses formatted inputs with currency symbol and postfix minus sign' do
