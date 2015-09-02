@@ -159,12 +159,12 @@ module Monetize
     minor = if Money.infinite_precision
               (BigDecimal.new(minor) / (10 ** minor.size)) * currency.subunit_to_unit
             elsif minor.size < currency.decimal_places
-              (minor + ('0' * currency.decimal_places))[0,currency.decimal_places].to_i
+              (minor + ('0' * currency.decimal_places))[0, currency.decimal_places].to_i
             elsif minor.size > currency.decimal_places
-              if minor[currency.decimal_places,1].to_i >= 5
-                minor[0,currency.decimal_places].to_i+1
+              if minor[currency.decimal_places, 1].to_i >= 5
+                minor[0, currency.decimal_places].to_i+1
               else
-                minor[0,currency.decimal_places].to_i
+                minor[0, currency.decimal_places].to_i
               end
             else
               minor.to_i
