@@ -197,9 +197,7 @@ module Monetize
   end
 
   def self.regex_safe_symbols
-    CURRENCY_SYMBOLS.keys.map { |key|
-      Regexp.escape(key)
-    }.join('|')
+    CURRENCY_SYMBOLS.keys.map { |key| Regexp.escape(key) }.join('|')
   end
 
   def self.currency_symbol_regex
