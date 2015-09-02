@@ -4,8 +4,37 @@ require 'spec_helper'
 require 'monetize'
 
 describe Monetize do
-  bar = '{ "priority": 1, "iso_code": "BAR", "iso_numeric": "840", "name": "Dollar with 4 decimal places", "symbol": "$", "subunit": "Cent", "subunit_to_unit": 10000, "symbol_first": true, "html_entity": "$", "decimal_mark": ".", "thousands_separator": "," }'
-  eu4 = '{ "priority": 1, "iso_code": "EU4", "iso_numeric": "841", "name": "Euro with 4 decimal places", "symbol": "€", "subunit": "Cent", "subunit_to_unit": 10000, "symbol_first": true, "html_entity": "€", "decimal_mark": ",", "thousands_separator": "." }'
+  bar = <<-JSON
+    {
+      "priority": 1,
+      "iso_code": "BAR",
+      "iso_numeric": "840",
+      "name": "Dollar with 4 decimal places",
+      "symbol": "$",
+      "subunit": "Cent",
+      "subunit_to_unit": 10000,
+      "symbol_first": true,
+      "html_entity": "$",
+      "decimal_mark": ".",
+      "thousands_separator": ","
+    }
+  JSON
+
+  eu4 = <<-JSON
+    {
+      "priority": 1,
+      "iso_code": "EU4",
+      "iso_numeric": "841",
+      "name": "Euro with 4 decimal places",
+      "symbol": "€",
+      "subunit": "Cent",
+      "subunit_to_unit": 10000,
+      "symbol_first": true,
+      "html_entity": "€",
+      "decimal_mark": ",",
+      "thousands_separator": "."
+    }
+  JSON
 
   describe '.parse' do
     it 'parses european-formatted inputs under 10EUR' do
@@ -393,7 +422,8 @@ describe Monetize do
     it 'optimizes workload' do
       expect(Monetize).to receive(:from_fixnum).with(1, 'USD').and_return(Money.new(1_00, 'USD'))
       expect(Monetize.from_numeric(1, 'USD')).to eq Money.new(1_00, 'USD')
-      expect(Monetize).to receive(:from_bigdecimal).with(BigDecimal.new('1.0'), 'USD').and_return(Money.new(1_00, 'USD'))
+      expect(Monetize).to receive(:from_bigdecimal).with(BigDecimal.new('1.0'), 'USD').
+        and_return(Money.new(1_00, 'USD'))
       expect(Monetize.from_numeric(1.0, 'USD')).to eq Money.new(1_00, 'USD')
     end
 
