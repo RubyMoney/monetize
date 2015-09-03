@@ -1,0 +1,32 @@
+Documentation:
+  Enabled: false
+Metrics/AbcSize:
+  Enabled: false
+Metrics/ClassLength:
+  Enabled: false
+Metrics/MethodLength:
+  Enabled: false
+Metrics/ModuleLength:
+  Enabled: false
+Style/AndOr:
+  Enabled: false
+Style/ClassAndModuleChildren:
+  Enabled: false
+Style/PerlBackrefs:
+  Enabled: false
+
+Style/CollectionMethods:
+  Enabled: yes
+Lint/LiteralInInterpolation:
+  Enabled: yes
+
+Metrics/LineLength:
+  Max: 120
+Metrics/ParameterLists:
+  CountKeywordArgs: false
+Style/DotPosition:
+  EnforcedStyle: trailing
+Style/EmptyElse:
+  EnforcedStyle: empty
+Style/SpaceInsideHashLiteralBraces:
+  EnforcedStyle: no_space

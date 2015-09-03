@@ -7,7 +7,7 @@
 ## 1.3.0
 - Add NilClass extension
 - Added correct parsing of Brazilian Real $R symbol
-- Add testing task for  Brazilian Real parsing 
+- Add testing task for  Brazilian Real parsing
 - Add Lira Sign (₤) as a symbol for GBP
 
 ## 1.3.1
@@ -15,3 +15,5 @@
 
 ## master
 - Fixed support for <code>Money.infinite_precision = true</code> in .to_money
+- Add Rubocop config to project
+- Reformat code to adapt to Rubocop guidelines
