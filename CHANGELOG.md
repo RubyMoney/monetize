@@ -17,3 +17,4 @@
 - Fixed support for <code>Money.infinite_precision = true</code> in .to_money
 - Add Rubocop config to project
 - Reformat code to adapt to Rubocop guidelines
+- Add config setting to always enforce currency delimiters

@@ -31,6 +31,12 @@ module Monetize
     # @attr_accessor [true, false] assume_from_symbol Use this to enable the
     #   ability to assume the currency from a passed symbol
     attr_accessor :assume_from_symbol
+
+    # Monetize uses the delimiters set in the currency to separate integers from
+    # decimals, and to ignore thousands separators. In some corner cases,
+    # though, it will try to determine the correct separator by itself. Set this
+    # to true to enforce the delimiters set in the currency all the time.
+    attr_accessor :enforce_currency_delimiters
   end
 
   def self.parse(input, currency = Money.default_currency, options = {})
@@ -146,13 +152,19 @@ module Monetize
       thousands_separator, decimal_mark = used_delimiters
       split_major_minor(num.gsub(thousands_separator, ''), decimal_mark)
     when 1
-      if currency.decimal_mark == used_delimiters.first
-        split_major_minor(num, used_delimiters.first)
-      else
-        extract_major_minor_with_tentative_delimiter(num, used_delimiters.first)
-      end
+      extract_major_minor_with_single_delimiter(num, currency, used_delimiters.first)
     else
       fail ArgumentError, 'Invalid currency amount'
+    end
+  end
+
+  def self.extract_major_minor_with_single_delimiter(num, currency, delimiter)
+    if delimiter == currency.decimal_mark
+      split_major_minor(num, delimiter)
+    elsif enforce_currency_delimiters and delimiter == currency.thousands_separator
+      [num.gsub(delimiter, ''), 0]
+    else
+      extract_major_minor_with_tentative_delimiter(num, delimiter)
     end
   end
 
