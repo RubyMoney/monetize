@@ -18,3 +18,4 @@
 - Add Rubocop config to project
 - Reformat code to adapt to Rubocop guidelines
 - Add config setting to always enforce currency delimiters
+- Add rake console task
