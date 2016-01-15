@@ -1,6 +1,6 @@
 # Changelog
 
-## Master
+## 1.4.0
 - Required Forwardable on Collection to resolve NameError [\#44](https://github.com/RubyMoney/monetize/issues/44)
 - Add capability to parse currency amounts given with suffixes (K, M, B, and T)
 
