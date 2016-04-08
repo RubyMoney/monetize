@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.5.0
+- Added extra currencies:
+  - Azerbaijani manat
+  - Chinese yuan
+  - Czech koruna
+  - Hungarian forint
+  - Indinan rupee
+  - Russian ruble
+  - Turkish Lira
+  - Ukrainian Hryvnia
+  - Swiss Frank
+  - Polish Zloty
+  - Kazakhstani Tenge
+
+
 ## 1.4.0
 - Required Forwardable on Collection to resolve NameError [\#44](https://github.com/RubyMoney/monetize/issues/44)
 - Add capability to parse currency amounts given with suffixes (K, M, B, and T)
