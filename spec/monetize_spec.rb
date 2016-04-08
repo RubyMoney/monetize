@@ -88,6 +88,51 @@ describe Monetize do
           expect(Monetize.parse('C$9.99')).to eq Money.new(999, 'CAD')
         end
 
+        it 'parses formatted inputs with Azerbaijani Manat passed as a symbol' do
+          expect(Monetize.parse('₼9.99')).to eq Money.new(999, 'AZN')
+        end
+
+        it 'parses formatted inputs with Chinese Yuan passed as a symbol' do
+          expect(Monetize.parse('元9.99')).to eq Money.new(999, 'CNY')
+        end
+
+        it 'parses formatted inputs with Czech Koruna passed as a symbol' do
+          expect(Monetize.parse('Kč9.99')).to eq Money.new(999, 'CZK')
+        end
+
+        it 'parses formatted inputs with Hungarian Forint passed as a symbol' do
+          expect(Monetize.parse('Ft9.99')).to eq Money.new(999, 'HUF')
+        end
+
+        it 'parses formatted inputs with Indinan Rupee passed as a symbol' do
+          expect(Monetize.parse('₹9.99')).to eq Money.new(999, 'INR')
+        end
+
+        it 'parses formatted inputs with Russian rubl passed as a symbol' do
+          expect(Monetize.parse('₽9.99')).to eq Money.new(999, 'RUB')
+        end
+
+        it 'parses formatted inputs with Turkish Lira passed as a symbol' do
+          expect(Monetize.parse('₺9.99')).to eq Money.new(999, 'TRY')
+        end
+
+        it 'parses formatted inputs with Ukrainian Hryvnia passed as a symbol' do
+          expect(Monetize.parse('₴9.99')).to eq Money.new(999, 'UAH')
+        end
+
+        it 'parses formatted inputs with Swiss Frank passed as a symbol' do
+          expect(Monetize.parse('Fr9.99')).to eq Money.new(999, 'CHF')
+        end
+
+        it 'parses formatted inputs with Polish Zloty passed as a symbol' do
+          expect(Monetize.parse('zł9.99')).to eq Money.new(999, 'PLN')
+        end
+
+        it 'parses formatted inputs with Kazakhstani Tenge passed as a symbol' do
+          expect(Monetize.parse('₸9.99')).to eq Money.new(999, 'KZT')
+        end
+
+
         it 'should assume default currency if not a recognised symbol' do
           expect(Monetize.parse('L9.99')).to eq Money.new(999, 'USD')
         end
@@ -102,6 +147,18 @@ describe Monetize do
           expect(Monetize.parse('-R$R9.99')).to eq Money.new(-999, 'BRL')
           expect(Monetize.parse('-¥999')).to eq Money.new(-999, 'JPY')
           expect(Monetize.parse('-C$9.99')).to eq Money.new(-999, 'CAD')
+          expect(Monetize.parse('-₼9.99')).to eq Money.new(-999, 'AZN')
+          expect(Monetize.parse('-元9.99')).to eq Money.new(-999, 'CNY')
+          expect(Monetize.parse('-Kč9.99')).to eq Money.new(-999, 'CZK')
+          expect(Monetize.parse('-Ft9.99')).to eq Money.new(-999, 'HUF')
+          expect(Monetize.parse('-₹9.99')).to eq Money.new(-999, 'INR')
+          expect(Monetize.parse('-₽9.99')).to eq Money.new(-999, 'RUB')
+          expect(Monetize.parse('-₺9.99')).to eq Money.new(-999, 'TRY')
+          expect(Monetize.parse('-₴9.99')).to eq Money.new(-999, 'UAH')
+          expect(Monetize.parse('-Fr9.99')).to eq Money.new(-999, 'CHF')
+          expect(Monetize.parse('-zł9.99')).to eq Money.new(-999, 'PLN')
+          expect(Monetize.parse('-₸9.99')).to eq Money.new(-999, 'KZT')
+
         end
 
         it 'parses formatted inputs with plus and GBP passed as symbol' do
@@ -110,6 +167,17 @@ describe Monetize do
           expect(Monetize.parse('+R$R9.99')).to eq Money.new(999, 'BRL')
           expect(Monetize.parse('+¥999')).to eq Money.new(999, 'JPY')
           expect(Monetize.parse('+C$9.99')).to eq Money.new(999, 'CAD')
+          expect(Monetize.parse('+₼9.99')).to eq Money.new(999, 'AZN')
+          expect(Monetize.parse('+元9.99')).to eq Money.new(999, 'CNY')
+          expect(Monetize.parse('+Kč9.99')).to eq Money.new(999, 'CZK')
+          expect(Monetize.parse('+Ft9.99')).to eq Money.new(999, 'HUF')
+          expect(Monetize.parse('+₹9.99')).to eq Money.new(999, 'INR')
+          expect(Monetize.parse('+₽9.99')).to eq Money.new(999, 'RUB')
+          expect(Monetize.parse('+₺9.99')).to eq Money.new(999, 'TRY')
+          expect(Monetize.parse('+₴9.99')).to eq Money.new(999, 'UAH')
+          expect(Monetize.parse('+Fr9.99')).to eq Money.new(999, 'CHF')
+          expect(Monetize.parse('+zł9.99')).to eq Money.new(999, 'PLN')
+          expect(Monetize.parse('+₸9.99')).to eq Money.new(999, 'KZT')
         end
 
         it 'parses formatted inputs with currency symbol and postfix minus sign' do
