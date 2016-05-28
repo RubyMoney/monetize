@@ -19,3 +19,5 @@
 - Reformat code to adapt to Rubocop guidelines
 - Add config setting to always enforce currency delimiters
 - Add rake console task
+- Fix issue where parsing a Money object resulted in a Money object with its currency set to `Money.default_currency`,
+  rather than the currency that it was sent in as.

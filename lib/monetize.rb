@@ -40,6 +40,8 @@ module Monetize
   end
 
   def self.parse(input, currency = Money.default_currency, options = {})
+    return input if input.class == Money
+
     input = input.to_s.strip
 
     computed_currency = if options.fetch(:assume_from_symbol) { assume_from_symbol }
