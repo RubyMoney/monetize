@@ -210,6 +210,16 @@ describe Monetize do
       Monetize.enforce_currency_delimiters = false
     end
 
+    context 'Money object attempting to be parsed' do
+      let(:money) { Money.new(595, 'GBP') }
+
+      it 'returns the original Money object' do
+        expect(Monetize.parse(money)).to eq money
+        expect(Monetize.parse(money).currency).to eq 'GBP'
+        expect(Monetize.parse(money).cents).to eq 595
+      end
+    end
+
     context 'custom currencies with 4 decimal places' do
       before :each do
         Money::Currency.register(JSON.parse(bar, symbolize_names: true))
