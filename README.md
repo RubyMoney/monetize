@@ -1,11 +1,11 @@
 # Monetize
 
-[![Gem Version](https://badge.fury.io/rb/monetize.png)](http://badge.fury.io/rb/monetize)
-[![Build Status](https://travis-ci.org/RubyMoney/monetize.png?branch=master)](https://travis-ci.org/RubyMoney/monetize)
-[![Code Climate](https://codeclimate.com/github/RubyMoney/monetize.png)](https://codeclimate.com/github/RubyMoney/monetize)
-[![Coverage Status](https://coveralls.io/repos/RubyMoney/monetize/badge.png)](https://coveralls.io/r/RubyMoney/monetize)
-[![Dependency Status](https://gemnasium.com/RubyMoney/monetize.png)](https://gemnasium.com/RubyMoney/monetize)
-[![License](http://img.shields.io/license/MIT.png?color=green)](http://opensource.org/licenses/MIT)
+[![Gem Version](https://badge.fury.io/rb/monetize.svg)](http://badge.fury.io/rb/monetize)
+[![Build Status](https://travis-ci.org/RubyMoney/monetize.svg?branch=master)](https://travis-ci.org/RubyMoney/monetize)
+[![Code Climate](https://codeclimate.com/github/RubyMoney/monetize.svg)](https://codeclimate.com/github/RubyMoney/monetize)
+[![Coverage Status](https://coveralls.io/repos/RubyMoney/monetize/badge.svg)](https://coveralls.io/r/RubyMoney/monetize)
+[![Dependency Status](https://gemnasium.com/RubyMoney/monetize.svg)](https://gemnasium.com/RubyMoney/monetize)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](http://opensource.org/licenses/MIT)
 
 A library for converting various objects into `Money` objects.
 
