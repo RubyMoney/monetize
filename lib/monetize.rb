@@ -40,7 +40,8 @@ module Monetize
   end
 
   def self.parse(input, currency = Money.default_currency, options = {})
-    return input if input.class == Money
+    return input if input.is_a?(Money)
+    return from_numeric(input, currency) if input.is_a?(Numeric)
 
     input = input.to_s.strip
 
