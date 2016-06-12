@@ -14,7 +14,18 @@ module Monetize
     'R$'   => 'BRL',
     'R'    => 'ZAR',
     '¥'    => 'JPY',
-    'C$'   => 'CAD'
+    'C$'   => 'CAD',
+    '₼'    => 'AZN',
+    '元'   => 'CNY',
+    'Kč'   => 'CZK',
+    'Ft'   => 'HUF',
+    '₹'    => 'INR',
+    '₽'    => 'RUB',
+    '₺'    => 'TRY',
+    '₴'    => 'UAH',
+    'Fr'   => 'CHF',
+    'zł'   => 'PLN',
+    '₸'    => 'KZT'
   }
 
   MULTIPLIER_SUFFIXES = {
