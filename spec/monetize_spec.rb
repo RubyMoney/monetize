@@ -132,10 +132,6 @@ describe Monetize do
           expect(Monetize.parse('₸9.99')).to eq Money.new(999, 'KZT')
         end
 
-        it 'parses formatted inputs with Swedish krona passed as a symbol' do
-          expect(Monetize.parse('kr9.99')).to eq Money.new(999, 'SEK')
-        end
-
 
         it 'should assume default currency if not a recognised symbol' do
           expect(Monetize.parse('L9.99')).to eq Money.new(999, 'USD')
@@ -162,8 +158,6 @@ describe Monetize do
           expect(Monetize.parse('-Fr9.99')).to eq Money.new(-999, 'CHF')
           expect(Monetize.parse('-zł9.99')).to eq Money.new(-999, 'PLN')
           expect(Monetize.parse('-₸9.99')).to eq Money.new(-999, 'KZT')
-          expect(Monetize.parse('-kr9.99')).to eq Money.new(-999, 'SEK')
-
         end
 
         it 'parses formatted inputs with plus and GBP passed as symbol' do
@@ -183,7 +177,6 @@ describe Monetize do
           expect(Monetize.parse('+Fr9.99')).to eq Money.new(999, 'CHF')
           expect(Monetize.parse('+zł9.99')).to eq Money.new(999, 'PLN')
           expect(Monetize.parse('+₸9.99')).to eq Money.new(999, 'KZT')
-          expect(Monetize.parse('+kr9.99')).to eq Money.new(999, 'SEK')
         end
 
         it 'parses formatted inputs with currency symbol and postfix minus sign' do
@@ -200,6 +193,13 @@ describe Monetize do
           expect(Monetize.parse('€.45B')).to eq Money.new(450_000_000_00, 'EUR')
           expect(Monetize.parse('-$2.45B')).to eq Money.new(-2_450_000_000_00, 'USD')
           expect(Monetize.parse('€1.65T')).to eq Money.new(1_650_000_000_000_00, 'EUR')
+        end
+
+        context 'negatives' do
+          it 'ignores the ambiguous kr symbol' do
+            # Could mean either of DKK, EEK, ISK, NOK, SEK
+            expect(Monetize.parse('kr9.99')).to eq Money.new(999, 'USD')
+          end
         end
       end
 
