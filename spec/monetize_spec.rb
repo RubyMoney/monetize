@@ -56,82 +56,41 @@ describe Monetize do
           Monetize.assume_from_symbol = false
         end
 
-        it 'parses formatted inputs with Euros passed as a symbol' do
-          expect(Monetize.parse('€5.95')).to eq Money.new(595, 'EUR')
-        end
+        Monetize::CURRENCY_SYMBOLS.each_pair do |symbol, iso_code|
+          context iso_code do
+            amount = 5_95
+            # Special case for JPY because of subunit_to_unit value of 1
+            amount_in_units = iso_code == 'JPY' ? '595' : '5.95'
 
-        it 'parses formatted inputs with Euros passed as a symbol with surrounding space' do
-          expect(Monetize.parse(' €5.95 ')).to eq Money.new(595, 'EUR')
-        end
+            it "parses formatted inputs with #{iso_code} passed as a symbol" do
+              expect(Monetize.parse("#{symbol}#{amount_in_units}")).to eq Money.new(amount, iso_code)
+            end
 
-        it 'parses formatted inputs with British Pounds Sterling passed as a symbol' do
-          expect(Monetize.parse('£9.99')).to eq Money.new(999, 'GBP')
-        end
+            context 'prefix' do
+              it 'parses formatted inputs with plus sign and currency as a symbol' do
+                expect(Monetize.parse("+#{symbol}#{amount_in_units}")).to eq Money.new(amount, iso_code)
+              end
 
-        it 'parses formatted inputs with British Pounds Sterling passed as a lira sign symbol' do
-          expect(Monetize.parse('₤9.99')).to eq Money.new(999, 'GBP')
-        end
+              it 'parses formatted inputs with minus sign and currency as a symbol' do
+                expect(Monetize.parse("-#{symbol}#{amount_in_units}")).to eq Money.new(-amount, iso_code)
+              end
+            end
 
-        it 'parses formatted inputs with South African Rand passed as a symbol' do
-          expect(Monetize.parse('R9.99')).to eq Money.new(999, 'ZAR')
-        end
+            context 'postfix' do
+              it 'parses formatted inputs with currency symbol and postfix minus sign' do
+                expect(Monetize.parse("#{symbol}#{amount_in_units}-")).to eq Money.new(-amount, iso_code)
+              end
 
-        it 'parses formatted inputs with Brazilian real passed as a symbol' do
-          expect(Monetize.parse('R$R9.99')).to eq Money.new(999, 'BRL')
-        end
+              it 'parses formatted inputs with currency symbol and postfix plus sign' do
+                expect(Monetize.parse("#{symbol}#{amount_in_units}+")).to eq Money.new(amount, iso_code)
+              end
+            end
 
-        it 'parses formatted inputs with Japanese Yen passed as a symbol' do
-          expect(Monetize.parse('¥999')).to eq Money.new(999, 'JPY')
+            it 'parses formatted inputs with symbol and surrounding spaces' do
+              expect(Monetize.parse(" #{symbol}#{amount_in_units} ")).to eq Money.new(amount, iso_code)
+            end
+          end
         end
-
-        it 'parses formatted inputs with Canadian Dollar passed as a symbol' do
-          expect(Monetize.parse('C$9.99')).to eq Money.new(999, 'CAD')
-        end
-
-        it 'parses formatted inputs with Azerbaijani Manat passed as a symbol' do
-          expect(Monetize.parse('₼9.99')).to eq Money.new(999, 'AZN')
-        end
-
-        it 'parses formatted inputs with Chinese Yuan passed as a symbol' do
-          expect(Monetize.parse('元9.99')).to eq Money.new(999, 'CNY')
-        end
-
-        it 'parses formatted inputs with Czech Koruna passed as a symbol' do
-          expect(Monetize.parse('Kč9.99')).to eq Money.new(999, 'CZK')
-        end
-
-        it 'parses formatted inputs with Hungarian Forint passed as a symbol' do
-          expect(Monetize.parse('Ft9.99')).to eq Money.new(999, 'HUF')
-        end
-
-        it 'parses formatted inputs with Indinan Rupee passed as a symbol' do
-          expect(Monetize.parse('₹9.99')).to eq Money.new(999, 'INR')
-        end
-
-        it 'parses formatted inputs with Russian rubl passed as a symbol' do
-          expect(Monetize.parse('₽9.99')).to eq Money.new(999, 'RUB')
-        end
-
-        it 'parses formatted inputs with Turkish Lira passed as a symbol' do
-          expect(Monetize.parse('₺9.99')).to eq Money.new(999, 'TRY')
-        end
-
-        it 'parses formatted inputs with Ukrainian Hryvnia passed as a symbol' do
-          expect(Monetize.parse('₴9.99')).to eq Money.new(999, 'UAH')
-        end
-
-        it 'parses formatted inputs with Swiss Frank passed as a symbol' do
-          expect(Monetize.parse('Fr9.99')).to eq Money.new(999, 'CHF')
-        end
-
-        it 'parses formatted inputs with Polish Zloty passed as a symbol' do
-          expect(Monetize.parse('zł9.99')).to eq Money.new(999, 'PLN')
-        end
-
-        it 'parses formatted inputs with Kazakhstani Tenge passed as a symbol' do
-          expect(Monetize.parse('₸9.99')).to eq Money.new(999, 'KZT')
-        end
-
 
         it 'should assume default currency if not a recognised symbol' do
           expect(Monetize.parse('L9.99')).to eq Money.new(999, 'USD')
@@ -139,52 +98,6 @@ describe Monetize do
 
         it 'parses formatted inputs without currency detection when overridden' do
           expect(Monetize.parse('£9.99', nil, assume_from_symbol: false)).to eq Money.new(999, 'USD')
-        end
-
-        it 'parses formatted inputs with minus sign and currency symbol' do
-          expect(Monetize.parse('-€9.99')).to eq Money.new(-999, 'EUR')
-          expect(Monetize.parse('-£9.99')).to eq Money.new(-999, 'GBP')
-          expect(Monetize.parse('-R$R9.99')).to eq Money.new(-999, 'BRL')
-          expect(Monetize.parse('-¥999')).to eq Money.new(-999, 'JPY')
-          expect(Monetize.parse('-C$9.99')).to eq Money.new(-999, 'CAD')
-          expect(Monetize.parse('-₼9.99')).to eq Money.new(-999, 'AZN')
-          expect(Monetize.parse('-元9.99')).to eq Money.new(-999, 'CNY')
-          expect(Monetize.parse('-Kč9.99')).to eq Money.new(-999, 'CZK')
-          expect(Monetize.parse('-Ft9.99')).to eq Money.new(-999, 'HUF')
-          expect(Monetize.parse('-₹9.99')).to eq Money.new(-999, 'INR')
-          expect(Monetize.parse('-₽9.99')).to eq Money.new(-999, 'RUB')
-          expect(Monetize.parse('-₺9.99')).to eq Money.new(-999, 'TRY')
-          expect(Monetize.parse('-₴9.99')).to eq Money.new(-999, 'UAH')
-          expect(Monetize.parse('-Fr9.99')).to eq Money.new(-999, 'CHF')
-          expect(Monetize.parse('-zł9.99')).to eq Money.new(-999, 'PLN')
-          expect(Monetize.parse('-₸9.99')).to eq Money.new(-999, 'KZT')
-        end
-
-        it 'parses formatted inputs with plus and GBP passed as symbol' do
-          expect(Monetize.parse('+€9.99')).to eq Money.new(999, 'EUR')
-          expect(Monetize.parse('+£9.99')).to eq Money.new(999, 'GBP')
-          expect(Monetize.parse('+R$R9.99')).to eq Money.new(999, 'BRL')
-          expect(Monetize.parse('+¥999')).to eq Money.new(999, 'JPY')
-          expect(Monetize.parse('+C$9.99')).to eq Money.new(999, 'CAD')
-          expect(Monetize.parse('+₼9.99')).to eq Money.new(999, 'AZN')
-          expect(Monetize.parse('+元9.99')).to eq Money.new(999, 'CNY')
-          expect(Monetize.parse('+Kč9.99')).to eq Money.new(999, 'CZK')
-          expect(Monetize.parse('+Ft9.99')).to eq Money.new(999, 'HUF')
-          expect(Monetize.parse('+₹9.99')).to eq Money.new(999, 'INR')
-          expect(Monetize.parse('+₽9.99')).to eq Money.new(999, 'RUB')
-          expect(Monetize.parse('+₺9.99')).to eq Money.new(999, 'TRY')
-          expect(Monetize.parse('+₴9.99')).to eq Money.new(999, 'UAH')
-          expect(Monetize.parse('+Fr9.99')).to eq Money.new(999, 'CHF')
-          expect(Monetize.parse('+zł9.99')).to eq Money.new(999, 'PLN')
-          expect(Monetize.parse('+₸9.99')).to eq Money.new(999, 'KZT')
-        end
-
-        it 'parses formatted inputs with currency symbol and postfix minus sign' do
-          expect(Monetize.parse('€9.99-')).to eq Money.new(-999, 'EUR')
-        end
-
-        it 'parses formatted inputs with currency symbol and postfix plus sign' do
-          expect(Monetize.parse('€9.99+')).to eq Money.new(999, 'EUR')
         end
 
         it 'parses formatted inputs with amounts given with suffixes' do
