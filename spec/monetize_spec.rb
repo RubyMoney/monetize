@@ -58,9 +58,13 @@ describe Monetize do
 
         Monetize::CURRENCY_SYMBOLS.each_pair do |symbol, iso_code|
           context iso_code do
-            amount = 5_95
-            # Special case for JPY because of subunit_to_unit value of 1
-            amount_in_units = iso_code == 'JPY' ? '595' : '5.95'
+            let(:currency) { Money::Currency.find(iso_code) }
+            let(:amount) { 5_95 }
+            let(:amount_in_units) { amount.to_f / currency.subunit_to_unit }
+
+            it 'ensures correct amount calculations for test' do
+              expect(amount_in_units * currency.subunit_to_unit).to eq(amount)
+            end
 
             it "parses formatted inputs with #{iso_code} passed as a symbol" do
               expect(Monetize.parse("#{symbol}#{amount_in_units}")).to eq Money.new(amount, iso_code)
@@ -88,6 +92,10 @@ describe Monetize do
 
             it 'parses formatted inputs with symbol and surrounding spaces' do
               expect(Monetize.parse(" #{symbol}#{amount_in_units} ")).to eq Money.new(amount, iso_code)
+            end
+
+            it 'parses formatted inputs without currency detection when overridden' do
+              expect(Monetize.parse("#{symbol}5.95", nil, assume_from_symbol: false)).to eq Money.new(amount, 'USD')
             end
           end
         end
