@@ -119,9 +119,9 @@ module Monetize
 
     major, minor = extract_major_minor(num, currency)
 
-    cents = major.to_i * currency.subunit_to_unit
+    major, minor = apply_multiplier(multiplier_exp, major.to_i, minor)
 
-    cents, minor = apply_multiplier(multiplier_exp, cents, minor)
+    cents = major.to_i * currency.subunit_to_unit
 
     cents += set_minor_precision(minor, currency)
 
@@ -130,13 +130,13 @@ module Monetize
 
   private
 
-  def self.apply_multiplier(multiplier_exp, cents, minor)
-    cents *= (10**multiplier_exp)
+  def self.apply_multiplier(multiplier_exp, major, minor)
+    major *= 10**multiplier_exp
     minor = minor.to_s + ('0' * multiplier_exp)
-    shift = minor[0...multiplier_exp].to_i * 100
-    cents += shift
+    shift = minor[0...multiplier_exp].to_i
+    major += shift
     minor = (minor[multiplier_exp..-1] || '')
-    [cents, minor]
+    [major, minor]
   end
 
   def self.apply_sign(negative, cents)
