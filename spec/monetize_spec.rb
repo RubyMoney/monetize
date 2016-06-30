@@ -58,9 +58,13 @@ describe Monetize do
 
         Monetize::CURRENCY_SYMBOLS.each_pair do |symbol, iso_code|
           context iso_code do
-            amount = 5_95
-            # Special case for JPY because of subunit_to_unit value of 1
-            amount_in_units = iso_code == 'JPY' ? '595' : '5.95'
+            let(:currency) { Money::Currency.find(iso_code) }
+            let(:amount) { 5_95 }
+            let(:amount_in_units) { amount.to_f / currency.subunit_to_unit }
+
+            it 'ensures correct amount calculations for test' do
+              expect(amount_in_units * currency.subunit_to_unit).to eq(amount)
+            end
 
             it "parses formatted inputs with #{iso_code} passed as a symbol" do
               expect(Monetize.parse("#{symbol}#{amount_in_units}")).to eq Money.new(amount, iso_code)
@@ -86,26 +90,28 @@ describe Monetize do
               end
             end
 
+            context 'amount suffixes' do
+              it 'parses formatted inputs with amounts given with suffixes' do
+                expect(Monetize.parse("#{symbol}1.26K")).to eq Money.new(1_260 * currency.subunit_to_unit, iso_code)
+                expect(Monetize.parse("#{symbol}126.36M")).to eq Money.new(126_360_000 * currency.subunit_to_unit, iso_code)
+                expect(Monetize.parse("#{symbol}.45B")).to eq Money.new(450_000_000 * currency.subunit_to_unit, iso_code)
+                expect(Monetize.parse("-#{symbol}2.45B")).to eq Money.new(-2_450_000_000 * currency.subunit_to_unit, iso_code)
+                expect(Monetize.parse("#{symbol}1.65T")).to eq Money.new(1_650_000_000_000 * currency.subunit_to_unit, iso_code)
+              end
+            end
+
             it 'parses formatted inputs with symbol and surrounding spaces' do
               expect(Monetize.parse(" #{symbol}#{amount_in_units} ")).to eq Money.new(amount, iso_code)
+            end
+
+            it 'parses formatted inputs without currency detection when overridden' do
+              expect(Monetize.parse("#{symbol}5.95", nil, assume_from_symbol: false)).to eq Money.new(amount, 'USD')
             end
           end
         end
 
         it 'should assume default currency if not a recognised symbol' do
           expect(Monetize.parse('L9.99')).to eq Money.new(999, 'USD')
-        end
-
-        it 'parses formatted inputs without currency detection when overridden' do
-          expect(Monetize.parse('£9.99', nil, assume_from_symbol: false)).to eq Money.new(999, 'USD')
-        end
-
-        it 'parses formatted inputs with amounts given with suffixes' do
-          expect(Monetize.parse('$1.26K')).to eq Money.new(1_260_00, 'USD')
-          expect(Monetize.parse('$126.36M')).to eq Money.new(126_360_000_00, 'USD')
-          expect(Monetize.parse('€.45B')).to eq Money.new(450_000_000_00, 'EUR')
-          expect(Monetize.parse('-$2.45B')).to eq Money.new(-2_450_000_000_00, 'USD')
-          expect(Monetize.parse('€1.65T')).to eq Money.new(1_650_000_000_000_00, 'EUR')
         end
 
         context 'negatives' do
