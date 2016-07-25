@@ -151,6 +151,18 @@ describe Monetize do
       it 'should opt out by default' do
         expect(Monetize.assume_from_symbol).to be_falsy
       end
+
+      context 'ISO code' do
+        it 'parses currency given as ISO code' do
+          expect('20.00 USD'.to_money).to eq Money.new(20_00, 'USD')
+          expect('20.00 EUR'.to_money).to eq Money.new(20_00, 'EUR')
+          expect('20.00 GBP'.to_money).to eq Money.new(20_00, 'GBP')
+        end
+
+        it 'raises an error if currency code is invalid' do
+          expect { '20.00 OMG'.to_money }.to raise_error Monetize::ParseError
+        end
+      end
     end
 
     it 'parses USD-formatted inputs under $10' do
@@ -171,9 +183,9 @@ describe Monetize do
     end
 
     it 'does not return a price if there is a price range' do
-      expect { Monetize.parse('$5.95-10.95') }.to raise_error ArgumentError
-      expect { Monetize.parse('$5.95 - 10.95') }.to raise_error ArgumentError
-      expect { Monetize.parse('$5.95 - $10.95') }.to raise_error ArgumentError
+      expect { Monetize.parse('$5.95-10.95') }.to raise_error Monetize::ParseError
+      expect { Monetize.parse('$5.95 - 10.95') }.to raise_error Monetize::ParseError
+      expect { Monetize.parse('$5.95 - $10.95') }.to raise_error Monetize::ParseError
     end
 
     it 'does not return a price for completely invalid input' do
@@ -191,7 +203,7 @@ describe Monetize do
     end
 
     it 'raises ArgumentError when unable to detect polarity' do
-      expect { Monetize.parse('-$5.95-') }.to raise_error ArgumentError
+      expect { Monetize.parse('-$5.95-') }.to raise_error Monetize::ParseError
     end
 
     it 'parses correctly strings with exactly 3 decimal digits' do
@@ -440,7 +452,7 @@ describe Monetize do
     end
 
     it 'raises ArgumentError with unsupported argument' do
-      expect { Monetize.from_numeric('100') }.to raise_error(ArgumentError)
+      expect { Monetize.from_numeric('100') }.to raise_error(Monetize::ArgumentError)
     end
 
     it 'optimizes workload' do

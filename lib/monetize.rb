@@ -2,6 +2,7 @@
 
 require 'money'
 require 'monetize/core_extensions'
+require 'monetize/errors'
 require 'monetize/version'
 require 'collection'
 
@@ -67,6 +68,8 @@ module Monetize
 
     fractional = extract_cents(input, currency)
     Money.new(fractional, currency)
+  rescue Money::Currency::UnknownCurrency => e
+    fail ParseError, e.message
   end
 
   def self.parse_collection(input, currency = Money.default_currency, options = {})
@@ -168,7 +171,7 @@ module Monetize
     when 1
       extract_major_minor_with_single_delimiter(num, currency, used_delimiters.first)
     else
-      fail ArgumentError, 'Invalid currency amount'
+      fail ParseError, 'Invalid amount'
     end
   end
 
@@ -209,7 +212,7 @@ module Monetize
 
   def self.extract_sign(input)
     result = (input =~ /^-+(.*)$/ or input =~ /^(.*)-+$/) ? [true, $1] : [false, input]
-    fail ArgumentError, 'Invalid currency amount (hyphen)' if result[1].include?('-')
+    fail ParseError, 'Invalid amount (hyphen)' if result[1].include?('-')
     result
   end
 
