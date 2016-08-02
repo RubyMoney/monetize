@@ -33,6 +33,16 @@ Monetize.parse("GBP 100") == Money.new(100_00, "GBP")
 "100".to_money == Money.new(100_00, "USD")
 ```
 
+`parse` will return `nil` if it is unable to parse the input. Use `parse!` instead if you want a `Monetize::Error` (or one of the subclasses) to be raised instead:
+
+```ruby
+>> Monetize.parse('OMG 100')
+=> nil
+
+>> Monetize.parse!('OMG 100')
+Monetize::ParseError: Unknown currency 'omg'
+```
+
 Optionally, enable the ability to assume the currency from a passed symbol. Otherwise, currency symbols will be ignored, and USD used as the default currency:
 
 ```ruby

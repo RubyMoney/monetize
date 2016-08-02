@@ -182,10 +182,10 @@ describe Monetize do
       expect(Monetize.parse('1,111,234,567.89')).to eq Money.new(1_111_234_567_89, 'USD')
     end
 
-    it 'does not return a price if there is a price range' do
-      expect { Monetize.parse('$5.95-10.95') }.to raise_error Monetize::ParseError
-      expect { Monetize.parse('$5.95 - 10.95') }.to raise_error Monetize::ParseError
-      expect { Monetize.parse('$5.95 - $10.95') }.to raise_error Monetize::ParseError
+    it 'returns nil if input is a price range' do
+      expect(Monetize.parse('$5.95-10.95')).to be_nil
+      expect(Monetize.parse('$5.95 - 10.95')).to be_nil
+      expect(Monetize.parse('$5.95 - $10.95')).to be_nil
     end
 
     it 'does not return a price for completely invalid input' do
@@ -202,8 +202,8 @@ describe Monetize do
       expect(Monetize.parse('$5.95-')).to eq five_ninety_five
     end
 
-    it 'raises ArgumentError when unable to detect polarity' do
-      expect { Monetize.parse('-$5.95-') }.to raise_error Monetize::ParseError
+    it 'returns nil when unable to detect polarity' do
+      expect(Monetize.parse('-$5.95-')).to be_nil
     end
 
     it 'parses correctly strings with exactly 3 decimal digits' do
@@ -293,6 +293,18 @@ describe Monetize do
         expect('€8.883.331,0034'.to_money('EU4')).to eq Money.new(8_883_331_0034, 'EU4')
         # rubocop:enable Style/NumericLiterals
       end
+    end
+  end
+
+  describe '.parse!' do
+    it 'does not return a price if there is a price range' do
+      expect { Monetize.parse!('$5.95-10.95') }.to raise_error Monetize::ParseError
+      expect { Monetize.parse!('$5.95 - 10.95') }.to raise_error Monetize::ParseError
+      expect { Monetize.parse!('$5.95 - $10.95') }.to raise_error Monetize::ParseError
+    end
+
+    it 'raises ArgumentError when unable to detect polarity' do
+      expect { Monetize.parse!('-$5.95-') }.to raise_error Monetize::ParseError
     end
   end
 
