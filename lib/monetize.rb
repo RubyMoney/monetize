@@ -52,6 +52,12 @@ module Monetize
   end
 
   def self.parse(input, currency = Money.default_currency, options = {})
+    parse! input, currency, options
+  rescue Error
+    nil
+  end
+
+  def self.parse!(input, currency = Money.default_currency, options = {})
     return input if input.is_a?(Money)
     return from_numeric(input, currency) if input.is_a?(Numeric)
 
