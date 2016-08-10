@@ -183,9 +183,9 @@ describe Monetize do
     end
 
     it 'returns nil if input is a price range' do
-      expect(Monetize.parse('$5.95-10.95')).to be_nil
-      expect(Monetize.parse('$5.95 - 10.95')).to be_nil
-      expect(Monetize.parse('$5.95 - $10.95')).to be_nil
+      expect(Monetize.parse('$5.95-10.95')).to eq Money.empty
+      expect(Monetize.parse('$5.95 - 10.95')).to eq Money.empty
+      expect(Monetize.parse('$5.95 - $10.95')).to eq Money.empty
     end
 
     it 'does not return a price for completely invalid input' do
@@ -203,7 +203,7 @@ describe Monetize do
     end
 
     it 'returns nil when unable to detect polarity' do
-      expect(Monetize.parse('-$5.95-')).to be_nil
+      expect(Monetize.parse('-$5.95-')).to eq Money.empty
     end
 
     it 'parses correctly strings with exactly 3 decimal digits' do

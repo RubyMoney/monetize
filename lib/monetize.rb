@@ -54,7 +54,7 @@ module Monetize
   def self.parse(input, currency = Money.default_currency, options = {})
     parse! input, currency, options
   rescue Error
-    nil
+    Money.empty
   end
 
   def self.parse!(input, currency = Money.default_currency, options = {})
