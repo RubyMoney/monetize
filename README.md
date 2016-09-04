@@ -37,7 +37,7 @@ Monetize.parse("GBP 100") == Money.new(100_00, "GBP")
 
 ```ruby
 >> Monetize.parse('OMG 100')
-=> Money.empty
+=> #<Money fractional:0 currency:USD>
 
 >> Monetize.parse!('OMG 100')
 Monetize::ParseError: Unknown currency 'omg'
