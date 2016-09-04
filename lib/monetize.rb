@@ -62,7 +62,7 @@ module Monetize
   def self.parse(input, currency = Money.default_currency, options = {})
     parse! input, currency, options
   rescue Error
-    empty_value
+    options.fetch(:empty_value) { empty_value }
   end
 
   def self.parse!(input, currency = Money.default_currency, options = {})

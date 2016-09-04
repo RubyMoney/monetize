@@ -296,11 +296,18 @@ describe Monetize do
     end
 
     context 'empty value configuration' do
-      before { Monetize.empty_value = nil }
-
       it 'returns a custom empty value' do
-        expect(Monetize.parse('$5.95-10.95')).to eq nil
-        expect(Monetize.parse('123 OMG')).to eq nil
+        expect(Monetize.parse('$5.95-10.95', nil, empty_value: nil)).to eq nil
+        expect(Monetize.parse('123 OMG', nil, empty_value: nil)).to eq nil
+      end
+
+      context 'with global option' do
+        before { Monetize.empty_value = nil }
+
+        it 'returns a custom empty value' do
+          expect(Monetize.parse('$5.95-10.95')).to eq nil
+          expect(Monetize.parse('123 OMG')).to eq nil
+        end
       end
     end
   end
