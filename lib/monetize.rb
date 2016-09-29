@@ -27,6 +27,12 @@ module Monetize
     'Fr'   => 'CHF',
     'zł'   => 'PLN',
     '₸'    => 'KZT',
+    'RM'   => 'MYR',
+    'Rp'   => 'IDR',
+    'S$'   => 'SGD',
+    'HK$'  => 'HKD',
+    'NT$'  => 'TWD',
+    '₱'    => 'PHP'
   }
 
   MULTIPLIER_SUFFIXES = {
