@@ -182,6 +182,12 @@ describe Monetize do
       expect(Monetize.parse('1,111,234,567.89')).to eq Money.new(1_111_234_567_89, 'USD')
     end
 
+    it 'parses DKK-formatted inputs' do
+      expect(Monetize.parse('kr.123,45', 'DKK')).to eq Money.new(123_45, 'DKK')
+      expect(Monetize.parse('kr.123.45', 'DKK')).to eq Money.new(123_45, 'DKK')
+      expect(Monetize.parse('kr.45k', 'DKK')).to eq Money.new(45_000_00, 'DKK')
+    end
+
     it 'returns nil if input is a price range' do
       expect(Monetize.parse('$5.95-10.95')).to be_nil
       expect(Monetize.parse('$5.95 - 10.95')).to be_nil

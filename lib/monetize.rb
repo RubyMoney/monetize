@@ -120,7 +120,7 @@ module Monetize
   def self.extract_cents(input, currency = Money.default_currency)
     multiplier_exp, input = extract_multiplier(input)
 
-    num = input.gsub(/[^\d.,'-]/, '')
+    num = input.gsub(/(?:^#{currency.symbol}|[^\d.,'-]+)/, '')
 
     negative, num = extract_sign(num)
 
