@@ -1,7 +1,7 @@
 # Changelog
 
 ## 1.5.0
-- Added extra currencies:
+- Add extra currencies:
   - Azerbaijani manat
   - Chinese yuan
   - Czech koruna
@@ -13,6 +13,15 @@
   - Swiss Frank
   - Polish Zloty
   - Kazakhstani Tenge
+- Parsing a Money object returns it unchanged
+- Fix issue with loosing precision on BigDecimal input
+- Add Swedish krona
+- Exclud ambiguous kr symbol from parsing
+- Fix JPY parsing
+- Sublcass all errors to Monetize::Error
+- Fix ruby 1.9.3 compatibility
+- Suppress errors when using parse. Use `parse!` instead
+- Strip currency symbol prefix when parsing input
 
 
 ## 1.4.0
