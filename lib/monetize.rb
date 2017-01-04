@@ -92,6 +92,7 @@ module Monetize
     value *= currency.subunit_to_unit
     Money.new(value, currency)
   end
+  singleton_class.send(:alias_method, :from_integer, :from_fixnum)
 
   def self.from_float(value, currency = Money.default_currency)
     value = BigDecimal.new(value.to_s)
@@ -107,7 +108,7 @@ module Monetize
 
   def self.from_numeric(value, currency = Money.default_currency)
     case value
-    when Fixnum
+    when Integer
       from_fixnum(value, currency)
     when Numeric
       value = BigDecimal.new(value.to_s)
