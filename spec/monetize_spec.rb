@@ -232,11 +232,11 @@ describe Monetize do
     end
 
     context 'parsing an instance of Numeric class' do
-      let(:fixnum)      { 10 }
+      let(:integer)     { 10 }
       let(:float)       { 10.0 }
       let(:big_decimal) { BigDecimal.new('10') }
 
-      [:fixnum, :float, :big_decimal].each do |type|
+      [:integer, :float, :big_decimal].each do |type|
         it "returns a new Money object based on the #{type} input" do
           money = Monetize.parse(send(type), 'USD')
 
@@ -385,6 +385,10 @@ describe Monetize do
 
       m = Monetize.from_fixnum(1, 'EUR')
       expect(m.currency).to eq Money::Currency.wrap('EUR')
+    end
+
+    it 'is aliased as from_integer' do
+      expect(Monetize.from_integer(1)).to eq(Monetize.from_fixnum(1))
     end
   end
 
