@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.0
+- Ruby 2.4.0 support
+- Money version updated to 6.8
+
 ## 1.5.0
 - Add extra currencies:
   - Azerbaijani manat
@@ -22,7 +26,6 @@
 - Fix ruby 1.9.3 compatibility
 - Suppress errors when using parse. Use `parse!` instead
 - Strip currency symbol prefix when parsing input
-
 
 ## 1.4.0
 - Required Forwardable on Collection to resolve NameError [\#44](https://github.com/RubyMoney/monetize/issues/44)
