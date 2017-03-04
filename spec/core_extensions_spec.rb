@@ -182,6 +182,14 @@ describe Monetize, 'core extensions' do
         end
       end
 
+      context 'when currency argument is a hash' do
+        subject(:hash) { {cents: 100, currency: {iso_code: 'EUR'}} }
+
+        it 'converts Hash to Money using iso_code from currency hash' do
+          expect(hash.to_money).to eq(Money.new(100, 'EUR'))
+        end
+      end
+
       context 'when no currency is passed' do
         subject(:hash) { {cents: 123} }
 
@@ -189,6 +197,14 @@ describe Monetize, 'core extensions' do
 
         it 'converts Hash to Money using default value' do
           expect(hash.to_money('USD')).to eq(Money.new(123, 'USD'))
+        end
+      end
+
+      context "when key name is 'fractional'" do
+        subject(:hash) { {fractional: 100} }
+
+        it 'converts Hash to Money, interpreting fractional as cents' do
+          expect(hash.to_money).to eq(Money.new(100, 'USD'))
         end
       end
     end
