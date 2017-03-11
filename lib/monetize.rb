@@ -27,6 +27,7 @@ module Monetize
     'Fr'   => 'CHF',
     'zł'   => 'PLN',
     '₸'    => 'KZT',
+    "₩"    => 'KRW',
   }
 
   MULTIPLIER_SUFFIXES = {
