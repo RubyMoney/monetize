@@ -48,3 +48,4 @@
 - Add rake console task
 - Fix issue where parsing a Money object resulted in a Money object with its currency set to `Money.default_currency`,
   rather than the currency that it was sent in as.
+- Add South Korean Won currency
