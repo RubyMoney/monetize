@@ -50,12 +50,20 @@ module Monetize
     # though, it will try to determine the correct separator by itself. Set this
     # to true to enforce the delimiters set in the currency all the time.
     attr_accessor :enforce_currency_delimiters
+
+    # Default: `Money.empty`
+    attr_writer :empty_value
+
+    def empty_value
+      return @empty_value if instance_variable_defined?('@empty_value')
+      Money.empty
+    end
   end
 
   def self.parse(input, currency = Money.default_currency, options = {})
     parse! input, currency, options
   rescue Error
-    nil
+    options.fetch(:empty_value) { empty_value }
   end
 
   def self.parse!(input, currency = Money.default_currency, options = {})

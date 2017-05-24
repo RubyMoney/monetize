@@ -189,9 +189,9 @@ describe Monetize do
     end
 
     it 'returns nil if input is a price range' do
-      expect(Monetize.parse('$5.95-10.95')).to be_nil
-      expect(Monetize.parse('$5.95 - 10.95')).to be_nil
-      expect(Monetize.parse('$5.95 - $10.95')).to be_nil
+      expect(Monetize.parse('$5.95-10.95')).to eq Money.empty
+      expect(Monetize.parse('$5.95 - 10.95')).to eq Money.empty
+      expect(Monetize.parse('$5.95 - $10.95')).to eq Money.empty
     end
 
     it 'does not return a price for completely invalid input' do
@@ -209,7 +209,7 @@ describe Monetize do
     end
 
     it 'returns nil when unable to detect polarity' do
-      expect(Monetize.parse('-$5.95-')).to be_nil
+      expect(Monetize.parse('-$5.95-')).to eq Money.empty
     end
 
     it 'parses correctly strings with exactly 3 decimal digits' do
@@ -298,6 +298,22 @@ describe Monetize do
         expect('$8,883,331.0034'.to_money('BAR')).to eq Money.new(8_883_331_0034, 'BAR')
         expect('€8.883.331,0034'.to_money('EU4')).to eq Money.new(8_883_331_0034, 'EU4')
         # rubocop:enable Style/NumericLiterals
+      end
+    end
+
+    context 'empty value configuration' do
+      it 'returns a custom empty value' do
+        expect(Monetize.parse('$5.95-10.95', nil, empty_value: nil)).to eq nil
+        expect(Monetize.parse('123 OMG', nil, empty_value: nil)).to eq nil
+      end
+
+      context 'with global option' do
+        before { Monetize.empty_value = nil }
+
+        it 'returns a custom empty value' do
+          expect(Monetize.parse('$5.95-10.95')).to eq nil
+          expect(Monetize.parse('123 OMG')).to eq nil
+        end
       end
     end
   end
