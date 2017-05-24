@@ -16,6 +16,7 @@ module Monetize
     'R'    => 'ZAR',
     '¥'    => 'JPY',
     'C$'   => 'CAD',
+    'AU$'   => 'AUD',
     '₼'    => 'AZN',
     '元'   => 'CNY',
     'Kč'   => 'CZK',
