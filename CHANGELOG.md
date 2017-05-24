@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.7.0
+- Money version updated to 6.9
+- Coveralls version update to 0.8.20
+- Add South Korean Won currency
+- Improve conversion to Money from Hash
+
 ## 1.6.0
 - Ruby 2.4.0 support
 - Money version updated to 6.8
