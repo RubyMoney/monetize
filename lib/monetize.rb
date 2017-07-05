@@ -4,7 +4,7 @@ require 'money'
 require 'monetize/core_extensions'
 require 'monetize/errors'
 require 'monetize/version'
-require 'collection'
+require 'monetize/collection'
 
 module Monetize
   CURRENCY_SYMBOLS = {
