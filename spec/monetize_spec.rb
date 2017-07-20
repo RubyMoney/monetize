@@ -430,6 +430,12 @@ describe Monetize do
       expect(Monetize.from_bigdecimal(BigDecimal.new('1'), 'JPY')).to eq Money.new(1, 'JPY')
     end
 
+    it 'respects rounding mode when rounding amount to the nearest cent' do
+      amount = BigDecimal.new('1.005')
+
+      expect(Monetize.from_bigdecimal(amount, 'USD')).to eq Money.from_amount(amount, 'USD')
+    end
+
     it 'accepts a currency options' do
       m = Monetize.from_bigdecimal(BigDecimal.new('1'))
       expect(m.currency).to eq Money.default_currency

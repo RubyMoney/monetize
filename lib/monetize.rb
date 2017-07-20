@@ -101,10 +101,7 @@ module Monetize
   end
 
   def self.from_bigdecimal(value, currency = Money.default_currency)
-    currency = Money::Currency.wrap(currency)
-    value *= currency.subunit_to_unit
-    value = value.round unless Money.infinite_precision
-    Money.new(value, currency)
+    Money.from_amount(value, currency)
   end
 
   def self.from_numeric(value, currency = Money.default_currency)
