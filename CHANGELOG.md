@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.8.0
+- Drop support for end of life rubies
+  - Ruby 1.9.3 EOL date 2015-02-23
+  - Ruby 2.0.0 EOL date 2016-02-24
+  - Ruby 2.1 EOL date 2017-03-31
+- Update support for Ruby from 2.4.1 to 2.4.2
+- Update support for JRuby from 9.0.5.0 to 9.1.13.0
+
 ## 1.7.1
 - tins updated to 1.15.0
 - term-ansicolor updated to 1.6.0
