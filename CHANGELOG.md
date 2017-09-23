@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.7.1
+- tins updated to 1.15.0
+- term-ansicolor updated to 1.6.0
+
 ## 1.7.0
 - Money version updated to 6.9
 - Coveralls version update to 0.8.20
