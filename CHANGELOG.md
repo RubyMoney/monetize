@@ -49,7 +49,27 @@
 - Updated Money version dependency to 6.6
 
 ## 1.3.0
+- Add Lira Sign (₤) as a symbol for GBP
+
+## 1.2.0
+- Add support for parsing Yen symbol
+- Add `Monetize.parse_collection` and `Monetize::Collection` class for parsing multiple values
+- Add parsing of C$ for Canadian Dollar
 - Add NilClass extension
+- Add Hash extension
+
+## 1.1.0
+- Add :assume_from_symbol option to #parse
+- Enable #parse to detect currency with signed amounts
+- Updated Money version dependency to 6.5.0
+
+## 1.0.0
+- Updated Money version dependency to 6.4.0
+
+## 0.4.1
+- Updated Money version dependency to 6.2.1
+
+## 0.4.0
 - Added correct parsing of Brazilian Real $R symbol
 - Add testing task for  Brazilian Real parsing
-- Add Lira Sign (₤) as a symbol for GBP
+- Updated Money version dependency to 6.2.0
