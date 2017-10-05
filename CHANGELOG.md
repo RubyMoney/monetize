@@ -19,19 +19,18 @@
   - Chinese yuan
   - Czech koruna
   - Hungarian forint
-  - Indinan rupee
+  - Indian rupee
   - Russian ruble
   - Turkish Lira
   - Ukrainian Hryvnia
   - Swiss Frank
   - Polish Zloty
   - Kazakhstani Tenge
-- Parsing a Money object returns it unchanged
-- Fix issue with loosing precision on BigDecimal input
+- Fix issue with losing precision on BigDecimal input
 - Add Swedish krona
-- Exclud ambiguous kr symbol from parsing
+- Exclude ambiguous kr symbol from parsing
 - Fix JPY parsing
-- Sublcass all errors to Monetize::Error
+- Subclass all errors to Monetize::Error
 - Fix ruby 1.9.3 compatibility
 - Suppress errors when using parse. Use `parse!` instead
 - Strip currency symbol prefix when parsing input
