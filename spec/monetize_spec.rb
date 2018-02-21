@@ -56,7 +56,7 @@ describe Monetize do
           Monetize.assume_from_symbol = false
         end
 
-        Monetize::CURRENCY_SYMBOLS.each_pair do |symbol, iso_code|
+        Monetize::Parser::CURRENCY_SYMBOLS.each_pair do |symbol, iso_code|
           context iso_code do
             let(:currency) { Money::Currency.find(iso_code) }
             let(:amount) { 5_95 }
