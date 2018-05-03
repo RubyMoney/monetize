@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.8.0
+- Money version updated to 6.11.2
+- Fix rounding problem in `.from_bigdecimal`
+
 ## 1.7.0
 - Add South Korean Won currency
 - Money version updated to 6.9
