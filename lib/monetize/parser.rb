@@ -56,10 +56,8 @@ module Monetize
     end
 
     def parse_currency
-      assume_from_symbol = options.fetch(:assume_from_symbol) { Monetize.assume_from_symbol }
-
       computed_currency = nil
-      computed_currency = compute_currency if assume_from_symbol
+      computed_currency = compute_currency if assume_from_symbol?
       computed_currency ||= input[/[A-Z]{2,3}/]
 
       computed_currency || fallback_currency || Money.default_currency
@@ -68,6 +66,10 @@ module Monetize
     private
 
     attr_reader :input, :fallback_currency, :options
+
+    def assume_from_symbol?
+      options.fetch(:assume_from_symbol) { Monetize.assume_from_symbol }
+    end
 
     def apply_multiplier(multiplier_exp, major, minor)
       major *= 10**multiplier_exp
