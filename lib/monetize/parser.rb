@@ -56,11 +56,11 @@ module Monetize
     end
 
     def parse_currency
-      computed_currency = if options.fetch(:assume_from_symbol) { Monetize.assume_from_symbol }
-                            compute_currency
-                          else
-                            input[/[A-Z]{2,3}/]
-                          end
+      assume_from_symbol = options.fetch(:assume_from_symbol) { Monetize.assume_from_symbol }
+
+      computed_currency = nil
+      computed_currency = compute_currency if assume_from_symbol
+      computed_currency ||= input[/[A-Z]{2,3}/]
 
       computed_currency || fallback_currency || Money.default_currency
     end
@@ -82,17 +82,9 @@ module Monetize
       negative ? cents * -1 : cents
     end
 
-    def contains_currency_symbol?
-      input =~ currency_symbol_regex
-    end
-
     def compute_currency
-      if contains_currency_symbol?
-        matches = input.match(currency_symbol_regex)
-        CURRENCY_SYMBOLS[matches[:symbol]]
-      else
-        input[/[A-Z]{2,3}/]
-      end
+      matches = input.match(currency_symbol_regex)
+      CURRENCY_SYMBOLS[matches[:symbol]] if matches
     end
 
     def extract_major_minor(num, currency)
