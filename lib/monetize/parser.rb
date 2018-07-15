@@ -42,7 +42,7 @@ module Monetize
 
       negative, num = extract_sign(num)
 
-      num.chop! if num.match(/[\.|,]$/)
+      num.chop! if num =~ /[\.|,]$/
 
       major, minor = extract_major_minor(num, currency)
 
@@ -108,7 +108,7 @@ module Monetize
     def extract_major_minor_with_single_delimiter(num, currency, delimiter)
       if delimiter == currency.decimal_mark
         split_major_minor(num, delimiter)
-      elsif Monetize.enforce_currency_delimiters and delimiter == currency.thousands_separator
+      elsif Monetize.enforce_currency_delimiters && delimiter == currency.thousands_separator
         [num.gsub(delimiter, ''), 0]
       else
         extract_major_minor_with_tentative_delimiter(num, delimiter)
@@ -122,7 +122,7 @@ module Monetize
       else
         possible_major, possible_minor = split_major_minor(num, delimiter)
 
-        if possible_minor.length != 3 or possible_major.length > 3 or delimiter == '.'
+        if possible_minor.length != 3 || possible_major.length > 3 || delimiter == '.'
           # Doesn't look like thousands separator
           [possible_major, possible_minor]
         else
@@ -141,7 +141,7 @@ module Monetize
     end
 
     def extract_sign(input)
-      result = (input =~ /^-+(.*)$/ or input =~ /^(.*)-+$/) ? [true, $1] : [false, input]
+      result = (input =~ /^-+(.*)$/ || input =~ /^(.*)-+$/) ? [true, $1] : [false, input]
       fail ParseError, 'Invalid amount (hyphen)' if result[1].include?('-')
       result
     end
@@ -168,8 +168,7 @@ module Monetize
 
     def split_major_minor(num, delimiter)
       major, minor = num.split(delimiter)
-      minor = '00' unless minor
-      [major, minor]
+      [major, minor || '00']
     end
 
     def currency_symbol_regex
