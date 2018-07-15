@@ -19,64 +19,64 @@ module Monetize
     # though, it will try to determine the correct separator by itself. Set this
     # to true to enforce the delimiters set in the currency all the time.
     attr_accessor :enforce_currency_delimiters
-  end
 
-  def self.parse(input, currency = Money.default_currency, options = {})
-    parse! input, currency, options
-  rescue Error
-    nil
-  end
+    def parse(input, currency = Money.default_currency, options = {})
+      parse! input, currency, options
+    rescue Error
+      nil
+    end
 
-  def self.parse!(input, currency = Money.default_currency, options = {})
-    return input if input.is_a?(Money)
-    return from_numeric(input, currency) if input.is_a?(Numeric)
+    def parse!(input, currency = Money.default_currency, options = {})
+      return input if input.is_a?(Money)
+      return from_numeric(input, currency) if input.is_a?(Numeric)
 
-    parser = Monetize::Parser.new(input, currency, options)
-    currency_from_input = Money::Currency.wrap(parser.parse_currency)
+      parser = Monetize::Parser.new(input, currency, options)
+      currency_from_input = Money::Currency.wrap(parser.parse_currency)
 
-    Money.new(parser.parse_cents(currency_from_input), currency_from_input)
-  rescue Money::Currency::UnknownCurrency => e
-    fail ParseError, e.message
-  end
+      Money.new(parser.parse_cents(currency_from_input), currency_from_input)
+    rescue Money::Currency::UnknownCurrency => e
+      fail ParseError, e.message
+    end
 
-  def self.parse_collection(input, currency = Money.default_currency, options = {})
-    Collection.parse(input, currency, options)
-  end
+    def parse_collection(input, currency = Money.default_currency, options = {})
+      Collection.parse(input, currency, options)
+    end
 
-  def self.from_string(value, currency = Money.default_currency)
-    value = BigDecimal.new(value.to_s)
-    from_bigdecimal(value, currency)
-  end
-
-  def self.from_fixnum(value, currency = Money.default_currency)
-    currency = Money::Currency.wrap(currency)
-    value *= currency.subunit_to_unit
-    Money.new(value, currency)
-  end
-  singleton_class.send(:alias_method, :from_integer, :from_fixnum)
-
-  def self.from_float(value, currency = Money.default_currency)
-    value = BigDecimal.new(value.to_s)
-    from_bigdecimal(value, currency)
-  end
-
-  def self.from_bigdecimal(value, currency = Money.default_currency)
-    Money.from_amount(value, currency)
-  end
-
-  def self.from_numeric(value, currency = Money.default_currency)
-    case value
-    when Integer
-      from_fixnum(value, currency)
-    when Numeric
+    def from_string(value, currency = Money.default_currency)
       value = BigDecimal.new(value.to_s)
       from_bigdecimal(value, currency)
-    else
-      fail ArgumentError, "'value' should be a type of Numeric"
     end
-  end
 
-  def self.extract_cents(input, currency = Money.default_currency)
-    Monetize::Parser.new(input).parse_cents(currency)
+    def from_fixnum(value, currency = Money.default_currency)
+      currency = Money::Currency.wrap(currency)
+      value *= currency.subunit_to_unit
+      Money.new(value, currency)
+    end
+    alias_method :from_integer, :from_fixnum
+
+    def from_float(value, currency = Money.default_currency)
+      value = BigDecimal.new(value.to_s)
+      from_bigdecimal(value, currency)
+    end
+
+    def from_bigdecimal(value, currency = Money.default_currency)
+      Money.from_amount(value, currency)
+    end
+
+    def from_numeric(value, currency = Money.default_currency)
+      case value
+      when Integer
+        from_fixnum(value, currency)
+      when Numeric
+        value = BigDecimal.new(value.to_s)
+        from_bigdecimal(value, currency)
+      else
+        fail ArgumentError, "'value' should be a type of Numeric"
+      end
+    end
+
+    def extract_cents(input, currency = Money.default_currency)
+      Monetize::Parser.new(input).parse_cents(currency)
+    end
   end
 end
