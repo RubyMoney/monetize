@@ -483,14 +483,6 @@ describe Monetize do
       expect { Monetize.from_numeric('100') }.to raise_error(Monetize::ArgumentError)
     end
 
-    it 'optimizes workload' do
-      expect(Monetize).to receive(:from_fixnum).with(1, 'USD').and_return(Money.new(1_00, 'USD'))
-      expect(Monetize.from_numeric(1, 'USD')).to eq Money.new(1_00, 'USD')
-      expect(Monetize).to receive(:from_bigdecimal).with(BigDecimal.new('1.0'), 'USD').
-        and_return(Money.new(1_00, 'USD'))
-      expect(Monetize.from_numeric(1.0, 'USD')).to eq Money.new(1_00, 'USD')
-    end
-
     it 'respects :subunit_to_unit currency property' do
       expect(Monetize.from_numeric(1, 'USD')).to eq Money.new(1_00, 'USD')
       expect(Monetize.from_numeric(1, 'TND')).to eq Money.new(1_000, 'TND')

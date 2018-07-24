@@ -44,19 +44,16 @@ module Monetize
 
     def from_string(value, currency = Money.default_currency)
       value = BigDecimal.new(value.to_s)
-      from_bigdecimal(value, currency)
+      Money.from_amount(value, currency)
     end
 
     def from_fixnum(value, currency = Money.default_currency)
-      currency = Money::Currency.wrap(currency)
-      value *= currency.subunit_to_unit
-      Money.new(value, currency)
+      Money.from_amount(value, currency)
     end
     alias_method :from_integer, :from_fixnum
 
     def from_float(value, currency = Money.default_currency)
-      value = BigDecimal.new(value.to_s)
-      from_bigdecimal(value, currency)
+      Money.from_amount(value, currency)
     end
 
     def from_bigdecimal(value, currency = Money.default_currency)
@@ -64,15 +61,8 @@ module Monetize
     end
 
     def from_numeric(value, currency = Money.default_currency)
-      case value
-      when Integer
-        from_fixnum(value, currency)
-      when Numeric
-        value = BigDecimal.new(value.to_s)
-        from_bigdecimal(value, currency)
-      else
-        fail ArgumentError, "'value' should be a type of Numeric"
-      end
+      fail ArgumentError, "'value' should be a type of Numeric" unless value.is_a?(Numeric)
+      Money.from_amount(value, currency)
     end
 
     def extract_cents(input, currency = Money.default_currency)
