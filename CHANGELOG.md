@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.9.0
+- Relax Money gem dependency to ~> 6.12
+- Refactor `Monetize::Parser`
+- Ruby 2.5 support
+
 ## 1.8.0
 - Money version updated to 6.11.2
 - Fix rounding problem in `.from_bigdecimal`
