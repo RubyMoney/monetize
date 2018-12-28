@@ -234,7 +234,7 @@ describe Monetize do
     context 'parsing an instance of Numeric class' do
       let(:integer)     { 10 }
       let(:float)       { 10.0 }
-      let(:big_decimal) { BigDecimal.new('10') }
+      let(:big_decimal) { BigDecimal('10') }
 
       [:integer, :float, :big_decimal].each do |type|
         it "returns a new Money object based on the #{type} input" do
@@ -419,31 +419,31 @@ describe Monetize do
 
   describe '.from_bigdecimal' do
     it 'converts given amount to cents' do
-      expect(Monetize.from_bigdecimal(BigDecimal.new('1'))).to eq Money.new(1_00)
-      expect(Monetize.from_bigdecimal(BigDecimal.new('1'))).to eq Money.new(1_00, 'USD')
-      expect(Monetize.from_bigdecimal(BigDecimal.new('1'), 'EUR')).to eq Money.new(1_00, 'EUR')
+      expect(Monetize.from_bigdecimal(BigDecimal('1'))).to eq Money.new(1_00)
+      expect(Monetize.from_bigdecimal(BigDecimal('1'))).to eq Money.new(1_00, 'USD')
+      expect(Monetize.from_bigdecimal(BigDecimal('1'), 'EUR')).to eq Money.new(1_00, 'EUR')
     end
 
     it 'respects :subunit_to_unit currency property' do
-      expect(Monetize.from_bigdecimal(BigDecimal.new('1'), 'USD')).to eq Money.new(1_00, 'USD')
-      expect(Monetize.from_bigdecimal(BigDecimal.new('1'), 'TND')).to eq Money.new(1_000, 'TND')
-      expect(Monetize.from_bigdecimal(BigDecimal.new('1'), 'JPY')).to eq Money.new(1, 'JPY')
+      expect(Monetize.from_bigdecimal(BigDecimal('1'), 'USD')).to eq Money.new(1_00, 'USD')
+      expect(Monetize.from_bigdecimal(BigDecimal('1'), 'TND')).to eq Money.new(1_000, 'TND')
+      expect(Monetize.from_bigdecimal(BigDecimal('1'), 'JPY')).to eq Money.new(1, 'JPY')
     end
 
     it 'respects rounding mode when rounding amount to the nearest cent' do
-      amount = BigDecimal.new('1.005')
+      amount = BigDecimal('1.005')
 
       expect(Monetize.from_bigdecimal(amount, 'USD')).to eq Money.from_amount(amount, 'USD')
     end
 
     it 'accepts a currency options' do
-      m = Monetize.from_bigdecimal(BigDecimal.new('1'))
+      m = Monetize.from_bigdecimal(BigDecimal('1'))
       expect(m.currency).to eq Money.default_currency
 
-      m = Monetize.from_bigdecimal(BigDecimal.new('1'), Money::Currency.wrap('EUR'))
+      m = Monetize.from_bigdecimal(BigDecimal('1'), Money::Currency.wrap('EUR'))
       expect(m.currency).to eq Money::Currency.wrap('EUR')
 
-      m = Monetize.from_bigdecimal(BigDecimal.new('1'), 'EUR')
+      m = Monetize.from_bigdecimal(BigDecimal('1'), 'EUR')
       expect(m.currency).to eq Money::Currency.wrap('EUR')
     end
 
@@ -457,11 +457,11 @@ describe Monetize do
       end
 
       it 'keeps precision' do
-        expect(Monetize.from_bigdecimal(BigDecimal.new('1'))).to eq Money.new(100)
-        expect(Monetize.from_bigdecimal(BigDecimal.new('1.23456'))).to eq Money.new(123.456)
-        expect(Monetize.from_bigdecimal(BigDecimal.new('-1.23456'))).to eq Money.new(-123.456)
-        expect(Monetize.from_bigdecimal(BigDecimal.new('1.23456'))).to eq Money.new(123.456, 'USD')
-        expect(Monetize.from_bigdecimal(BigDecimal.new('1.23456'), 'EUR')).to eq Money.new(123.456, 'EUR')
+        expect(Monetize.from_bigdecimal(BigDecimal('1'))).to eq Money.new(100)
+        expect(Monetize.from_bigdecimal(BigDecimal('1.23456'))).to eq Money.new(123.456)
+        expect(Monetize.from_bigdecimal(BigDecimal('-1.23456'))).to eq Money.new(-123.456)
+        expect(Monetize.from_bigdecimal(BigDecimal('1.23456'))).to eq Money.new(123.456, 'USD')
+        expect(Monetize.from_bigdecimal(BigDecimal('1.23456'), 'EUR')).to eq Money.new(123.456, 'EUR')
 
         expect('1'.to_money).to eq Money.new(100)
         expect('1.23456'.to_money).to eq Money.new(123.456)
@@ -476,7 +476,7 @@ describe Monetize do
     it 'converts given amount to cents' do
       expect(Monetize.from_numeric(1)).to eq Money.new(1_00)
       expect(Monetize.from_numeric(1.0)).to eq Money.new(1_00)
-      expect(Monetize.from_numeric(BigDecimal.new('1'))).to eq Money.new(1_00)
+      expect(Monetize.from_numeric(BigDecimal('1'))).to eq Money.new(1_00)
     end
 
     it 'raises ArgumentError with unsupported argument' do
