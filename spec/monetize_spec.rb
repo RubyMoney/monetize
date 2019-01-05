@@ -212,6 +212,14 @@ describe Monetize do
       expect(Monetize.parse('-$5.95-')).to be_nil
     end
 
+    it 'returns nil when more than 2 digit separators are used' do
+      expect(Monetize.parse("123.34,56'89 EUR")).to be_nil
+    end
+
+    it 'parses correctly strings with repeated digit separator' do
+      expect(Monetize.parse('19.12.89', 'EUR')).to eq Money.new(191_289_00, 'EUR')
+    end
+
     it 'parses correctly strings with exactly 3 decimal digits' do
       expect(Monetize.parse('6,534', 'EUR')).to eq Money.new(653, 'EUR')
       expect(Monetize.parse('6.534', 'EUR')).to eq Money.new(653, 'EUR')
@@ -335,6 +343,10 @@ describe Monetize do
       collection = Monetize.parse_collection('$4 - $10')
       expect(collection.first).to eq Monetize.parse('$4')
       expect(collection.last).to eq Monetize.parse('$10')
+    end
+
+    it 'raises an error if argument is invalid' do
+      expect { Monetize.parse_collection(nil) }.to raise_error Monetize::ArgumentError
     end
   end
 
