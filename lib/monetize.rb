@@ -43,7 +43,7 @@ module Monetize
     end
 
     def from_string(value, currency = Money.default_currency)
-      value = BigDecimal.new(value.to_s)
+      value = BigDecimal(value.to_s)
       Money.from_amount(value, currency)
     end
 

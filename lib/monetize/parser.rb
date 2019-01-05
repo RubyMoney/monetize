@@ -152,7 +152,7 @@ module Monetize
 
     def set_minor_precision(minor, currency)
       if Money.infinite_precision
-        (BigDecimal.new(minor) / (10**minor.size)) * currency.subunit_to_unit
+        (BigDecimal(minor) / (10**minor.size)) * currency.subunit_to_unit
       elsif minor.size < currency.decimal_places
         (minor + ('0' * currency.decimal_places))[0, currency.decimal_places].to_i
       elsif minor.size > currency.decimal_places

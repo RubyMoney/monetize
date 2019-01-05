@@ -31,7 +31,7 @@ describe Monetize, 'core extensions' do
         expect(money.cents).to eq 100_37
         expect(money.currency).to eq Money.default_currency
 
-        money = BigDecimal.new('1234').to_money
+        money = BigDecimal('1234').to_money
         expect(money.cents).to eq 1_234_00
         expect(money.currency).to eq Money.default_currency
       end
