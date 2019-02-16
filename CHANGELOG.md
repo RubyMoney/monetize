@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.9.1
+- Ruby 2.6 support
+
 ## 1.9.0
 - Relax Money gem dependency to ~> 6.12
 - Refactor `Monetize::Parser`
