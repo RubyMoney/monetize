@@ -8,6 +8,8 @@ module Monetize
       '£'  => 'GBP',
       '₤'  => 'GBP',
       'R$' => 'BRL',
+      'RM' => 'MYR',
+      'Rp' => 'IDR',
       'R'  => 'ZAR',
       '¥'  => 'JPY',
       'C$' => 'CAD',
@@ -23,6 +25,10 @@ module Monetize
       'zł' => 'PLN',
       '₸'  => 'KZT',
       "₩"  => 'KRW',
+      'S$' => 'SGD',
+      'HK$'=> 'HKD',
+      'NT$'=> 'TWD',
+      '₱'  => 'PHP',
     }
 
     MULTIPLIER_SUFFIXES = { 'K' => 3, 'M' => 6, 'B' => 9, 'T' => 12 }
