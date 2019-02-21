@@ -56,7 +56,7 @@ describe Monetize do
           Monetize.assume_from_symbol = false
         end
 
-        Monetize::CURRENCY_SYMBOLS.each_pair do |symbol, iso_code|
+        Monetize::Parser::CURRENCY_SYMBOLS.each_pair do |symbol, iso_code|
           context iso_code do
             let(:currency) { Money::Currency.find(iso_code) }
             let(:amount) { 5_95 }
@@ -182,6 +182,12 @@ describe Monetize do
       expect(Monetize.parse('1,111,234,567.89')).to eq Money.new(1_111_234_567_89, 'USD')
     end
 
+    it 'parses DKK-formatted inputs' do
+      expect(Monetize.parse('kr.123,45', 'DKK')).to eq Money.new(123_45, 'DKK')
+      expect(Monetize.parse('kr.123.45', 'DKK')).to eq Money.new(123_45, 'DKK')
+      expect(Monetize.parse('kr.45k', 'DKK')).to eq Money.new(45_000_00, 'DKK')
+    end
+
     it 'returns nil if input is a price range' do
       expect(Monetize.parse('$5.95-10.95')).to be_nil
       expect(Monetize.parse('$5.95 - 10.95')).to be_nil
@@ -206,6 +212,14 @@ describe Monetize do
       expect(Monetize.parse('-$5.95-')).to be_nil
     end
 
+    it 'returns nil when more than 2 digit separators are used' do
+      expect(Monetize.parse("123.34,56'89 EUR")).to be_nil
+    end
+
+    it 'parses correctly strings with repeated digit separator' do
+      expect(Monetize.parse('19.12.89', 'EUR')).to eq Money.new(191_289_00, 'EUR')
+    end
+
     it 'parses correctly strings with exactly 3 decimal digits' do
       expect(Monetize.parse('6,534', 'EUR')).to eq Money.new(653, 'EUR')
       expect(Monetize.parse('6.534', 'EUR')).to eq Money.new(653, 'EUR')
@@ -226,11 +240,11 @@ describe Monetize do
     end
 
     context 'parsing an instance of Numeric class' do
-      let(:fixnum)      { 10 }
+      let(:integer)     { 10 }
       let(:float)       { 10.0 }
-      let(:big_decimal) { BigDecimal.new('10') }
+      let(:big_decimal) { BigDecimal('10') }
 
-      [:fixnum, :float, :big_decimal].each do |type|
+      [:integer, :float, :big_decimal].each do |type|
         it "returns a new Money object based on the #{type} input" do
           money = Monetize.parse(send(type), 'USD')
 
@@ -330,6 +344,10 @@ describe Monetize do
       expect(collection.first).to eq Monetize.parse('$4')
       expect(collection.last).to eq Monetize.parse('$10')
     end
+
+    it 'raises an error if argument is invalid' do
+      expect { Monetize.parse_collection(nil) }.to raise_error Monetize::ArgumentError
+    end
   end
 
   describe '.from_string' do
@@ -380,6 +398,10 @@ describe Monetize do
       m = Monetize.from_fixnum(1, 'EUR')
       expect(m.currency).to eq Money::Currency.wrap('EUR')
     end
+
+    it 'is aliased as from_integer' do
+      expect(Monetize.from_integer(1)).to eq(Monetize.from_fixnum(1))
+    end
   end
 
   describe '.from_float' do
@@ -409,25 +431,31 @@ describe Monetize do
 
   describe '.from_bigdecimal' do
     it 'converts given amount to cents' do
-      expect(Monetize.from_bigdecimal(BigDecimal.new('1'))).to eq Money.new(1_00)
-      expect(Monetize.from_bigdecimal(BigDecimal.new('1'))).to eq Money.new(1_00, 'USD')
-      expect(Monetize.from_bigdecimal(BigDecimal.new('1'), 'EUR')).to eq Money.new(1_00, 'EUR')
+      expect(Monetize.from_bigdecimal(BigDecimal('1'))).to eq Money.new(1_00)
+      expect(Monetize.from_bigdecimal(BigDecimal('1'))).to eq Money.new(1_00, 'USD')
+      expect(Monetize.from_bigdecimal(BigDecimal('1'), 'EUR')).to eq Money.new(1_00, 'EUR')
     end
 
     it 'respects :subunit_to_unit currency property' do
-      expect(Monetize.from_bigdecimal(BigDecimal.new('1'), 'USD')).to eq Money.new(1_00, 'USD')
-      expect(Monetize.from_bigdecimal(BigDecimal.new('1'), 'TND')).to eq Money.new(1_000, 'TND')
-      expect(Monetize.from_bigdecimal(BigDecimal.new('1'), 'JPY')).to eq Money.new(1, 'JPY')
+      expect(Monetize.from_bigdecimal(BigDecimal('1'), 'USD')).to eq Money.new(1_00, 'USD')
+      expect(Monetize.from_bigdecimal(BigDecimal('1'), 'TND')).to eq Money.new(1_000, 'TND')
+      expect(Monetize.from_bigdecimal(BigDecimal('1'), 'JPY')).to eq Money.new(1, 'JPY')
+    end
+
+    it 'respects rounding mode when rounding amount to the nearest cent' do
+      amount = BigDecimal('1.005')
+
+      expect(Monetize.from_bigdecimal(amount, 'USD')).to eq Money.from_amount(amount, 'USD')
     end
 
     it 'accepts a currency options' do
-      m = Monetize.from_bigdecimal(BigDecimal.new('1'))
+      m = Monetize.from_bigdecimal(BigDecimal('1'))
       expect(m.currency).to eq Money.default_currency
 
-      m = Monetize.from_bigdecimal(BigDecimal.new('1'), Money::Currency.wrap('EUR'))
+      m = Monetize.from_bigdecimal(BigDecimal('1'), Money::Currency.wrap('EUR'))
       expect(m.currency).to eq Money::Currency.wrap('EUR')
 
-      m = Monetize.from_bigdecimal(BigDecimal.new('1'), 'EUR')
+      m = Monetize.from_bigdecimal(BigDecimal('1'), 'EUR')
       expect(m.currency).to eq Money::Currency.wrap('EUR')
     end
 
@@ -441,11 +469,11 @@ describe Monetize do
       end
 
       it 'keeps precision' do
-        expect(Monetize.from_bigdecimal(BigDecimal.new('1'))).to eq Money.new(100)
-        expect(Monetize.from_bigdecimal(BigDecimal.new('1.23456'))).to eq Money.new(123.456)
-        expect(Monetize.from_bigdecimal(BigDecimal.new('-1.23456'))).to eq Money.new(-123.456)
-        expect(Monetize.from_bigdecimal(BigDecimal.new('1.23456'))).to eq Money.new(123.456, 'USD')
-        expect(Monetize.from_bigdecimal(BigDecimal.new('1.23456'), 'EUR')).to eq Money.new(123.456, 'EUR')
+        expect(Monetize.from_bigdecimal(BigDecimal('1'))).to eq Money.new(100)
+        expect(Monetize.from_bigdecimal(BigDecimal('1.23456'))).to eq Money.new(123.456)
+        expect(Monetize.from_bigdecimal(BigDecimal('-1.23456'))).to eq Money.new(-123.456)
+        expect(Monetize.from_bigdecimal(BigDecimal('1.23456'))).to eq Money.new(123.456, 'USD')
+        expect(Monetize.from_bigdecimal(BigDecimal('1.23456'), 'EUR')).to eq Money.new(123.456, 'EUR')
 
         expect('1'.to_money).to eq Money.new(100)
         expect('1.23456'.to_money).to eq Money.new(123.456)
@@ -460,19 +488,11 @@ describe Monetize do
     it 'converts given amount to cents' do
       expect(Monetize.from_numeric(1)).to eq Money.new(1_00)
       expect(Monetize.from_numeric(1.0)).to eq Money.new(1_00)
-      expect(Monetize.from_numeric(BigDecimal.new('1'))).to eq Money.new(1_00)
+      expect(Monetize.from_numeric(BigDecimal('1'))).to eq Money.new(1_00)
     end
 
     it 'raises ArgumentError with unsupported argument' do
       expect { Monetize.from_numeric('100') }.to raise_error(Monetize::ArgumentError)
-    end
-
-    it 'optimizes workload' do
-      expect(Monetize).to receive(:from_fixnum).with(1, 'USD').and_return(Money.new(1_00, 'USD'))
-      expect(Monetize.from_numeric(1, 'USD')).to eq Money.new(1_00, 'USD')
-      expect(Monetize).to receive(:from_bigdecimal).with(BigDecimal.new('1.0'), 'USD').
-        and_return(Money.new(1_00, 'USD'))
-      expect(Monetize.from_numeric(1.0, 'USD')).to eq Money.new(1_00, 'USD')
     end
 
     it 'respects :subunit_to_unit currency property' do
