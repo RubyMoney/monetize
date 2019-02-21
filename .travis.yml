@@ -3,10 +3,15 @@ language: ruby
 rvm:
   - 1.9.3
   - 2.0.0
-  - 2.1.9
-  - 2.2.5
-  - 2.3.1
+  - 2.1.10
+  - 2.2.10
+  - 2.3.7
+  - 2.4.4
+  - 2.5.1
+  - 2.6.0
   - jruby-9.0.5.0
+before_install:
+  - gem install bundler --version '~> 1.17'
 script: bundle exec rspec spec
 notifications:
   recipients:
