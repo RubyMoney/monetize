@@ -29,13 +29,17 @@ module Monetize
     MULTIPLIER_SUFFIXES.default = 0
     MULTIPLIER_REGEXP = Regexp.new(format('^(.*?\d)(%s)\b([^\d]*)$', MULTIPLIER_SUFFIXES.keys.join('|')), 'i')
 
+    DEFAULT_DECIMAL_MARK = '.'.freeze
+
     def initialize(input, fallback_currency = Money.default_currency, options = {})
       @input = input.to_s.strip
       @fallback_currency = fallback_currency
       @options = options
     end
 
-    def parse_cents(currency)
+    def parse
+      currency = Money::Currency.wrap(parse_currency)
+
       multiplier_exp, input = extract_multiplier
 
       num = input.gsub(/(?:^#{currency.symbol}|[^\d.,'-]+)/, '')
@@ -46,14 +50,16 @@ module Monetize
 
       major, minor = extract_major_minor(num, currency)
 
-      major, minor = apply_multiplier(multiplier_exp, major.to_i, minor)
+      amount = BigDecimal([major, minor].join(DEFAULT_DECIMAL_MARK))
+      amount = apply_multiplier(multiplier_exp, amount)
+      amount = apply_sign(negative, amount)
 
-      cents = major.to_i * currency.subunit_to_unit
-
-      cents += set_minor_precision(minor, currency)
-
-      apply_sign(negative, cents)
+      [amount, currency]
     end
+
+    private
+
+    attr_reader :input, :fallback_currency, :options
 
     def parse_currency
       computed_currency = nil
@@ -63,25 +69,16 @@ module Monetize
       computed_currency || fallback_currency || Money.default_currency
     end
 
-    private
-
-    attr_reader :input, :fallback_currency, :options
-
     def assume_from_symbol?
       options.fetch(:assume_from_symbol) { Monetize.assume_from_symbol }
     end
 
-    def apply_multiplier(multiplier_exp, major, minor)
-      major *= 10**multiplier_exp
-      minor = minor.to_s + ('0' * multiplier_exp)
-      shift = minor[0...multiplier_exp].to_i
-      major += shift
-      minor = (minor[multiplier_exp..-1] || '')
-      [major, minor]
+    def apply_multiplier(multiplier_exp, amount)
+      amount * 10**multiplier_exp
     end
 
-    def apply_sign(negative, cents)
-      negative ? cents * -1 : cents
+    def apply_sign(negative, amount)
+      negative ? amount * -1 : amount
     end
 
     def compute_currency
@@ -148,22 +145,6 @@ module Monetize
 
     def regex_safe_symbols
       CURRENCY_SYMBOLS.keys.map { |key| Regexp.escape(key) }.join('|')
-    end
-
-    def set_minor_precision(minor, currency)
-      if Money.infinite_precision
-        (BigDecimal(minor) / (10**minor.size)) * currency.subunit_to_unit
-      elsif minor.size < currency.decimal_places
-        (minor + ('0' * currency.decimal_places))[0, currency.decimal_places].to_i
-      elsif minor.size > currency.decimal_places
-        if minor[currency.decimal_places, 1].to_i >= 5
-          minor[0, currency.decimal_places].to_i + 1
-        else
-          minor[0, currency.decimal_places].to_i
-        end
-      else
-        minor.to_i
-      end
     end
 
     def split_major_minor(num, delimiter)
