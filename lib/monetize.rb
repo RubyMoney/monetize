@@ -66,6 +66,8 @@ module Monetize
     end
 
     def extract_cents(input, currency = Money.default_currency)
+      warn '[DEPRECATION] Monetize.extract_cents is deprecated. Use Monetize.parse().cents'
+
       Monetize::Parser.new(input).parse_cents(currency)
     end
   end
