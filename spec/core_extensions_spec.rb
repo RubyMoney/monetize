@@ -67,7 +67,8 @@ describe Monetize, 'core extensions' do
         '-1,000'          => Money.new(-1_000_00),
         '1,000.5'         => Money.new(1_000_50),
         '1,000.51'        => Money.new(1_000_51),
-        '1,000.505'       => Money.new(1_000_51),
+        '1,000.505'       => Money.new(1_000_50), # ROUND_HALF_EVEN default bankers rounding
+        '1,000.515'       => Money.new(1_000_52), # ROUND_HALF_EVEN default bankers rounding
         '1,000.504'       => Money.new(1_000_50),
         '1,000.0000'      => Money.new(1_000_00),
         '1,000.5000'      => Money.new(1_000_50),
@@ -148,6 +149,28 @@ describe Monetize, 'core extensions' do
         expect('1'.to_money('TND')).to eq Money.new(1_000, 'TND')
         expect('1'.to_money('JPY')).to eq Money.new(1,     'JPY')
         expect('1.5'.to_money('KWD').cents).to eq 1_500
+      end
+
+      it 'respects Money.rounding_mode' do
+        expect('1.009'.to_money).to eq(Money.new(1_01))
+
+        Money.rounding_mode(BigDecimal::ROUND_DOWN) do
+          expect('1.009'.to_money).to eq(Money.new(1_00))
+        end
+
+        expect('1.001'.to_money).to eq(Money.new(1_00))
+
+        Money.rounding_mode(BigDecimal::ROUND_UP) do
+          expect('1.001'.to_money).to eq(Money.new(1_01))
+        end
+      end
+
+      it 'produces results similar to Money.from_amount for all the rounding edge cases' do
+        (1_000..1_010).each do |amount|
+          amount = amount.to_f / 1000
+
+          expect(amount.to_s.to_money).to eq(Money.from_amount(amount))
+        end
       end
     end
 

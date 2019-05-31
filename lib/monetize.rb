@@ -31,9 +31,9 @@ module Monetize
       return from_numeric(input, currency) if input.is_a?(Numeric)
 
       parser = Monetize::Parser.new(input, currency, options)
-      currency_from_input = Money::Currency.wrap(parser.parse_currency)
+      amount, currency = parser.parse
 
-      Money.new(parser.parse_cents(currency_from_input), currency_from_input)
+      Money.from_amount(amount, currency)
     rescue Money::Currency::UnknownCurrency => e
       fail ParseError, e.message
     end
@@ -66,7 +66,10 @@ module Monetize
     end
 
     def extract_cents(input, currency = Money.default_currency)
-      Monetize::Parser.new(input).parse_cents(currency)
+      warn '[DEPRECATION] Monetize.extract_cents is deprecated. Use Monetize.parse().cents'
+
+      money = parse(input, currency)
+      money.cents if money
     end
   end
 end
