@@ -7,8 +7,8 @@ require 'English'
 Gem::Specification.new do |spec|
   spec.name          = 'monetize'
   spec.version       = Monetize::VERSION
-  spec.authors       = ['Shane Emmons']
-  spec.email         = ['shane@emmons.io']
+  spec.authors       = ['Shane Emmons', 'Anthony Dmitriyev']
+  spec.email         = ['shane@emmons.io', 'anthony.dmitriyev@gmail.com']
   spec.description   = 'A library for converting various objects into `Money` objects.'
   spec.summary       = 'A library for converting various objects into `Money` objects.'
   spec.homepage      = 'https://github.com/RubyMoney/monetize'
