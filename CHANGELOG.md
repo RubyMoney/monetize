@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.9.2
+- Respect Money.rounding_mode when parsing strings
+- Deprecate Monetize.extract_cents
+
 ## 1.9.1
 - Ruby 2.6 support
 
