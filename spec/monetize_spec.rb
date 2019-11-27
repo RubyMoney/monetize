@@ -70,6 +70,10 @@ describe Monetize do
               expect(Monetize.parse("#{symbol}#{amount_in_units}")).to eq Money.new(amount, iso_code)
             end
 
+            it "parses formatted inputs with #{iso_code} symbol is after the amount" do
+              expect(Monetize.parse("#{amount_in_units}#{symbol}")).to eq Money.new(amount, iso_code)
+            end
+
             context 'prefix' do
               it 'parses formatted inputs with plus sign and currency as a symbol' do
                 expect(Monetize.parse("+#{symbol}#{amount_in_units}")).to eq Money.new(amount, iso_code)
