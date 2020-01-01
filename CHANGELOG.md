@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.9.3
+- Fix input parsing when currency symbol after the amount
+
 ## 1.9.2
 - Respect Money.rounding_mode when parsing strings
 - Deprecate Monetize.extract_cents
