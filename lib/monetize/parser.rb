@@ -82,8 +82,8 @@ module Monetize
     end
 
     def compute_currency
-      matches = input.match(currency_symbol_regex)
-      CURRENCY_SYMBOLS[matches[:symbol]] if matches
+      match = input.match(currency_symbol_regex)
+      CURRENCY_SYMBOLS[match.to_s] if match
     end
 
     def extract_major_minor(num, currency)
@@ -153,7 +153,7 @@ module Monetize
     end
 
     def currency_symbol_regex
-      /(?<symbol>#{regex_safe_symbols})/
+      /(?<![A-Z])(#{regex_safe_symbols})(?![A-Z])/i
     end
   end
 end

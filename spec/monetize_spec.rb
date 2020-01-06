@@ -118,6 +118,11 @@ describe Monetize do
           expect(Monetize.parse('L9.99')).to eq Money.new(999, 'USD')
         end
 
+        it 'ignores ZAR symbols that is part of a text' do
+          expect(Monetize.parse('EUR 9.99')).to eq Money.new(999, 'EUR')
+          expect(Monetize.parse('9.99 EUR')).to eq Money.new(999, 'EUR')
+        end
+
         context 'negatives' do
           it 'ignores the ambiguous kr symbol' do
             # Could mean either of DKK, EEK, ISK, NOK, SEK
