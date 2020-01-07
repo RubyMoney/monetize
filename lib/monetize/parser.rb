@@ -153,7 +153,7 @@ module Monetize
     end
 
     def currency_symbol_regex
-      /\A[\+|\-]?(?<symbol>#{regex_safe_symbols})/
+      /\A[\+|\-]?(?<symbol>#{regex_safe_symbols})|(?<symbol>#{regex_safe_symbols})[\+|\-]?$/
     end
   end
 end

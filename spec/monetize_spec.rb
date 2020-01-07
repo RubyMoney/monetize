@@ -66,27 +66,47 @@ describe Monetize do
               expect(amount_in_units * currency.subunit_to_unit).to eq(amount)
             end
 
-            it "parses formatted inputs with #{iso_code} passed as a symbol" do
+            it "parses formatted inputs with #{iso_code} passed as a symbol before amount" do
               expect(Monetize.parse("#{symbol}#{amount_in_units}")).to eq Money.new(amount, iso_code)
             end
 
+            it "parses formatted inputs with #{iso_code} passed as a symbol after amount" do
+              expect(Monetize.parse("#{amount_in_units}#{symbol}")).to eq Money.new(amount, iso_code)
+            end
+
             context 'prefix' do
-              it 'parses formatted inputs with plus sign and currency as a symbol' do
+              it 'parses formatted inputs with plus sign and currency as a symbol before amount' do
                 expect(Monetize.parse("+#{symbol}#{amount_in_units}")).to eq Money.new(amount, iso_code)
               end
 
-              it 'parses formatted inputs with minus sign and currency as a symbol' do
+              it 'parses formatted inputs with plus sign and currency as a symbol after amount' do
+                expect(Monetize.parse("+#{amount_in_units}#{symbol}")).to eq Money.new(amount, iso_code)
+              end
+
+              it 'parses formatted inputs with minus sign and currency as a symbol before amount' do
                 expect(Monetize.parse("-#{symbol}#{amount_in_units}")).to eq Money.new(-amount, iso_code)
+              end
+
+              it 'parses formatted inputs with minus sign and currency as a symbol after amount' do
+                expect(Monetize.parse("-#{amount_in_units}#{symbol}")).to eq Money.new(-amount, iso_code)
               end
             end
 
             context 'postfix' do
-              it 'parses formatted inputs with currency symbol and postfix minus sign' do
+              it 'parses formatted inputs with currency symbol before amount and postfix minus sign' do
                 expect(Monetize.parse("#{symbol}#{amount_in_units}-")).to eq Money.new(-amount, iso_code)
               end
 
-              it 'parses formatted inputs with currency symbol and postfix plus sign' do
+              it 'parses formatted inputs with currency symbol after amount and postfix minus sign' do
+                expect(Monetize.parse("#{amount_in_units}#{symbol}-")).to eq Money.new(-amount, iso_code)
+              end
+
+              it 'parses formatted inputs with currency symbol before amount and postfix plus sign' do
                 expect(Monetize.parse("#{symbol}#{amount_in_units}+")).to eq Money.new(amount, iso_code)
+              end
+
+              it 'parses formatted inputs with currency symbol after amount and postfix plus sign' do
+                expect(Monetize.parse("#{amount_in_units}#{symbol}+")).to eq Money.new(amount, iso_code)
               end
             end
 
