@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.9.4
+- Fix symbol parsing that are surrounded by other characters
+
 ## 1.9.3
 - Fix input parsing when currency symbol after the amount
 
