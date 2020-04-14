@@ -118,6 +118,10 @@ describe Monetize do
           expect(Monetize.parse('L9.99')).to eq Money.new(999, 'USD')
         end
 
+        it 'should use provided currency over symbol' do
+          expect(Monetize.parse('$1.05 CAD')).to eq Money.new(105, 'CAD')
+        end
+
         it 'ignores ZAR symbols that is part of a text' do
           expect(Monetize.parse('EUR 9.99')).to eq Money.new(999, 'EUR')
           expect(Monetize.parse('9.99 EUR')).to eq Money.new(999, 'EUR')
