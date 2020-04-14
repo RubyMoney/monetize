@@ -63,8 +63,9 @@ module Monetize
 
     def parse_currency
       computed_currency = nil
-      computed_currency = compute_currency if assume_from_symbol?
-      computed_currency ||= input[/[A-Z]{2,3}/]
+      computed_currency = input[/[A-Z]{2,3}/]
+      computed_currency ||= compute_currency if assume_from_symbol?
+
 
       computed_currency || fallback_currency || Money.default_currency
     end

@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.10.0
+- When using the `assume_from_symbol` option, the currency in the input string will be used over the assumed currency based on symbol. For example, `$1.05 CAD` will use `CAD` instead of `USD`.
+
 ## 1.9.4
 - Fix symbol parsing that are surrounded by other characters
 
