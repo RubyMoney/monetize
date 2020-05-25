@@ -7,7 +7,7 @@ require 'monetize/core_extensions'
 describe Monetize, 'core extensions' do
   describe NilClass do
     describe '#to_money' do
-      it 'work as documented' do
+      it 'works as documented' do
         money = nil.to_money
         expect(money.cents).to eq 0
         expect(money.currency).to eq Money.default_currency
@@ -22,7 +22,7 @@ describe Monetize, 'core extensions' do
 
   describe Numeric do
     describe '#to_money' do
-      it 'work as documented' do
+      it 'works as documented' do
         money = 1234.to_money
         expect(money.cents).to eq 1_234_00
         expect(money.currency).to eq Money.default_currency
