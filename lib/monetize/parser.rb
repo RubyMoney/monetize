@@ -50,7 +50,7 @@ module Monetize
 
       major, minor = extract_major_minor(num, currency)
 
-      amount = BigDecimal([major, minor].join(DEFAULT_DECIMAL_MARK))
+      amount = to_big_decimal([major, minor].join(DEFAULT_DECIMAL_MARK))
       amount = apply_multiplier(multiplier_exp, amount)
       amount = apply_sign(negative, amount)
 
@@ -58,6 +58,12 @@ module Monetize
     end
 
     private
+
+    def to_big_decimal(value)
+      BigDecimal(value)
+    rescue ::ArgumentError => err
+      fail ParseError, err.message
+    end
 
     attr_reader :input, :fallback_currency, :options
 
