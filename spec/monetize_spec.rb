@@ -333,6 +333,10 @@ describe Monetize do
     it 'raises ArgumentError when unable to detect polarity' do
       expect { Monetize.parse!('-$5.95-') }.to raise_error Monetize::ParseError
     end
+
+    it 'raises ArgumentError with invalid format' do
+      expect { Monetize.parse!('11..0') }.to raise_error Monetize::ParseError
+    end
   end
 
   describe '.parse_collection' do
