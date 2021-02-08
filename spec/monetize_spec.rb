@@ -320,6 +320,29 @@ describe Monetize do
         expect('€8.883.331,0034'.to_money('EU4')).to eq Money.new(8_883_331_0034, 'EU4')
         # rubocop:enable Style/NumericLiterals
       end
+
+      it 'parses strings deducing a decimal mark when a single delimiter is used and major is 0' do
+        expect('$0,4'.to_money('BAR')).to eq Money.new(4000, 'BAR')
+        expect('€0.4'.to_money('EU4')).to eq Money.new(4000, 'EU4')
+
+        expect('$0,04'.to_money('BAR')).to eq Money.new(400, 'BAR')
+        expect('€0.04'.to_money('EU4')).to eq Money.new(400, 'EU4')
+
+        expect('$0,004'.to_money('BAR')).to eq Money.new(40, 'BAR')
+        expect('€0.004'.to_money('EU4')).to eq Money.new(40, 'EU4')
+
+        expect('$0,0004'.to_money('BAR')).to eq Money.new(4, 'BAR')
+        expect('€0.0004'.to_money('EU4')).to eq Money.new(4, 'EU4')
+
+        expect('$0,0024'.to_money('BAR')).to eq Money.new(24, 'BAR')
+        expect('€0.0024'.to_money('EU4')).to eq Money.new(24, 'EU4')
+
+        expect('$0,0324'.to_money('BAR')).to eq Money.new(324, 'BAR')
+        expect('€0.0324'.to_money('EU4')).to eq Money.new(324, 'EU4')
+
+        expect('$0,5324'.to_money('BAR')).to eq Money.new(5324, 'BAR')
+        expect('€0.5324'.to_money('EU4')).to eq Money.new(5324, 'EU4')
+      end
     end
   end
 
