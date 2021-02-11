@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.10.1
+## 1.11.0
 - When parsing a string assume a single separator to be a decimal mark when number starts with 0
 
 ## 1.10.0
