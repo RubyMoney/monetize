@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.11.0
+- When parsing a string assume a single separator to be a decimal mark when number starts with 0
+
 ## 1.10.0
 - When using the `assume_from_symbol` option, the currency in the input string will be used over the assumed currency based on symbol. For example, `$1.05 CAD` will use `CAD` instead of `USD`.
 

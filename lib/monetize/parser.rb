@@ -126,8 +126,13 @@ module Monetize
       else
         possible_major, possible_minor = split_major_minor(num, delimiter)
 
-        if possible_minor.length != 3 || possible_major.length > 3 || delimiter == '.'
-          # Doesn't look like thousands separator
+        # Doesn't look like thousands separator
+        is_decimal_mark = possible_minor.length != 3 ||
+                          possible_major.length > 3 ||
+                          possible_major.to_i == 0 ||
+                          delimiter == '.'
+
+        if is_decimal_mark
           [possible_major, possible_minor]
         else
           ["#{possible_major}#{possible_minor}", '00']
