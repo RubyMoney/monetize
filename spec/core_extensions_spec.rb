@@ -230,6 +230,26 @@ describe Monetize, 'core extensions' do
           expect(hash.to_money).to eq(Money.new(100, 'USD'))
         end
       end
+
+      fork {
+        require 'money-rails'
+
+        context 'when Money to_hash is used' do
+          subject(:hash) { Money.new(100, 'SGD').to_hash }
+  
+          it 'converts Hash to Money, interpreting fractional as cents' do
+            expect(hash.to_money).to eq(Money.new(100, 'SGD'))
+          end
+        end
+      }
+
+      context 'ensure money-rails is not loaded' do
+        subject(:hash) { Money.new(100, 'SGD').to_hash }
+
+        it 'is missing to_hash' do
+          expect { hash }.to raise_error NoMethodError
+        end
+      end
     end
   end
 

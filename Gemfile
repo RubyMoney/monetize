@@ -10,4 +10,8 @@ elsif RUBY_VERSION =~ /^1/
   gem 'i18n', '~> 0.9'
 end
 
+group :test do
+  gem 'money-rails', require: false
+end
+
 gemspec
