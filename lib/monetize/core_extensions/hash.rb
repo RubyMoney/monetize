@@ -2,14 +2,16 @@
 
 class Hash
   def to_money(currency = nil)
-    hash_currency = if self[:currency].is_a?(Hash)
-                      self[:currency][:iso_code]
-                    elsif self[:currency_iso] && !self[:currency_iso].empty?
-                      self[:currency_iso]
+    money_hash = self.respond_to?(:with_indifferent_access) ? self.with_indifferent_access : self
+
+    hash_currency = if money_hash[:currency].is_a?(Hash)
+                      money_hash[:currency][:iso_code]
+                    elsif money_hash[:currency_iso] && !money_hash[:currency_iso].empty?
+                      money_hash[:currency_iso]
                     else
-                      self[:currency]
+                      money_hash[:currency]
                     end
 
-    Money.new(self[:cents] || self[:fractional], hash_currency || currency || Money.default_currency)
+    Money.new(money_hash[:cents] || money_hash[:fractional], hash_currency || currency || Money.default_currency)
   end
 end
