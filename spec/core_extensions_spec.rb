@@ -230,6 +230,14 @@ describe Monetize, 'core extensions' do
           expect(hash.to_money).to eq(Money.new(100, 'USD'))
         end
       end
+        
+      context 'when Money to_hash is used' do
+        subject(:hash) { { cents: 100, currency_iso: 'SGD' } }
+
+        it 'converts Hash to Money, interpreting fractional as cents' do
+          expect(hash.to_money).to eq(Money.new(100, 'SGD'))
+        end
+      end
     end
   end
 
