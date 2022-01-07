@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.12.0
+- Update `to_money` to match money-rails to_hash.
+
 ## 1.11.0
 - When parsing a string assume a single separator to be a decimal mark when number starts with 0
 
