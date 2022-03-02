@@ -20,6 +20,12 @@ module Monetize
     # to true to enforce the delimiters set in the currency all the time.
     attr_accessor :enforce_currency_delimiters
 
+
+    # Where this set to true, the behavior for parsing thousands separators is changed to 
+    # expect that eg. €10.000 is EUR 10 000 and not EUR 10.000 - it's incredibly rare when parsing 
+    # human text that we're dealing with fractions of cents.
+    attr_accessor :expect_whole_subunits
+
     def parse(input, currency = Money.default_currency, options = {})
       parse! input, currency, options
     rescue Error

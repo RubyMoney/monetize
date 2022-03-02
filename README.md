@@ -53,6 +53,22 @@ Monetize.parse("£100") == Money.new(100_00, "GBP")
 "€100".to_money == Money.new(100_00, "EUR")
 ```
 
+Parsing can be improved where the input is not expected to contain fractonal subunits.
+To do this, set `Monetize.expect_whole_subunits = true`
+
+```ruby
+Monetize.parse('EUR 10,000') == Money.new(100_00, "EUR")
+
+Monetize.expect_whole_subunits = true
+Monetize.parse('EUR 10,000') == Money.new(10_000_00, "EUR")
+```
+
+Why does this work?  If we expect fractional subunits then the parser will treat a single
+delimiter as a decimal marker if it matches the currency's decimal marker.  But often 
+this is not the case - a European site will show $10.000 because that's the local format.
+As a human, if this was a stock ticker we might expect fractional cents.  If it's a retail price we know it's actually an incorrect thousands separator.
+
+
 Monetize can also parse a list of values, returning an array-like object ([Monetize::Collection](lib/collection.rb)):
 
 ```ruby
