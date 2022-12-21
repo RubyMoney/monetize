@@ -10,13 +10,9 @@ A library for converting various objects into `Money` objects.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Run:
 
-    gem 'monetize'
-
-And then execute:
-
-    $ bundle
+    bundle add monetize
 
 Or install it yourself as:
 
