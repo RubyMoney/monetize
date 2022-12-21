@@ -344,6 +344,32 @@ describe Monetize do
         expect('€0.5324'.to_money('EU4')).to eq Money.new(5324, 'EU4')
       end
     end
+
+    describe "expecting whole subunits" do
+      before(:all) do 
+        Monetize.expect_whole_subunits = true
+        Monetize.assume_from_symbol = true
+      end
+
+      after(:all) do
+        Monetize.expect_whole_subunits = false
+        Monetize.assume_from_symbol = false
+      end
+
+      it "handles euros" do
+        expect(Monetize.parse('€10,000')).to eq Money.new(10_000_00, 'EUR')
+        expect(Monetize.parse('€10,00')).to eq Money.new(10_00, 'EUR')
+        expect(Monetize.parse('€10.00')).to eq Money.new(10_00, 'EUR')
+        expect(Monetize.parse('EUR 10,000.00')).to eq Money.new(10_000_00, 'EUR')
+      end
+
+      it "handles GBP" do
+        expect(Monetize.parse('£10,000')).to eq Money.new(10_000_00, 'GBP')
+        expect(Monetize.parse('£10.000')).to eq Money.new(10_000_00, 'GBP')
+        expect(Monetize.parse('£10,00')).to eq Money.new(10_00, 'GBP')
+        expect(Monetize.parse('£10.00')).to eq Money.new(10_00, 'GBP')
+      end
+    end
   end
 
   describe '.parse!' do

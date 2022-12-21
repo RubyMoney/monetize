@@ -80,6 +80,10 @@ module Monetize
       options.fetch(:assume_from_symbol) { Monetize.assume_from_symbol }
     end
 
+    def expect_whole_subunits?
+      options.fetch(:expect_whole_subunits) { Monetize.expect_whole_subunits }
+    end
+
     def apply_multiplier(multiplier_exp, amount)
       amount * 10**multiplier_exp
     end
@@ -109,13 +113,26 @@ module Monetize
       end
     end
 
+    def minor_has_correct_dp_for_currency_subunit?(minor, currency)
+      minor.length == currency.subunit_to_unit.to_s.length - 1
+    end
+
     def extract_major_minor_with_single_delimiter(num, currency, delimiter)
-      if delimiter == currency.decimal_mark
-        split_major_minor(num, delimiter)
-      elsif Monetize.enforce_currency_delimiters && delimiter == currency.thousands_separator
-        [num.gsub(delimiter, ''), 0]
+      if expect_whole_subunits?
+        possible_major, possible_minor = split_major_minor(num, delimiter)
+        if minor_has_correct_dp_for_currency_subunit?(possible_minor, currency)
+          split_major_minor(num, delimiter)
+        else
+          extract_major_minor_with_tentative_delimiter(num, delimiter)
+        end
       else
-        extract_major_minor_with_tentative_delimiter(num, delimiter)
+        if delimiter == currency.decimal_mark 
+          split_major_minor(num, delimiter)
+        elsif Monetize.enforce_currency_delimiters && delimiter == currency.thousands_separator
+          [num.gsub(delimiter, ''), 0]
+        else
+          extract_major_minor_with_tentative_delimiter(num, delimiter)
+        end
       end
     end
 
@@ -130,7 +147,7 @@ module Monetize
         is_decimal_mark = possible_minor.length != 3 ||
                           possible_major.length > 3 ||
                           possible_major.to_i == 0 ||
-                          delimiter == '.'
+                          (!expect_whole_subunits? && delimiter == '.')
 
         if is_decimal_mark
           [possible_major, possible_minor]
