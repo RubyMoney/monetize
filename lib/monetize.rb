@@ -5,11 +5,14 @@ require 'monetize/core_extensions'
 require 'monetize/errors'
 require 'monetize/version'
 require 'monetize/parser'
+require 'monetize/strict_parser'
 require 'monetize/collection'
 
 module Monetize
   # Class methods
   class << self
+    attr_writer :parser_class
+
     # @attr_accessor [true, false] assume_from_symbol Use this to enable the
     #   ability to assume the currency from a passed symbol
     attr_accessor :assume_from_symbol
@@ -20,11 +23,14 @@ module Monetize
     # to true to enforce the delimiters set in the currency all the time.
     attr_accessor :enforce_currency_delimiters
 
-
     # Where this set to true, the behavior for parsing thousands separators is changed to 
     # expect that eg. €10.000 is EUR 10 000 and not EUR 10.000 - it's incredibly rare when parsing 
     # human text that we're dealing with fractions of cents.
     attr_accessor :expect_whole_subunits
+
+    def parser_class
+      @parser_class || Monetize::Parser
+    end
 
     def parse(input, currency = Money.default_currency, options = {})
       parse! input, currency, options
@@ -36,7 +42,7 @@ module Monetize
       return input if input.is_a?(Money)
       return from_numeric(input, currency) if input.is_a?(Numeric)
 
-      parser = Monetize::Parser.new(input, currency, options)
+      parser = parser_class.new(input, currency, options)
       amount, currency = parser.parse
 
       Money.from_amount(amount, currency)
@@ -79,3 +85,5 @@ module Monetize
     end
   end
 end
+
+Monetize.parser_class = Monetize::StrictParser
