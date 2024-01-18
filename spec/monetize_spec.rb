@@ -172,8 +172,28 @@ describe Monetize do
           expect('20.00 GBP'.to_money).to eq Money.new(20_00, 'GBP')
         end
 
-        it 'raises an error if currency code is invalid' do
-          expect { '20.00 OMG'.to_money }.to raise_error Monetize::ParseError
+        context 'with default currency' do
+          before do
+            Money.default_currency = Money::Currency.new('USD')
+          end
+
+          it 'parses currency given using default currency' do
+            expect('20.00 OMG'.to_money).to eq Money.new(20_00, 'USD')
+          end
+        end
+
+        context 'without default currency' do
+          before do
+            Money.default_currency = nil
+          end
+
+          after do
+            Money.default_currency = Money::Currency.new('USD')
+          end
+
+          it 'raises an error if currency code is invalid' do
+            expect { '20.00 OMG'.to_money }.to raise_error
+          end
         end
       end
     end
@@ -346,7 +366,7 @@ describe Monetize do
     end
 
     describe "expecting whole subunits" do
-      before(:all) do 
+      before(:all) do
         Monetize.expect_whole_subunits = true
         Monetize.assume_from_symbol = true
       end

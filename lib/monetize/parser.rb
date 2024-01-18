@@ -76,6 +76,7 @@ module Monetize
     def parse_currency
       computed_currency = nil
       computed_currency = input[/[A-Z]{2,3}/]
+      computed_currency = nil unless Monetize::Parser::CURRENCY_SYMBOLS.value?(computed_currency)
       computed_currency ||= compute_currency if assume_from_symbol?
 
 
@@ -132,7 +133,7 @@ module Monetize
           extract_major_minor_with_tentative_delimiter(num, delimiter)
         end
       else
-        if delimiter == currency.decimal_mark 
+        if delimiter == currency.decimal_mark
           split_major_minor(num, delimiter)
         elsif Monetize.enforce_currency_delimiters && delimiter == currency.thousands_separator
           [num.gsub(delimiter, ''), 0]
