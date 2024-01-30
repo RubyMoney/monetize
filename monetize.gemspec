@@ -29,5 +29,6 @@ Gem::Specification.new do |spec|
     spec.metadata['changelog_uri'] = 'https://github.com/RubyMoney/monetize/blob/master/CHANGELOG.md'
     spec.metadata['source_code_uri'] = 'https://github.com/RubyMoney/monetize/'
     spec.metadata['bug_tracker_uri'] = 'https://github.com/RubyMoney/monetize/issues'
+    spec.metadata['rubygems_mfa_required'] = 'true'
   end
 end
