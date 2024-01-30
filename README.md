@@ -28,16 +28,6 @@ Monetize.parse("GBP 100") == Money.new(100_00, "GBP")
 "100".to_money == Money.new(100_00, "USD")
 ```
 
-`parse` will return `nil` if it is unable to parse the input. Use `parse!` instead if you want a `Monetize::Error` (or one of the subclasses) to be raised instead:
-
-```ruby
->> Monetize.parse('OMG 100')
-=> nil
-
->> Monetize.parse!('OMG 100')
-Monetize::ParseError: Unknown currency 'omg'
-```
-
 Optionally, enable the ability to assume the currency from a passed symbol. Otherwise, currency symbols will be ignored, and USD used as the default currency:
 
 ```ruby
@@ -60,7 +50,7 @@ Monetize.parse('EUR 10,000') == Money.new(10_000_00, "EUR")
 ```
 
 Why does this work?  If we expect fractional subunits then the parser will treat a single
-delimiter as a decimal marker if it matches the currency's decimal marker.  But often 
+delimiter as a decimal marker if it matches the currency's decimal marker.  But often
 this is not the case - a European site will show $10.000 because that's the local format.
 As a human, if this was a stock ticker we might expect fractional cents.  If it's a retail price we know it's actually an incorrect thousands separator.
 
