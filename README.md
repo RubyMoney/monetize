@@ -3,7 +3,6 @@
 [![Gem Version](https://badge.fury.io/rb/monetize.svg)](http://badge.fury.io/rb/monetize)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a2cf7b7a170b4ca68fe8/maintainability)](https://codeclimate.com/github/RubyMoney/monetize/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/a2cf7b7a170b4ca68fe8/test_coverage)](https://codeclimate.com/github/RubyMoney/monetize/test_coverage)
-[![Dependency Status](https://gemnasium.com/RubyMoney/monetize.svg)](https://gemnasium.com/RubyMoney/monetize)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](http://opensource.org/licenses/MIT)
 
 A library for converting various objects into `Money` objects.
