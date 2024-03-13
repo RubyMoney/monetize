@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.13.0
+- **Breaking change**: check ISO currency code validity when parsing strings with `to_money`
+- Adds `expect_whole_subunits` option when fractional subunits are expected
+- Add MYR, IDR, SGD, HKD, TWD, and PHP symbol to currency conversion
+
 ## 1.12.0
 - Update `to_money` to match money-rails to_hash.
 
