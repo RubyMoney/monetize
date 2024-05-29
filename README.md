@@ -39,7 +39,7 @@ Monetize.parse("£100") == Money.new(100_00, "GBP")
 "€100".to_money == Money.new(100_00, "EUR")
 ```
 
-Parsing can be improved where the input is not expected to contain fractonal subunits.
+Parsing can be improved where the input is not expected to contain fractional subunits.
 To do this, set `Monetize.expect_whole_subunits = true`
 
 ```ruby
