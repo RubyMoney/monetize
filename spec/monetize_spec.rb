@@ -109,7 +109,11 @@ describe Monetize do
             end
 
             it 'parses formatted inputs without currency detection when overridden' do
-              expect(Monetize.parse("#{symbol}5.95", nil, assume_from_symbol: false)).to eq Money.new(amount, 'USD')
+              currency_symbols_with_no_special_and_uncapitalized_chars = ["RM"]
+
+              expect(Monetize.parse("#{symbol}5.95", nil, assume_from_symbol: false)).to eq(
+                Money.new(amount, currency_symbols_with_no_special_and_uncapitalized_chars.include?(symbol) ? iso_code : "USD")
+              )
             end
           end
         end
