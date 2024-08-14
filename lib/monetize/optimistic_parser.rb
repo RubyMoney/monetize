@@ -1,38 +1,9 @@
 # encoding: utf-8
 
-module Monetize
-  class OptimisticParser
-    CURRENCY_SYMBOLS = {
-      '$'  => 'USD',
-      '€'  => 'EUR',
-      '£'  => 'GBP',
-      '₤'  => 'GBP',
-      'R$' => 'BRL',
-      'RM' => 'MYR',
-      'Rp' => 'IDR',
-      'R'  => 'ZAR',
-      '¥'  => 'JPY',
-      'C$' => 'CAD',
-      '₼'  => 'AZN',
-      '元' => 'CNY',
-      'Kč' => 'CZK',
-      'Ft' => 'HUF',
-      '₹'  => 'INR',
-      '₽'  => 'RUB',
-      '₺'  => 'TRY',
-      '₴'  => 'UAH',
-      'Fr' => 'CHF',
-      'zł' => 'PLN',
-      '₸'  => 'KZT',
-      "₩"  => 'KRW',
-      'S$' => 'SGD',
-      'HK$'=> 'HKD',
-      'NT$'=> 'TWD',
-      '₱'  => 'PHP',
-    }
+require 'monetize/parser'
 
-    MULTIPLIER_SUFFIXES = { 'K' => 3, 'M' => 6, 'B' => 9, 'T' => 12 }
-    MULTIPLIER_SUFFIXES.default = 0
+module Monetize
+  class OptimisticParser < Parser
     MULTIPLIER_REGEXP = Regexp.new(format('^(.*?\d)(%s)\b([^\d]*)$', MULTIPLIER_SUFFIXES.keys.join('|')), 'i')
 
     DEFAULT_DECIMAL_MARK = '.'.freeze
@@ -76,7 +47,7 @@ module Monetize
     def parse_currency
       computed_currency = nil
       computed_currency = input[/[A-Z]{2,3}/]
-      computed_currency = nil unless Monetize::OptimisticParser::CURRENCY_SYMBOLS.value?(computed_currency)
+      computed_currency = nil unless CURRENCY_SYMBOLS.value?(computed_currency)
       computed_currency ||= compute_currency if assume_from_symbol?
 
 
