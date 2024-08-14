@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'money', '~> 6.12'
 
   spec.add_development_dependency 'bundler'
-  spec.add_development_dependency 'rake', '~> 10.2'
+  spec.add_development_dependency 'rake'
   spec.add_development_dependency 'rspec', '~> 3.0'
 
   if spec.respond_to?(:metadata)
