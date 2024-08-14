@@ -26,6 +26,10 @@ module Monetize
     # human text that we're dealing with fractions of cents.
     attr_accessor :expect_whole_subunits
 
+    # Specify which of the previously registered parsers should be used when parsing an input
+    # unless overriden using the :parser keyword option for the .parse and parse! methods.
+    attr_accessor :default_parser
+
     def parse(input, currency = Money.default_currency, options = {})
       parse! input, currency, options
     rescue Error
@@ -36,7 +40,7 @@ module Monetize
       return input if input.is_a?(Money)
       return from_numeric(input, currency) if input.is_a?(Numeric)
 
-      parser = Monetize::OptimisticParser.new(input, currency, options)
+      parser = fetch_parser(input, currency, options)
       amount, currency = parser.parse
 
       Money.from_amount(amount, currency)
@@ -77,5 +81,28 @@ module Monetize
       money = parse(input, currency)
       money.cents if money
     end
+
+    # Registers a new parser class along with the default options. It can then be used by
+    # providing a :parser option when parsing an input or by specifying a default parser
+    # using Monetize.default_parser=.
+    def register_parser(name, klass, options = {})
+      @parsers ||= {}
+      @parsers[name] = [klass, options]
+    end
+
+    private
+
+    attr_reader :parsers
+
+    def fetch_parser(input, currency, options)
+      parser_name = options[:parser] || default_parser
+      parser_klass, parser_options = parsers.fetch(parser_name) do
+        raise ArgumentError, "Parser not registered: #{parser_name}"
+      end
+      parser_klass.new(input, currency, parser_options.merge(options))
+    end
   end
 end
+
+Monetize.register_parser(:optimistic, Monetize::OptimisticParser)
+Monetize.default_parser = :optimistic

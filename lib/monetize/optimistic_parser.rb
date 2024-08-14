@@ -8,7 +8,7 @@ module Monetize
 
     DEFAULT_DECIMAL_MARK = '.'.freeze
 
-    def initialize(input, fallback_currency = Money.default_currency, options = {})
+    def initialize(input, fallback_currency, options)
       @input = input.to_s.strip
       @fallback_currency = fallback_currency
       @options = options
