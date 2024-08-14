@@ -4,7 +4,7 @@ require 'money'
 require 'monetize/core_extensions'
 require 'monetize/errors'
 require 'monetize/version'
-require 'monetize/parser'
+require 'monetize/optimistic_parser'
 require 'monetize/collection'
 
 module Monetize
@@ -36,7 +36,7 @@ module Monetize
       return input if input.is_a?(Money)
       return from_numeric(input, currency) if input.is_a?(Numeric)
 
-      parser = Monetize::Parser.new(input, currency, options)
+      parser = Monetize::OptimisticParser.new(input, currency, options)
       amount, currency = parser.parse
 
       Money.from_amount(amount, currency)

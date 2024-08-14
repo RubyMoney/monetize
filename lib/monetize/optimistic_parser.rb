@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 module Monetize
-  class Parser
+  class OptimisticParser
     CURRENCY_SYMBOLS = {
       '$'  => 'USD',
       '€'  => 'EUR',
@@ -76,7 +76,7 @@ module Monetize
     def parse_currency
       computed_currency = nil
       computed_currency = input[/[A-Z]{2,3}/]
-      computed_currency = nil unless Monetize::Parser::CURRENCY_SYMBOLS.value?(computed_currency)
+      computed_currency = nil unless Monetize::OptimisticParser::CURRENCY_SYMBOLS.value?(computed_currency)
       computed_currency ||= compute_currency if assume_from_symbol?
 
 
