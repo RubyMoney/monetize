@@ -36,13 +36,15 @@ module Monetize
 
     private
 
+    private
+
+    attr_reader :input, :fallback_currency, :options
+
     def to_big_decimal(value)
       BigDecimal(value)
     rescue ::ArgumentError => err
       fail ParseError, err.message
     end
-
-    attr_reader :input, :fallback_currency, :options
 
     def parse_currency
       computed_currency = nil
