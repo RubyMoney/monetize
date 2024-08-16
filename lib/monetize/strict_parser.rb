@@ -3,10 +3,10 @@ require 'monetize/tokenizer'
 
 module Monetize
   class StrictParser < Parser
-    # TODO: perform exhaustive match
-    # TODO: error subclasses with detailed explanation
-    # TODO: check if decimal mark is a thousands separator (1,000 USD)
     # TODO: switch to using allowed format as strings for added flexibility
+
+    THOUSAND_SEPARATORS = /[\.\ ,]/.freeze
+    DECIMAL_MARKS = /[\.,]/.freeze
 
     # Some advanced regexp tips to understand the next bit of code:
     # "?:"       - makes the group non-capturing, excluding it from the resulting match data
@@ -15,18 +15,18 @@ module Monetize
     # "?!"       - negative lookahead (next character(-s) can't be the contents of this group)
     AMOUNT_REGEXP = %r{
       ^
-        (?:                          # whole units
-          (?:                        # try to capture units separated by thousands
-            \d{1,3}                  # must start with 3 or less whole numbers
-            (?:(?<ts>[\.\ ,])\d{3})?   # first occurance of separated thousands, captures the separator
-            (?:\k<ts>\d{3})*         # other iterations with a backreference to the first separator
+        (?:                                         # whole units
+          (?:                                       # try to capture units separated by thousands
+            \d{1,3}                                 # must start with 3 or less whole numbers
+            (?:(?<ts>#{THOUSAND_SEPARATORS})\d{3})? # first occurance of separated thousands, captures the separator
+            (?:\k<ts>\d{3})*                        # other iterations with a the same exact separator
           )
-          |\d+                       # fallback to non thousands-separated units
+          |\d+                                      # fallback to non thousands-separated units
         )
-        (?:                          # this group captures subunits
-          (?!\k<ts>)                 # avoid thousands separator used to separate decimals
-          (?<ds>[\.,])               # captured decimal separator
-          \d+                        # subunits
+        (?:                                         # this group captures subunits
+          (?!\k<ts>)                                # disallow captured thousands separator as decimals separator
+          (?<ds>#{DECIMAL_MARKS})                   # captured decimal separator
+          \d+                                       # subunits
         )?
       $
     }ix.freeze
@@ -42,16 +42,16 @@ module Monetize
     end
 
     def parse
-      result = Tokenizer.new(input, options).process
+      tokens = Tokenizer.new(input, options).process
 
-      unless ALLOWED_FORMATS.include?(result.map(&:first))
-        raise ParseError, "invalid input - #{result.map(&:first)}"
+      unless ALLOWED_FORMATS.include?(tokens.map(&:first))
+        raise ParseError, "invalid input - #{tokens.map(&:first)}"
       end
 
-      amount = result.find { |token| token.type == :amount }
-      sign = result.find { |token| token.type == :sign }
-      symbol = result.find { |token| token.type == :symbol }
-      currency_iso = result.find { |token| token.type == :currency_iso }
+      amount = tokens.find { |token| token.type == :amount }
+      sign = tokens.find { |token| token.type == :sign }
+      symbol = tokens.find { |token| token.type == :symbol }
+      currency_iso = tokens.find { |token| token.type == :currency_iso }
 
       currency =
         if currency_iso

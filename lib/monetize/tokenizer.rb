@@ -52,13 +52,12 @@ module Monetize
 
     def match(input, type, regexp)
       tokens = []
-      # TODO: replace with gsub to avoid another loop later?
-      input.scan(regexp) { tokens << Token.new(type, Regexp.last_match) }
-
-      # Replace the matches from the input with § to avoid over-matching
-      tokens.each do |token|
-        offset = token.match.offset(0)
-        input[offset.first..(offset.last - 1)] = REPLACEMENT_SYMBOL * token.match.to_s.length
+      input.gsub!(regexp) do
+        tokens << Token.new(type, Regexp.last_match)
+        # Replace the matches from the input with § to avoid overlapping matches. Stripping
+        # out the matches is dangerous because it can bring things irrelevant things together:
+        # '12USD34' will become '1234' after removing currency, which is NOT expected.
+        REPLACEMENT_SYMBOL * Regexp.last_match.to_s.length
       end
 
       tokens
