@@ -2,6 +2,9 @@ require 'monetize/parser'
 require 'monetize/tokenizer'
 
 module Monetize
+  # Unlike the OptimisticParser which aims for the best effort match, the StrictParser is
+  # designed to only parse well formatted inputs (see ALLOWED_FORMATS) and ignore anything
+  # that looks off.
   class StrictParser < Parser
     # TODO: switch to using allowed format as strings for added flexibility
 
