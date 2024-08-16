@@ -48,21 +48,19 @@ module Monetize
         raise ParseError, "invalid input - #{tokens.map(&:first)}"
       end
 
-      amount = tokens.find { |token| token.type == :amount }
-      sign = tokens.find { |token| token.type == :sign }
-      symbol = tokens.find { |token| token.type == :symbol }
-      currency_iso = tokens.find { |token| token.type == :currency_iso }
+      parts = Struct.new(:amount, :sign, :symbol, :currency_iso).new
+      tokens.each { |token| parts[token.type] = token }
 
       currency =
-        if currency_iso
-          parse_currency_iso(currency_iso.match.to_s)
-        elsif symbol && assume_from_symbol?
-          parse_symbol(symbol.match.to_s)
+        if parts.currency_iso
+          parse_currency_iso(parts.currency_iso.match.to_s)
+        elsif parts.symbol && assume_from_symbol?
+          parse_symbol(parts.symbol.match.to_s)
         else
           fallback_currency
         end
 
-      amount = parse_amount(currency, amount.match, sign&.match)
+      amount = parse_amount(currency, parts.amount.match, parts.sign&.match)
 
       [amount, currency]
     end
