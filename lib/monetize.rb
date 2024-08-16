@@ -5,6 +5,7 @@ require 'monetize/core_extensions'
 require 'monetize/errors'
 require 'monetize/version'
 require 'monetize/optimistic_parser'
+require 'monetize/strict_parser'
 require 'monetize/collection'
 
 module Monetize
@@ -105,4 +106,5 @@ module Monetize
 end
 
 Monetize.register_parser(:optimistic, Monetize::OptimisticParser)
+Monetize.register_parser(:strict, Monetize::StrictParser)
 Monetize.default_parser = :optimistic

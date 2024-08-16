@@ -36,6 +36,8 @@ describe Monetize do
     }
   JSON
 
+  before { Monetize.default_parser = :strict }
+
   # Dummy parser that always returns an amount and currency specified via options
   class TestParser < Monetize::Parser
     def initialize(input, currency, options)
