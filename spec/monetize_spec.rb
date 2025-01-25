@@ -56,10 +56,13 @@ describe Monetize do
           Monetize.assume_from_symbol = false
         end
 
-        Monetize::Parser::CURRENCY_SYMBOLS.each_pair do |symbol, iso_code|
+        Monetize::Parser.currency_symbols.each_pair do |symbol, iso_code|
           context iso_code do
             let(:currency) { Money::Currency.find(iso_code) }
-            let(:amount) { 5_95 }
+            let(:amount) do
+              # FIXME: The exponent > 3 (e.g. BTC) causes problems when converting to string from float
+              (currency.exponent > 3)? (595 * currency.subunit_to_unit) : 595
+            end
             let(:amount_in_units) { amount.to_f / currency.subunit_to_unit }
 
             it 'ensures correct amount calculations for test' do
@@ -109,13 +112,21 @@ describe Monetize do
             end
 
             it 'parses formatted inputs without currency detection when overridden' do
-              expect(Monetize.parse("#{symbol}5.95", nil, assume_from_symbol: false)).to eq Money.new(amount, 'USD')
+              if Monetize::Parser.currency_symbols.value?(symbol)
+                currency_iso_code = symbol
+                amount_str = currency.exponent == 0 ? '595' : '5.95'
+              else
+                currency_iso_code = 'USD'
+                amount_str = '5.95'
+              end
+
+              expect(Monetize.parse("#{symbol}#{amount_str}", nil, assume_from_symbol: false)).to eq Money.new(595, currency_iso_code)
             end
           end
         end
 
         it 'should assume default currency if not a recognised symbol' do
-          expect(Monetize.parse('L9.99')).to eq Money.new(999, 'USD')
+          expect(Monetize.parse('NRS9.99')).to eq Money.new(999, 'USD')
         end
 
         it 'should use provided currency over symbol' do
