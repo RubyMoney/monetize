@@ -36,6 +36,17 @@ describe Monetize do
     }
   JSON
 
+  # Dummy parser that always returns an amount and currency specified via options
+  class TestParser < Monetize::Parser
+    def initialize(input, currency, options)
+      @options = options
+    end
+
+    def parse
+      [@options[:amount], @options[:currency]]
+    end
+  end
+
   describe '.parse' do
     it 'parses european-formatted inputs under 10EUR' do
       expect(Monetize.parse('EUR 5,95')).to eq Money.new(595, 'EUR')
@@ -56,7 +67,7 @@ describe Monetize do
           Monetize.assume_from_symbol = false
         end
 
-        Monetize::Parser::CURRENCY_SYMBOLS.each_pair do |symbol, iso_code|
+        Monetize::OptimisticParser::CURRENCY_SYMBOLS.each_pair do |symbol, iso_code|
           context iso_code do
             let(:currency) { Money::Currency.find(iso_code) }
             let(:amount) { 5_95 }
@@ -390,6 +401,12 @@ describe Monetize do
         expect(Monetize.parse('£10.00')).to eq Money.new(10_00, 'GBP')
       end
     end
+
+    context 'when specified parser does not exist' do
+      it 'returns nil' do
+        expect(Monetize.parse('100 USD', nil, parser: :foo)).to eq(nil)
+      end
+    end
   end
 
   describe '.parse!' do
@@ -405,6 +422,14 @@ describe Monetize do
 
     it 'raises ArgumentError with invalid format' do
       expect { Monetize.parse!('11..0') }.to raise_error Monetize::ParseError
+    end
+
+    context 'when specified parser does not exist' do
+      it 'raises ArgumentError' do
+        expect do
+          Monetize.parse!('100 USD', nil, parser: :foo)
+        end.to raise_error(Monetize::ArgumentError, 'Parser not registered: foo')
+      end
     end
   end
 
@@ -628,6 +653,41 @@ describe Monetize do
   context 'given the same inputs to .parse and .from_*' do
     it 'gives the same results' do
       expect(4.635.to_money).to eq '4.635'.to_money
+    end
+  end
+
+  describe '.register_parser' do
+    it 'registers a new parser with a provided name' do
+      Monetize.register_parser(:test, TestParser, amount: 42, currency: 'GBP')
+
+      expect(Monetize.parse!('test', nil, parser: :test)).to eq(Money.new(42_00, 'GBP'))
+    end
+
+    it 'registers the same parser with a different name' do
+      Monetize.register_parser(:test_1, TestParser, amount: 1, currency: 'GBP')
+      Monetize.register_parser(:test_2, TestParser, amount: 2, currency: 'USD')
+
+      expect(Monetize.parse!('test', nil, parser: :test_1)).to eq(Money.new(1_00, 'GBP'))
+      expect(Monetize.parse!('test', nil, parser: :test_2)).to eq(Money.new(2_00, 'USD'))
+    end
+
+    it 'overrides existing parser with the same name' do
+      Monetize.register_parser(:test, TestParser, amount: 42, currency: 'GBP')
+      Monetize.register_parser(:test, TestParser, amount: 99, currency: 'USD')
+
+      expect(Monetize.parse!('test', nil, parser: :test)).to eq(Money.new(99_00, 'USD'))
+    end
+  end
+
+  describe '.default_parser=' do
+    before { Monetize.register_parser(:test, TestParser, amount: 1, currency: 'USD') }
+    after { Monetize.default_parser = :optimistic }
+
+    it 'specifies which parser to use by default' do
+      expect(Monetize.parse!('99 GBP')).to eq(Money.new(99_00, 'GBP'))
+
+      Monetize.default_parser = :test
+      expect(Monetize.parse!('99 GBP')).to eq(Money.new(1_00, 'USD'))
     end
   end
 end
