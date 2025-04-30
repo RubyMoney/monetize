@@ -9,13 +9,12 @@ name: Ruby
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, test-ci ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, test-ci ]
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
