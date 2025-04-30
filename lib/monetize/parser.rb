@@ -28,7 +28,7 @@ module Monetize
       'S$' => 'SGD',
       'HK$'=> 'HKD',
       'NT$'=> 'TWD',
-      '₱'  => 'PHP',
+      '₱'  => 'PHP'
     }
 
     MULTIPLIER_SUFFIXES = { 'K' => 3, 'M' => 6, 'B' => 9, 'T' => 12 }
