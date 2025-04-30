@@ -74,7 +74,6 @@ module Monetize
     attr_reader :input, :fallback_currency, :options
 
     def parse_currency
-      computed_currency = nil
       computed_currency = input[/[A-Z]{2,3}/]
       computed_currency = nil unless Monetize::Parser::CURRENCY_SYMBOLS.value?(computed_currency)
       computed_currency ||= compute_currency if assume_from_symbol?
