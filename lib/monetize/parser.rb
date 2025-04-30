@@ -173,7 +173,8 @@ module Monetize
     end
 
     def extract_sign(input)
-      result = (input =~ /^-+(.*)$/ || input =~ /^(.*)-+$/) ? [true, $1] : [false, input]
+      match = input =~ /^-+(.*)$/ || input =~ /^(.*)-+$/
+      result = match ? [true, $1] : [false, input]
       fail ParseError, 'Invalid amount (hyphen)' if result[1].include?('-')
       result
     end
