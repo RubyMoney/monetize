@@ -68,3 +68,5 @@ Monetize.parse_collection("€80-$100").range? == true
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
+TEST de PR
