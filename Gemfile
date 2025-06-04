@@ -10,4 +10,8 @@ elsif RUBY_VERSION =~ /^1/
   gem 'i18n', '~> 0.9'
 end
 
+if RUBY_VERSION >= '3.4.0'
+  gem 'bigdecimal'
+end
+
 gemspec
