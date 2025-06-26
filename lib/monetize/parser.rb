@@ -74,17 +74,31 @@ module Monetize
     attr_reader :input, :fallback_currency, :options
 
     def parse_currency
-      computed_currency = nil
-      computed_currency = input[/[A-Z]{2,3}/]
-      computed_currency = nil unless Monetize::Parser::CURRENCY_SYMBOLS.value?(computed_currency)
-      computed_currency ||= compute_currency if assume_from_symbol?
-
+      computed_currency = compute_currency
+      computed_currency ||= compute_currency_assumed_from_symbol if assume_from_symbol?
 
       computed_currency || fallback_currency || Money.default_currency
     end
 
+    # input[/[A-Z]{2,3}/] can match certain currency symbols with no "special" and uncapitalized characters e.g.
+    # RM, not just normal ISO codes. Thus, we make sure that if parsed_currency matches
+    # the mentioned currency symbols, then we return the respective ISO currency code for them.
+    def compute_currency
+      parsed_currency = input[/[A-Z]{2,3}/]
+      
+      return if !parsed_currency
+      return CURRENCY_SYMBOLS[parsed_currency] if parsed_currency == input.match(currency_symbol_regex).to_s
+
+      Money::Currency.all.map(&:iso_code).include?(parsed_currency) ? parsed_currency : nil
+    end
+
     def assume_from_symbol?
       options.fetch(:assume_from_symbol) { Monetize.assume_from_symbol }
+    end
+
+    def compute_currency_assumed_from_symbol
+      match = input.match(currency_symbol_regex)
+      CURRENCY_SYMBOLS[match.to_s] if match
     end
 
     def expect_whole_subunits?
@@ -97,11 +111,6 @@ module Monetize
 
     def apply_sign(negative, amount)
       negative ? amount * -1 : amount
-    end
-
-    def compute_currency
-      match = input.match(currency_symbol_regex)
-      CURRENCY_SYMBOLS[match.to_s] if match
     end
 
     def extract_major_minor(num, currency)
