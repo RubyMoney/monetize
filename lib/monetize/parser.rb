@@ -184,8 +184,10 @@ module Monetize
     end
 
     def split_major_minor(num, delimiter)
-      major, minor = num.split(delimiter)
-      [major, minor || '00']
+      splits = num.split(delimiter)
+      fail ParseError, 'Invalid amount (multiple delimiters)' if splits.length > 2
+
+      [splits[0], splits[1] || '00']
     end
 
     def currency_symbol_regex
