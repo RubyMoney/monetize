@@ -2,7 +2,7 @@
 
 module Monetize
   class Parser
-    CURRENCY_SYMBOLS = {
+    INITIAL_CURRENCY_SYMBOLS = {
       '$'  => 'USD',
       '€'  => 'EUR',
       '£'  => 'GBP',
@@ -28,14 +28,29 @@ module Monetize
       'S$' => 'SGD',
       'HK$'=> 'HKD',
       'NT$'=> 'TWD',
-      '₱'  => 'PHP',
-    }
+      '₱'  => 'PHP'
+    }.freeze
+    # FIXME: This ignored symbols could be ambiguous or conflict with other symbols
+    IGNORED_SYMBOLS = ['kr', 'NIO$', 'UM', 'L', 'oz t', "so'm", 'CUC$'].freeze
 
     MULTIPLIER_SUFFIXES = { 'K' => 3, 'M' => 6, 'B' => 9, 'T' => 12 }
     MULTIPLIER_SUFFIXES.default = 0
     MULTIPLIER_REGEXP = Regexp.new(format('^(.*?\d)(%s)\b([^\d]*)$', MULTIPLIER_SUFFIXES.keys.join('|')), 'i')
 
     DEFAULT_DECIMAL_MARK = '.'.freeze
+
+    def self.currency_symbols
+      @@currency_symbols ||= Money::Currency.table.reduce(INITIAL_CURRENCY_SYMBOLS.dup) do |memo, (_, currency)|
+        symbol = currency[:symbol]
+        symbol = currency[:disambiguate_symbol] if symbol && memo.key?(symbol)
+
+        next memo if is_invalid_currency_symbol?(symbol)
+
+        memo[symbol] = currency[:iso_code] unless memo.value?(currency[:iso_code])
+
+        memo
+      end.freeze
+    end
 
     def initialize(input, fallback_currency = Money.default_currency, options = {})
       @input = input.to_s.strip
@@ -65,6 +80,17 @@ module Monetize
 
     private
 
+    def self.is_invalid_currency_symbol?(symbol)
+      currency_symbol_blank?(symbol) ||
+      symbol.include?('.') || # Ignore symbols with dots because they can be confused with decimal marks
+      IGNORED_SYMBOLS.include?(symbol) ||
+      MULTIPLIER_REGEXP.match?("1#{symbol}") # Ignore symbols that can be confused with multipliers
+    end
+
+    def self.currency_symbol_blank?(symbol)
+      symbol.nil? || symbol.empty?
+    end
+
     def to_big_decimal(value)
       BigDecimal(value)
     rescue ::ArgumentError => err
@@ -74,11 +100,8 @@ module Monetize
     attr_reader :input, :fallback_currency, :options
 
     def parse_currency
-      computed_currency = nil
-      computed_currency = input[/[A-Z]{2,3}/]
-      computed_currency = nil unless Monetize::Parser::CURRENCY_SYMBOLS.value?(computed_currency)
-      computed_currency ||= compute_currency if assume_from_symbol?
-
+      computed_currency = compute_currency_from_iso_code
+      computed_currency ||= compute_currency_from_symbol if assume_from_symbol?
 
       computed_currency || fallback_currency || Money.default_currency
     end
@@ -99,9 +122,18 @@ module Monetize
       negative ? amount * -1 : amount
     end
 
-    def compute_currency
+    def compute_currency_from_iso_code
+      computed_currency = input[/[A-Z]{2,4}/]
+
+      return unless computed_currency
+
+      computed_currency if self.class.currency_symbols.value?(computed_currency)
+    end
+
+    def compute_currency_from_symbol
       match = input.match(currency_symbol_regex)
-      CURRENCY_SYMBOLS[match.to_s] if match
+
+      self.class.currency_symbols[match.to_s] if match
     end
 
     def extract_major_minor(num, currency)
@@ -127,20 +159,19 @@ module Monetize
     def extract_major_minor_with_single_delimiter(num, currency, delimiter)
       if expect_whole_subunits?
         possible_major, possible_minor = split_major_minor(num, delimiter)
+
         if minor_has_correct_dp_for_currency_subunit?(possible_minor, currency)
-          split_major_minor(num, delimiter)
-        else
-          extract_major_minor_with_tentative_delimiter(num, delimiter)
+          return [possible_major, possible_minor]
         end
       else
-        if delimiter == currency.decimal_mark
-          split_major_minor(num, delimiter)
-        elsif Monetize.enforce_currency_delimiters && delimiter == currency.thousands_separator
-          [num.gsub(delimiter, ''), 0]
-        else
-          extract_major_minor_with_tentative_delimiter(num, delimiter)
+        return split_major_minor(num, delimiter) if delimiter == currency.decimal_mark
+
+        if Monetize.enforce_currency_delimiters && delimiter == currency.thousands_separator
+          return [num.gsub(delimiter, ''), 0]
         end
       end
+
+      extract_major_minor_with_tentative_delimiter(num, delimiter)
     end
 
     def extract_major_minor_with_tentative_delimiter(num, delimiter)
@@ -165,7 +196,9 @@ module Monetize
     end
 
     def extract_multiplier
-      if (matches = MULTIPLIER_REGEXP.match(input))
+      matches = MULTIPLIER_REGEXP.match(input)
+
+      if matches
         multiplier_suffix = matches[2].upcase
         [MULTIPLIER_SUFFIXES[multiplier_suffix], "#{$1}#{$3}"]
       else
@@ -180,7 +213,7 @@ module Monetize
     end
 
     def regex_safe_symbols
-      CURRENCY_SYMBOLS.keys.map { |key| Regexp.escape(key) }.join('|')
+      self.class.currency_symbols.keys.map { |key| Regexp.escape(key) }.join('|')
     end
 
     def split_major_minor(num, delimiter)
