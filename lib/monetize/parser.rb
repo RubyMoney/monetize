@@ -188,8 +188,13 @@ module Monetize
       [major, minor || '00']
     end
 
+    CURRENCY_SYMBOL_REGEX = begin
+      regex_safe_symbols = CURRENCY_SYMBOLS.keys.map { |key| Regexp.escape(key) }.join('|')
+      Regexp.new("(?<![A-Z])(#{regex_safe_symbols})(?![A-Z])", Regexp::IGNORECASE)
+    end.freeze
+    
     def currency_symbol_regex
-      /(?<![A-Z])(#{regex_safe_symbols})(?![A-Z])/i
+      CURRENCY_SYMBOL_REGEX
     end
   end
 end
