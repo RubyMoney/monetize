@@ -189,7 +189,6 @@ module Monetize
     end
 
     CURRENCY_SYMBOL_REGEX = begin
-      regex_safe_symbols = CURRENCY_SYMBOLS.keys.map { |key| Regexp.escape(key) }.join('|')
       Regexp.new("(?<![A-Z])(#{regex_safe_symbols})(?![A-Z])", Regexp::IGNORECASE)
     end.freeze
     
