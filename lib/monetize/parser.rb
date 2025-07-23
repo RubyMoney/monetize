@@ -30,7 +30,8 @@ module Monetize
       'NT$'=> 'TWD',
       '₱'  => 'PHP',
     }
-
+    
+    CURRENCY_SYMBOL_REGEX = /(?<![A-Z])(#{CURRENCY_SYMBOLS.keys.map { |key| Regexp.escape(key) }.join('|')})(?![A-Z])/i
     MULTIPLIER_SUFFIXES = { 'K' => 3, 'M' => 6, 'B' => 9, 'T' => 12 }
     MULTIPLIER_SUFFIXES.default = 0
     MULTIPLIER_REGEXP = Regexp.new(format('^(.*?\d)(%s)\b([^\d]*)$', MULTIPLIER_SUFFIXES.keys.join('|')), 'i')
@@ -100,7 +101,7 @@ module Monetize
     end
 
     def compute_currency
-      match = input.match(currency_symbol_regex)
+      match = input.match(CURRENCY_SYMBOL_REGEX)
       CURRENCY_SYMBOLS[match.to_s] if match
     end
 
@@ -179,19 +180,9 @@ module Monetize
       result
     end
 
-    def regex_safe_symbols
-      CURRENCY_SYMBOLS.keys.map { |key| Regexp.escape(key) }.join('|')
-    end
-
     def split_major_minor(num, delimiter)
       major, minor = num.split(delimiter)
       [major, minor || '00']
-    end
-
-    CURRENCY_SYMBOL_REGEX = /(?<![A-Z])(#{regex_safe_symbols})(?![A-Z])/i
-    
-    def currency_symbol_regex
-      CURRENCY_SYMBOL_REGEX
     end
   end
 end
