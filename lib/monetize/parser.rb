@@ -188,9 +188,7 @@ module Monetize
       [major, minor || '00']
     end
 
-    CURRENCY_SYMBOL_REGEX = begin
-      Regexp.new("(?<![A-Z])(#{regex_safe_symbols})(?![A-Z])", Regexp::IGNORECASE)
-    end.freeze
+    CURRENCY_SYMBOL_REGEX = /(?<![A-Z])(#{regex_safe_symbols})(?![A-Z])/i
     
     def currency_symbol_regex
       CURRENCY_SYMBOL_REGEX
