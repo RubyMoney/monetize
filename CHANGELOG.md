@@ -2,6 +2,7 @@
 
 ## Current
 - Fix parsing multiple delimeters in the amount, after BigDecimal updates
+- Fix unused variable `possible_major` Ruby warning.
 
 ## 1.13.0
 - **Breaking change**: check ISO currency code validity when parsing strings with `to_money`
