@@ -127,7 +127,7 @@ module Monetize
 
     def extract_major_minor_with_single_delimiter(num, currency, delimiter)
       if expect_whole_subunits?
-        possible_major, possible_minor = split_major_minor(num, delimiter)
+        _possible_major, possible_minor = split_major_minor(num, delimiter)
         if minor_has_correct_dp_for_currency_subunit?(possible_minor, currency)
           split_major_minor(num, delimiter)
         else
