@@ -545,13 +545,13 @@ describe Monetize do
       expect(m.currency).to eq Money::Currency.wrap('EUR')
     end
 
-    context 'infinite_precision = true' do
+    context 'default_infinite_precision = true' do
       before do
-        Money.infinite_precision = true
+        Money.default_infinite_precision = true
       end
 
       after do
-        Money.infinite_precision = false
+        Money.default_infinite_precision = false
       end
 
       it 'keeps precision' do
