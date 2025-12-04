@@ -605,26 +605,6 @@ describe Monetize do
     end
   end
 
-  describe '.extract_cents' do
-    it 'is deprecated' do
-      allow(Monetize).to receive(:warn)
-
-      Monetize.extract_cents('100')
-
-      expect(Monetize)
-        .to have_received(:warn)
-        .with('[DEPRECATION] Monetize.extract_cents is deprecated. Use Monetize.parse().cents')
-    end
-
-    it 'extracts cents from a given string' do
-      expect(Monetize.extract_cents('10.99')).to eq(1099)
-    end
-
-    it "correctly treats pipe marks '|' in input (regression test)" do
-      expect(Monetize.extract_cents('100|0')).to eq Monetize.extract_cents('100!0')
-    end
-  end
-
   context 'given the same inputs to .parse and .from_*' do
     it 'gives the same results' do
       expect(4.635.to_money).to eq '4.635'.to_money

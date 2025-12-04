@@ -2,7 +2,7 @@
 
 require 'money'
 
-Money.default_currency = 'USD'
+Money.default_currency = Money::Currency.new("USD")
 
 RSpec.configure do |config|
   config.order = 'random'
