@@ -30,7 +30,7 @@ module Monetize
       'NT$'=> 'TWD',
       '₱'  => 'PHP',
     }
-    
+
     CURRENCY_SYMBOL_REGEX = /(?<![A-Z])(#{CURRENCY_SYMBOLS.keys.map { |key| Regexp.escape(key) }.join('|')})(?![A-Z])/i
     MULTIPLIER_SUFFIXES = { 'K' => 3, 'M' => 6, 'B' => 9, 'T' => 12 }
     MULTIPLIER_SUFFIXES.default = 0
@@ -80,8 +80,9 @@ module Monetize
       computed_currency = nil unless Monetize::Parser::CURRENCY_SYMBOLS.value?(computed_currency)
       computed_currency ||= compute_currency if assume_from_symbol?
 
-
-      computed_currency || fallback_currency || Money.default_currency
+      found = computed_currency || fallback_currency || Money.default_currency
+      raise Money::Currency::UnknownCurrency unless found
+      found
     end
 
     def assume_from_symbol?

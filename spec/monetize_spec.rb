@@ -192,7 +192,7 @@ describe Monetize do
           end
 
           it 'raises an error if currency code is invalid' do
-            expect { '20.00 OMG'.to_money }.to raise_error
+            expect { '20.00 OMG'.to_money }.to raise_error(Monetize::ParseError)
           end
         end
       end
