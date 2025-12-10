@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 class Hash
   def to_money(currency = nil)
     money_hash = self.respond_to?(:with_indifferent_access) ? self.with_indifferent_access : self

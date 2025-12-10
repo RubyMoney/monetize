@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 class String
   def to_money(currency = nil)
     Monetize.parse!(self, currency)

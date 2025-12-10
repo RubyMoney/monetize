@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 require 'money'
 require 'monetize/core_extensions'
 require 'monetize/errors'

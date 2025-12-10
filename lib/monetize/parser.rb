@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 module Monetize
   class Parser
     CURRENCY_SYMBOLS = {
