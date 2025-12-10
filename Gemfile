@@ -1,7 +1,6 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
-if RUBY_VERSION >= '3.4.0'
-  gem 'bigdecimal'
-end
+gem "rake"
+gem "rspec", "~> 3.0"
 
 gemspec
