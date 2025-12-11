@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 require 'spec_helper'
 require 'monetize'
 require 'monetize/core_extensions'
@@ -67,8 +65,8 @@ describe Monetize, 'core extensions' do
         '-1,000'          => Money.new(-1_000_00),
         '1,000.5'         => Money.new(1_000_50),
         '1,000.51'        => Money.new(1_000_51),
-        '1,000.505'       => Money.new(1_000_50), # ROUND_HALF_EVEN default bankers rounding
-        '1,000.515'       => Money.new(1_000_52), # ROUND_HALF_EVEN default bankers rounding
+        '1,000.505'       => Money.new(1_000_51), # ROUND_HALF_UP default rounding
+        '1,000.515'       => Money.new(1_000_52), # ROUND_HALF_UP default rounding
         '1,000.504'       => Money.new(1_000_50),
         '1,000.0000'      => Money.new(1_000_00),
         '1,000.5000'      => Money.new(1_000_50),
@@ -151,16 +149,16 @@ describe Monetize, 'core extensions' do
         expect('1.5'.to_money('KWD').cents).to eq 1_500
       end
 
-      it 'respects Money.rounding_mode' do
+      it 'respects Money.with_rounding_mode' do
         expect('1.009'.to_money).to eq(Money.new(1_01))
 
-        Money.rounding_mode(BigDecimal::ROUND_DOWN) do
+        Money.with_rounding_mode(BigDecimal::ROUND_DOWN) do
           expect('1.009'.to_money).to eq(Money.new(1_00))
         end
 
         expect('1.001'.to_money).to eq(Money.new(1_00))
 
-        Money.rounding_mode(BigDecimal::ROUND_UP) do
+        Money.with_rounding_mode(BigDecimal::ROUND_UP) do
           expect('1.001'.to_money).to eq(Money.new(1_01))
         end
       end
@@ -230,7 +228,7 @@ describe Monetize, 'core extensions' do
           expect(hash.to_money).to eq(Money.new(100, 'USD'))
         end
       end
-        
+
       context 'when Money to_hash is used' do
         subject(:hash) { { cents: 100, currency_iso: 'SGD' } }
 

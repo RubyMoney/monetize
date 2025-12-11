@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 require 'money'
 require 'monetize/core_extensions'
 require 'monetize/errors'
@@ -21,8 +19,8 @@ module Monetize
     attr_accessor :enforce_currency_delimiters
 
 
-    # Where this set to true, the behavior for parsing thousands separators is changed to 
-    # expect that eg. €10.000 is EUR 10 000 and not EUR 10.000 - it's incredibly rare when parsing 
+    # Where this set to true, the behavior for parsing thousands separators is changed to
+    # expect that eg. €10.000 is EUR 10 000 and not EUR 10.000 - it's incredibly rare when parsing
     # human text that we're dealing with fractions of cents.
     attr_accessor :expect_whole_subunits
 
@@ -69,13 +67,6 @@ module Monetize
     def from_numeric(value, currency = Money.default_currency)
       fail ArgumentError, "'value' should be a type of Numeric" unless value.is_a?(Numeric)
       Money.from_amount(value, currency)
-    end
-
-    def extract_cents(input, currency = Money.default_currency)
-      warn '[DEPRECATION] Monetize.extract_cents is deprecated. Use Monetize.parse().cents'
-
-      money = parse(input, currency)
-      money.cents if money
     end
   end
 end

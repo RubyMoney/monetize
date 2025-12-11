@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 require 'spec_helper'
 require 'monetize'
 
@@ -192,7 +190,7 @@ describe Monetize do
           end
 
           it 'raises an error if currency code is invalid' do
-            expect { '20.00 OMG'.to_money }.to raise_error
+            expect { '20.00 OMG'.to_money }.to raise_error(Monetize::ParseError)
           end
         end
       end
@@ -545,13 +543,13 @@ describe Monetize do
       expect(m.currency).to eq Money::Currency.wrap('EUR')
     end
 
-    context 'infinite_precision = true' do
+    context 'default_infinite_precision = true' do
       before do
-        Money.infinite_precision = true
+        Money.default_infinite_precision = true
       end
 
       after do
-        Money.infinite_precision = false
+        Money.default_infinite_precision = false
       end
 
       it 'keeps precision' do
@@ -602,26 +600,6 @@ describe Monetize do
 
       m = Monetize.from_numeric(1, 'EUR')
       expect(m.currency).to eq Money::Currency.wrap('EUR')
-    end
-  end
-
-  describe '.extract_cents' do
-    it 'is deprecated' do
-      allow(Monetize).to receive(:warn)
-
-      Monetize.extract_cents('100')
-
-      expect(Monetize)
-        .to have_received(:warn)
-        .with('[DEPRECATION] Monetize.extract_cents is deprecated. Use Monetize.parse().cents')
-    end
-
-    it 'extracts cents from a given string' do
-      expect(Monetize.extract_cents('10.99')).to eq(1099)
-    end
-
-    it "correctly treats pipe marks '|' in input (regression test)" do
-      expect(Monetize.extract_cents('100|0')).to eq Monetize.extract_cents('100!0')
     end
   end
 

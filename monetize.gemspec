@@ -1,34 +1,31 @@
-# coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
+# frozen_string_literal: true
+
+lib = File.expand_path("lib", __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'monetize/version'
-require 'English'
+require "monetize/version"
 
-Gem::Specification.new do |spec|
-  spec.name          = 'monetize'
-  spec.version       = Monetize::VERSION
-  spec.authors       = ['Shane Emmons', 'Anthony Dmitriyev']
-  spec.email         = ['shane@emmons.io', 'anthony.dmitriyev@gmail.com']
-  spec.description   = 'A library for converting various objects into `Money` objects.'
-  spec.summary       = 'A library for converting various objects into `Money` objects.'
-  spec.homepage      = 'https://github.com/RubyMoney/monetize'
-  spec.license       = 'MIT'
+Gem::Specification.new do |s|
+  s.name        = "monetize"
+  s.version     = Monetize::VERSION
+  s.platform    = Gem::Platform::RUBY
+  s.authors     = ["Shane Emmons", "Anthony Dmitriyev"]
+  s.email       = ["shane@emmons.io", "anthony.dmitriyev@gmail.com"]
+  s.homepage    = "https://github.com/RubyMoney/monetize"
+  s.summary     = "A library for converting various objects into `Money` objects."
+  s.description = "A library for converting various objects into `Money` objects."
+  s.license     = "MIT"
 
-  spec.files         = `git ls-files`.split($INPUT_RECORD_SEPARATOR)
-  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
-  spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
-  spec.require_paths = ['lib']
+  s.add_dependency "money", "~> 7.0"
 
-  spec.add_dependency 'money', '~> 6.12'
+  s.required_ruby_version = ">= 3.1"
 
-  spec.add_development_dependency 'bundler'
-  spec.add_development_dependency 'rake'
-  spec.add_development_dependency 'rspec', '~> 3.0'
+  s.files         = `git ls-files -z -- lib/* CHANGELOG.md LICENSE monetize.gemspec README.md`.split("\x0")
+  s.require_paths = ["lib"]
 
-  if spec.respond_to?(:metadata)
-    spec.metadata['changelog_uri'] = 'https://github.com/RubyMoney/monetize/blob/master/CHANGELOG.md'
-    spec.metadata['source_code_uri'] = 'https://github.com/RubyMoney/monetize/'
-    spec.metadata['bug_tracker_uri'] = 'https://github.com/RubyMoney/monetize/issues'
-    spec.metadata['rubygems_mfa_required'] = 'true'
+  if s.respond_to?(:metadata)
+    s.metadata["changelog_uri"] = "https://github.com/RubyMoney/monetize/blob/master/CHANGELOG.md"
+    s.metadata["source_code_uri"] = "https://github.com/RubyMoney/monetize/"
+    s.metadata["bug_tracker_uri"] = "https://github.com/RubyMoney/monetize/issues"
+    s.metadata["rubygems_mfa_required"] = "true"
   end
 end
