@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- Fix parsing of ISO codes not in `Monetize::Parser::CURRENCY_SYMBOLS`.
 
 ## 2.0.0
 - **Breaking change**: Remove deprecated `Monetize.extract_cents`.
