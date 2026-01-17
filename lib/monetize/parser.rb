@@ -75,7 +75,7 @@ module Monetize
     def parse_currency
       computed_currency = nil
       computed_currency = input[/[A-Z]{2,3}/]
-      computed_currency = nil unless Monetize::Parser::CURRENCY_SYMBOLS.value?(computed_currency)
+      computed_currency = nil unless Money::Currency.find(computed_currency)
       computed_currency ||= compute_currency if assume_from_symbol?
 
       found = computed_currency || fallback_currency || Money.default_currency
