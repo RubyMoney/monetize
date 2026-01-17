@@ -118,6 +118,7 @@ describe Monetize do
 
         it 'should use provided currency over symbol' do
           expect(Monetize.parse('$1.05 CAD')).to eq Money.new(105, 'CAD')
+          expect(Monetize.parse('$1.05 DKK')).to eq Money.new(105, 'DKK')
         end
 
         it 'ignores ZAR symbols that is part of a text' do
@@ -164,10 +165,15 @@ describe Monetize do
       end
 
       context 'ISO code' do
-        it 'parses currency given as ISO code' do
+        it 'parses currency in CURRENCY_SYMBOLS given as ISO code' do
           expect('20.00 USD'.to_money).to eq Money.new(20_00, 'USD')
           expect('20.00 EUR'.to_money).to eq Money.new(20_00, 'EUR')
           expect('20.00 GBP'.to_money).to eq Money.new(20_00, 'GBP')
+        end
+
+        it 'parses currency not in CURRENCY_SYMBOLS given as ISO code' do
+          expect(Monetize::Parser::CURRENCY_SYMBOLS).to_not have_value('DKK')
+          expect('20.00 DKK'.to_money).to eq Money.new(20_00, 'DKK')
         end
 
         context 'with default currency' do
