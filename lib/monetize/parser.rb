@@ -73,14 +73,27 @@ module Monetize
     attr_reader :input, :fallback_currency, :options
 
     def parse_currency
-      computed_currency = nil
-      computed_currency = input[/[A-Z]{2,3}/]
-      computed_currency = nil unless Money::Currency.find(computed_currency)
-      computed_currency ||= compute_currency if assume_from_symbol?
+      computed_currency = compute_currency_from_iso_code
+      computed_currency ||= compute_currency_from_symbol if assume_from_symbol?
+      computed_currency ||= fallback_currency || Money.default_currency
 
-      found = computed_currency || fallback_currency || Money.default_currency
-      raise Money::Currency::UnknownCurrency unless found
-      found
+      raise Money::Currency::UnknownCurrency unless computed_currency
+
+      computed_currency
+    end
+
+    def compute_currency_from_iso_code
+      computed_currency = input[/[A-Z]{2,3}/]
+
+      return unless Money::Currency.find(computed_currency)
+
+      computed_currency
+    end
+
+    def compute_currency_from_symbol
+      match = input.match(CURRENCY_SYMBOL_REGEX)
+
+      CURRENCY_SYMBOLS[match.to_s] if match
     end
 
     def assume_from_symbol?
@@ -97,11 +110,6 @@ module Monetize
 
     def apply_sign(negative, amount)
       negative ? amount * -1 : amount
-    end
-
-    def compute_currency
-      match = input.match(CURRENCY_SYMBOL_REGEX)
-      CURRENCY_SYMBOLS[match.to_s] if match
     end
 
     def extract_major_minor(num, currency)
