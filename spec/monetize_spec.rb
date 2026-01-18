@@ -148,6 +148,16 @@ describe Monetize do
             expect(Monetize.parse("€19.90")).to eq Money.new(1990, "USD")
           end
 
+          it "registers currency symbol before currency_symbols is accessed" do
+            Monetize::Parser.class_variable_set(:@@currency_symbols, nil)
+
+            expect {
+              Monetize.register_currency_symbol("S/", "PEN")
+            }.not_to raise_error
+
+            expect(Monetize.parse("S/19.90")).to eq Money.new(1990, "PEN")
+          end
+
           it "unregisters custom currency symbol" do
             Monetize.register_currency_symbol("S/", "PEN")
 

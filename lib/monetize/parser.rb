@@ -41,13 +41,13 @@ module Monetize
       end
 
       def register_currency_symbol(symbol, iso_code)
-        @@currency_symbols[symbol] = iso_code
+        currency_symbols[symbol] = iso_code
 
         reset_currency_symbol_regex
       end
 
       def unregister_currency_symbol(symbol)
-        @@currency_symbols.delete(symbol)
+        currency_symbols.delete(symbol)
         reset_currency_symbol_regex
       end
 
