@@ -112,11 +112,7 @@ module Monetize
     end
 
     def compute_currency_from_iso_code
-      computed_currency = input[/[A-Z]{2,3}/]
-
-      return unless Money::Currency.find(computed_currency)
-
-      computed_currency
+      Money::Currency.find(input[/[A-Z]{2,3}/])
     end
 
     def compute_currency_from_symbol
