@@ -1,8 +1,8 @@
 # Monetize
 
-[![Gem Version](https://badge.fury.io/rb/monetize.svg)](http://badge.fury.io/rb/monetize)
+[![Gem Version](https://badge.fury.io/rb/monetize.svg)](https://rubygems.org/gems/monetize)
 [![Ruby](https://github.com/RubyMoney/monetize/actions/workflows/ruby.yml/badge.svg)](https://github.com/RubyMoney/monetize/actions/workflows/ruby.yml)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](http://opensource.org/licenses/MIT)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/license/MIT)
 
 A library for converting various objects into `Money` objects.
 
@@ -53,7 +53,7 @@ this is not the case - a European site will show $10.000 because that's the loca
 As a human, if this was a stock ticker we might expect fractional cents.  If it's a retail price we know it's actually an incorrect thousands separator.
 
 
-Monetize can also parse a list of values, returning an array-like object ([Monetize::Collection](lib/collection.rb)):
+Monetize can also parse a list of values, returning an array-like object ([Monetize::Collection](lib/monetize/collection.rb)):
 
 ```ruby
 Monetize.parse_collection("€80/$100") == [Money.new(80_00, "EUR"), Money.new(100_00, "USD")]
