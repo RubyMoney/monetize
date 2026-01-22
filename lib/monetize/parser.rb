@@ -43,8 +43,6 @@ module Monetize
     end
 
     def parse
-      currency = Money::Currency.wrap(parse_currency)
-
       multiplier_exp, input = extract_multiplier
 
       num = input.gsub(/(?:^#{currency.symbol}|[^\d.,'-]+)/, '')
@@ -53,7 +51,7 @@ module Monetize
 
       num.chop! if num =~ /[\.|,]$/
 
-      major, minor = extract_major_minor(num, currency)
+      major, minor = extract_major_minor(num)
 
       amount = to_big_decimal([major, minor].join(DEFAULT_DECIMAL_MARK))
       amount = apply_multiplier(multiplier_exp, amount)
@@ -71,6 +69,10 @@ module Monetize
     end
 
     attr_reader :input, :fallback_currency, :options
+
+    def currency
+      @currency ||= Money::Currency.wrap(parse_currency)
+    end
 
     def parse_currency
       computed_currency = nil
@@ -104,7 +106,7 @@ module Monetize
       CURRENCY_SYMBOLS[match.to_s] if match
     end
 
-    def extract_major_minor(num, currency)
+    def extract_major_minor(num)
       used_delimiters = num.scan(/[^\d]/).uniq
 
       case used_delimiters.length
@@ -114,20 +116,20 @@ module Monetize
         thousands_separator, decimal_mark = used_delimiters
         split_major_minor(num.gsub(thousands_separator, ''), decimal_mark)
       when 1
-        extract_major_minor_with_single_delimiter(num, currency, used_delimiters.first)
+        extract_major_minor_with_single_delimiter(num, used_delimiters.first)
       else
         fail ParseError, 'Invalid amount'
       end
     end
 
-    def minor_has_correct_dp_for_currency_subunit?(minor, currency)
+    def minor_has_correct_dp_for_currency_subunit?(minor)
       minor.length == currency.subunit_to_unit.to_s.length - 1
     end
 
-    def extract_major_minor_with_single_delimiter(num, currency, delimiter)
+    def extract_major_minor_with_single_delimiter(num, delimiter)
       if expect_whole_subunits?
         _possible_major, possible_minor = split_major_minor(num, delimiter)
-        if minor_has_correct_dp_for_currency_subunit?(possible_minor, currency)
+        if minor_has_correct_dp_for_currency_subunit?(possible_minor)
           split_major_minor(num, delimiter)
         else
           extract_major_minor_with_tentative_delimiter(num, delimiter)
