@@ -40,7 +40,6 @@ module Monetize
       @input = input.to_s.strip
       @fallback_currency = fallback_currency
       @options = options
-      @currency = Money::Currency.wrap(parse_currency)
     end
 
     def parse
@@ -69,7 +68,11 @@ module Monetize
       fail ParseError, err.message
     end
 
-    attr_reader :input, :fallback_currency, :options, :currency
+    attr_reader :input, :fallback_currency, :options
+
+    def currency
+      @currency ||= Money::Currency.wrap(parse_currency)
+    end
 
     def parse_currency
       computed_currency = nil
