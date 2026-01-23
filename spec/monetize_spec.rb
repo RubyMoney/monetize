@@ -262,6 +262,7 @@ describe Monetize do
       expect(Monetize.parse('6.534', 'EUR')).to eq Money.new(653, 'EUR')
 
       Monetize.enforce_currency_delimiters = true
+      expect(Monetize.parse('6,534', 'EUR')).to eq Money.new(653, 'EUR')
       expect(Monetize.parse('6.534', 'EUR')).to eq Money.new(6_534_00, 'EUR')
       Monetize.enforce_currency_delimiters = false
     end
