@@ -35,6 +35,8 @@ module Monetize
     MULTIPLIER_REGEXP = Regexp.new(format('^(.*?\d)(%s)\b([^\d]*)$', MULTIPLIER_SUFFIXES.keys.join('|')), 'i')
 
     DEFAULT_DECIMAL_MARK = '.'.freeze
+    DEFAULT_MINOR = "00".freeze
+    private_constant :DEFAULT_MINOR
 
     def initialize(input, fallback_currency = Money.default_currency, options = {})
       @input = input.to_s.strip
@@ -111,7 +113,7 @@ module Monetize
 
       case used_delimiters.length
       when 0
-        [num, 0]
+        [num, DEFAULT_MINOR]
       when 2
         thousands_separator, decimal_mark = used_delimiters
         split_major_minor(num.gsub(thousands_separator, ''), decimal_mark)
@@ -138,7 +140,7 @@ module Monetize
         if delimiter == currency.decimal_mark
           split_major_minor(num, delimiter)
         elsif Monetize.enforce_currency_delimiters && delimiter == currency.thousands_separator
-          [num.gsub(delimiter, ''), 0]
+          [num.gsub(delimiter, ''), DEFAULT_MINOR]
         else
           extract_major_minor_with_tentative_delimiter(num, delimiter)
         end
@@ -148,7 +150,7 @@ module Monetize
     def extract_major_minor_with_tentative_delimiter(num, delimiter)
       if num.scan(delimiter).length > 1
         # Multiple matches; treat as thousands separator
-        [num.gsub(delimiter, ''), '00']
+        [num.gsub(delimiter, ''), DEFAULT_MINOR]
       else
         possible_major, possible_minor = split_major_minor(num, delimiter)
 
@@ -161,7 +163,7 @@ module Monetize
         if is_decimal_mark
           [possible_major, possible_minor]
         else
-          ["#{possible_major}#{possible_minor}", '00']
+          ["#{possible_major}#{possible_minor}", DEFAULT_MINOR]
         end
       end
     end
@@ -185,7 +187,9 @@ module Monetize
       splits = num.split(delimiter)
       fail ParseError, 'Invalid amount (multiple delimiters)' if splits.length > 2
 
-      [splits[0], splits[1] || '00']
+      splits[1] ||= DEFAULT_MINOR
+
+      splits
     end
   end
 end
