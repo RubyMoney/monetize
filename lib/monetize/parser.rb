@@ -51,11 +51,7 @@ module Monetize
 
       negative, num = extract_sign(num)
 
-      num.chop! if num =~ /[\.|,]$/
-
-      major, minor = extract_major_minor(num)
-
-      amount = to_big_decimal([major, minor].join(DEFAULT_DECIMAL_MARK))
+      amount = to_big_decimal(normalize_number(num))
       amount = apply_multiplier(multiplier_exp, amount)
       amount = apply_sign(negative, amount)
 
@@ -63,6 +59,10 @@ module Monetize
     end
 
     private
+
+    def normalize_number(num)
+      extract_major_minor(num.sub(/[\.|,]$/, "")).join(DEFAULT_DECIMAL_MARK)
+    end
 
     def to_big_decimal(value)
       BigDecimal(value)
