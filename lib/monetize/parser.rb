@@ -36,6 +36,7 @@ module Monetize
 
     DEFAULT_DECIMAL_MARK = '.'.freeze
     DEFAULT_MINOR = "00".freeze
+    private_constant :DEFAULT_MINOR
 
     def initialize(input, fallback_currency = Money.default_currency, options = {})
       @input = input.to_s.strip
