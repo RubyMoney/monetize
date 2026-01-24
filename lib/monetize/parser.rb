@@ -130,13 +130,13 @@ module Monetize
       case used_delimiters.length
       when 0
         [num, DEFAULT_MINOR]
+      when 1
+        extract_major_minor_with_single_delimiter(num, used_delimiters.first)
       when 2
         thousands_separator, decimal_mark = used_delimiters
         num = remove_separator(num, thousands_separator)
 
         split_major_minor(num, decimal_mark)
-      when 1
-        extract_major_minor_with_single_delimiter(num, used_delimiters.first)
       else
         fail ParseError, 'Invalid amount'
       end
