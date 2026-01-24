@@ -61,7 +61,9 @@ module Monetize
     private
 
     def normalize_number(num)
-      extract_major_minor(num.sub(/[\.|,]$/, "")).join(DEFAULT_DECIMAL_MARK)
+      clean_num = num.sub(/[\.|,]$/, "")
+
+      extract_major_minor(clean_num).join(DEFAULT_DECIMAL_MARK)
     end
 
     def to_big_decimal(value)
