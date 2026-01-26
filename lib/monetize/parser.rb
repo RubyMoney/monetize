@@ -114,17 +114,7 @@ module Monetize
       num.gsub(separator, "")
     end
 
-    def extract_major_minor_with_currency_delimiters(num)
-      num = remove_separator(num, currency.thousands_separator)
-
-      split_major_minor(num, currency.decimal_mark)
-    end
-
     def extract_major_minor(num)
-      if Monetize.enforce_currency_delimiters
-        return extract_major_minor_with_currency_delimiters(num)
-      end
-
       used_delimiters = num.scan(/[^\d]/).uniq
 
       case used_delimiters.length
@@ -155,6 +145,8 @@ module Monetize
         end
       elsif delimiter == currency.decimal_mark
         return split_major_minor(num, delimiter)
+      elsif Monetize.enforce_currency_delimiters && delimiter == currency.thousands_separator
+        return [remove_separator(num, delimiter), DEFAULT_MINOR]
       end
 
       extract_major_minor_with_tentative_delimiter(num, delimiter)
