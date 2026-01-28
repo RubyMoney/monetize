@@ -257,14 +257,37 @@ describe Monetize do
       expect(Monetize.parse('19.12.89', 'EUR')).to eq Money.new(191_289_00, 'EUR')
     end
 
-    it 'parses correctly strings with exactly 3 decimal digits' do
-      expect(Monetize.parse('6,534', 'EUR')).to eq Money.new(653, 'EUR')
-      expect(Monetize.parse('6.534', 'EUR')).to eq Money.new(653, 'EUR')
+    context "parses with enforce_currency_delimiters enabled" do
+      before(:all) { Monetize.enforce_currency_delimiters = true }
+      after(:all)  { Monetize.enforce_currency_delimiters = false }
 
-      Monetize.enforce_currency_delimiters = true
-      expect(Monetize.parse('6,534', 'EUR')).to eq Money.new(653, 'EUR')
-      expect(Monetize.parse('6.534', 'EUR')).to eq Money.new(6_534_00, 'EUR')
-      Monetize.enforce_currency_delimiters = false
+      it "parses strings with correct currency delimiters" do
+        expect(Monetize.parse("34,56 EUR")).to eq Money.new(34_56, "EUR")
+        expect(Monetize.parse("34.56 USD")).to eq Money.new(34_56, "USD")
+      end
+
+      it "parses strings with incorrect currency delimiters" do
+        expect(Monetize.parse("6.53 EUR")).to eq Money.new(653_00, "EUR")
+        expect(Monetize.parse("6,53 USD")).to eq Money.new(653_00, "USD")
+      end
+
+      it "parses strings with exactly 3 digits after the separator" do
+        expect(Monetize.parse('6,534', 'EUR')).to eq Money.new(6_53, 'EUR')
+        expect(Monetize.parse('6,534', 'USD')).to eq Money.new(6_534_00, 'USD')
+
+        expect(Monetize.parse('6.534', 'EUR')).to eq Money.new(6_534_00, 'EUR')
+        expect(Monetize.parse('6.534', 'USD')).to eq Money.new(6_53, 'USD')
+      end
+
+      it "parses strings with multiple thousands separators" do
+        expect(Monetize.parse("1.234.567", "EUR")).to eq Money.new(1_234_567_00, "EUR")
+        expect(Monetize.parse("1,234,567", "USD")).to eq Money.new(1_234_567_00, "USD")
+      end
+
+      it "returns nil for strings with invalid thousands separators" do
+        expect(Monetize.parse("12,34,56 EUR")).to be_nil
+        expect(Monetize.parse("12.34.56 USD")).to be_nil
+      end
     end
 
     context 'Money object attempting to be parsed' do
