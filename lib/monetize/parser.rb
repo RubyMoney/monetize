@@ -51,11 +51,7 @@ module Monetize
 
       negative, num = extract_sign(num)
 
-      num.chop! if num =~ /[\.|,]$/
-
-      major, minor = extract_major_minor(num)
-
-      amount = to_big_decimal([major, minor].join(DEFAULT_DECIMAL_MARK))
+      amount = to_big_decimal(normalize_number(num))
       amount = apply_multiplier(multiplier_exp, amount)
       amount = apply_sign(negative, amount)
 
@@ -63,6 +59,12 @@ module Monetize
     end
 
     private
+
+    def normalize_number(num)
+      clean_num = num.sub(/[\.|,]$/, "")
+
+      extract_major_minor(clean_num).join(DEFAULT_DECIMAL_MARK)
+    end
 
     def to_big_decimal(value)
       BigDecimal(value)
@@ -108,64 +110,65 @@ module Monetize
       CURRENCY_SYMBOLS[match.to_s] if match
     end
 
+    def remove_separator(num, separator)
+      num.gsub(separator, "")
+    end
+
     def extract_major_minor(num)
       used_delimiters = num.scan(/[^\d]/).uniq
 
       case used_delimiters.length
       when 0
         [num, DEFAULT_MINOR]
-      when 2
-        thousands_separator, decimal_mark = used_delimiters
-        split_major_minor(num.gsub(thousands_separator, ''), decimal_mark)
       when 1
         extract_major_minor_with_single_delimiter(num, used_delimiters.first)
+      when 2
+        thousands_separator, decimal_mark = used_delimiters
+        num = remove_separator(num, thousands_separator)
+
+        split_major_minor(num, decimal_mark)
       else
         fail ParseError, 'Invalid amount'
       end
     end
 
-    def minor_has_correct_dp_for_currency_subunit?(minor)
-      minor.length == currency.subunit_to_unit.to_s.length - 1
+    def minor_has_correct_decimal_places_for_currency?(minor)
+      minor.length == currency.decimal_places
     end
 
     def extract_major_minor_with_single_delimiter(num, delimiter)
       if expect_whole_subunits?
-        _possible_major, possible_minor = split_major_minor(num, delimiter)
-        if minor_has_correct_dp_for_currency_subunit?(possible_minor)
-          split_major_minor(num, delimiter)
-        else
-          extract_major_minor_with_tentative_delimiter(num, delimiter)
+        possible_major, possible_minor = split_major_minor(num, delimiter)
+
+        if minor_has_correct_decimal_places_for_currency?(possible_minor)
+          return [possible_major, possible_minor]
         end
-      else
-        if delimiter == currency.decimal_mark
-          split_major_minor(num, delimiter)
-        elsif Monetize.enforce_currency_delimiters && delimiter == currency.thousands_separator
-          [num.gsub(delimiter, ''), DEFAULT_MINOR]
-        else
-          extract_major_minor_with_tentative_delimiter(num, delimiter)
-        end
+      elsif delimiter == currency.decimal_mark
+        return split_major_minor(num, delimiter)
+      elsif Monetize.enforce_currency_delimiters && delimiter == currency.thousands_separator
+        return [remove_separator(num, delimiter), DEFAULT_MINOR]
       end
+
+      extract_major_minor_with_tentative_delimiter(num, delimiter)
     end
 
     def extract_major_minor_with_tentative_delimiter(num, delimiter)
       if num.scan(delimiter).length > 1
         # Multiple matches; treat as thousands separator
-        [num.gsub(delimiter, ''), DEFAULT_MINOR]
-      else
-        possible_major, possible_minor = split_major_minor(num, delimiter)
-
-        # Doesn't look like thousands separator
-        is_decimal_mark = possible_minor.length != 3 ||
-                          possible_major.length > 3 ||
-                          possible_major.to_i == 0 ||
-                          (!expect_whole_subunits? && delimiter == '.')
-
-        if is_decimal_mark
-          [possible_major, possible_minor]
-        else
-          ["#{possible_major}#{possible_minor}", DEFAULT_MINOR]
-        end
+        return [remove_separator(num, delimiter), DEFAULT_MINOR]
       end
+
+      possible_major, possible_minor = split_major_minor(num, delimiter)
+
+      # Doesn't look like thousands separator
+      is_decimal_mark = possible_minor.length != 3 ||
+                        possible_major.length > 3 ||
+                        possible_major.to_i == 0 ||
+                        (!expect_whole_subunits? && delimiter == ".")
+
+      return [possible_major, possible_minor] if is_decimal_mark
+
+      ["#{possible_major}#{possible_minor}", DEFAULT_MINOR]
     end
 
     def extract_multiplier
