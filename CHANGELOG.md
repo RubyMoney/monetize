@@ -1,7 +1,9 @@
 # Changelog
 
 ## Unreleased
-- Fix parsing of ISO codes not in `Monetize::Parser::CURRENCY_SYMBOLS`.
+
+## 2.0.1
+- Fix parsing of ISO codes not in `Monetize::Parser::CURRENCY_SYMBOLS`. `Monetize.parse('20.00 DKK')` returned 20.00 in the default currency instead of 20.00 DKK.
 
 ## 2.0.0
 - **Breaking change**: Remove deprecated `Monetize.extract_cents`.
