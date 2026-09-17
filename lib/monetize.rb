@@ -68,5 +68,17 @@ module Monetize
       fail ArgumentError, "'value' should be a type of Numeric" unless value.is_a?(Numeric)
       Money.from_amount(value, currency)
     end
+
+    def register_currency_symbol(symbol, iso_code)
+      Monetize::Parser.register_currency_symbol(symbol, iso_code)
+    end
+
+    def unregister_currency_symbol(symbol)
+      Monetize::Parser.unregister_currency_symbol(symbol)
+    end
+
+    def reset_currency_symbols!
+      Monetize::Parser.reset_currency_symbols!
+    end
   end
 end

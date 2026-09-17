@@ -54,7 +54,7 @@ describe Monetize do
           Monetize.assume_from_symbol = false
         end
 
-        Monetize::Parser::CURRENCY_SYMBOLS.each_pair do |symbol, iso_code|
+        Monetize::Parser.currency_symbols.each_pair do |symbol, iso_code|
           context iso_code do
             let(:currency) { Money::Currency.find(iso_code) }
             let(:amount) { 5_95 }
@@ -132,6 +132,67 @@ describe Monetize do
             expect(Monetize.parse('kr9.99')).to eq Money.new(999, 'USD')
           end
         end
+
+        context "registered custom symbols and unregistering" do
+          after { Monetize.reset_currency_symbols! }
+
+          it "parses registered custom currency symbol" do
+            Monetize.register_currency_symbol("S/", "PEN")
+
+            expect(Monetize.parse("S/19.90")).to eq Money.new(1990, "PEN")
+          end
+
+          it "overrides existing currency symbol when registering" do
+            Monetize.register_currency_symbol("€", "USD")
+
+            expect(Monetize.parse("€19.90")).to eq Money.new(1990, "USD")
+          end
+
+          it "registers currency symbol before currency_symbols is accessed" do
+            Monetize::Parser.class_variable_set(:@@currency_symbols, nil)
+
+            expect {
+              Monetize.register_currency_symbol("S/", "PEN")
+            }.not_to raise_error
+
+            expect(Monetize.parse("S/19.90")).to eq Money.new(1990, "PEN")
+          end
+
+          it "unregisters custom currency symbol" do
+            Monetize.register_currency_symbol("S/", "PEN")
+
+            expect(Monetize.parse("S/19.90")).to eq Money.new(1990, "PEN")
+
+            Monetize.unregister_currency_symbol("S/")
+
+            expect(Monetize.parse("S/19.90")).to eq Money.new(1990, "USD")
+          end
+
+          it "unregisters existing currency symbol" do
+            Monetize.unregister_currency_symbol("€")
+
+            expect(Monetize.parse("€19.90")).to eq Money.new(1990, "USD")
+          end
+
+          it "unregisters non-registered currency symbol without errors" do
+            expect {
+              Monetize.unregister_currency_symbol("XYZ")
+            }.not_to raise_error
+          end
+
+          it "resets currency symbols to original set" do
+            Monetize.register_currency_symbol("S/", "PEN")
+            Monetize.unregister_currency_symbol("€")
+
+            expect(Monetize.parse("S/19.90")).to eq Money.new(1990, "PEN")
+            expect(Monetize.parse("€19.90")).to eq Money.new(1990, "USD")
+
+            Monetize.reset_currency_symbols!
+
+            expect(Monetize.parse("€19.90")).to eq Money.new(1990, "EUR")
+            expect(Monetize.parse("S/19.90")).to eq Money.new(1990, "USD")
+          end
+        end
       end
 
       context 'opted out' do
@@ -172,7 +233,7 @@ describe Monetize do
         end
 
         it 'parses currency not in CURRENCY_SYMBOLS given as ISO code' do
-          expect(Monetize::Parser::CURRENCY_SYMBOLS).to_not have_value('DKK')
+          expect(Monetize::Parser.currency_symbols).to_not have_value('DKK')
           expect('20.00 DKK'.to_money).to eq Money.new(20_00, 'DKK')
         end
 
