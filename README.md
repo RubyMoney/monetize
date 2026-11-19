@@ -19,17 +19,17 @@ Or install it yourself as:
 ## Usage
 
 ```ruby
-Monetize.parse("USD 100") == Money.new(100_00, "USD")
-Monetize.parse("EUR 100") == Money.new(100_00, "EUR")
-Monetize.parse("GBP 100") == Money.new(100_00, "GBP")
+Monetize.parse("USD 100")    == Money.new(100_00, "USD")
+Monetize.parse("EUR 100")    == Money.new(100_00, "EUR")
+Monetize.parse("GBP 100")    == Money.new(100_00, "GBP")
+Monetize.parse("100")        == Money.new(100_00, "USD")
+Monetize.parse("7.21K")      == Money.new(7_210_00, "USD")
+Monetize.parse("1m")         == Money.new(1_000_000_00, "USD")
+Monetize.parse("3.1415927M") == Money.new(3_141_592_70, "USD")
+Monetize.parse(".42B")       == Money.new(420_000_000_00, "USD")
+Monetize.parse("5T")         == Money.new(5_000_000_000_000_00, "USD")
 
 "100".to_money == Money.new(100_00, "USD")
-
-"7.21K".to_money      == Money.new(7_210_00)
-"1m".to_money         == Money.new(1_000_000_00)
-"3.1415927M".to_money == Money.new(3_141_592_70)
-".42B".to_money       == Money.new(420_000_000_00)
-"5T".to_money         == Money.new(5_000_000_000_000_00)
 ```
 
 Optionally, enable the ability to assume the currency from a passed symbol. Otherwise, currency symbols will be ignored, and USD used as the default currency:
